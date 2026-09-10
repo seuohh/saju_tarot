@@ -76,6 +76,31 @@
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     }
 
+    .lang-toggle {
+      display: flex;
+      justify-content: flex-end;
+      gap: 4px;
+      margin-bottom: 18px;
+    }
+
+    .lang-toggle button {
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      padding: 6px 14px;
+      cursor: pointer;
+      background: #fff;
+      color: #888;
+    }
+
+    .lang-toggle button.active {
+      background: #6c5ce7;
+      color: #fff;
+      border-color: #6c5ce7;
+    }
+
     h1 {
       margin-top: 0;
       font-size: 32px;
@@ -452,18 +477,23 @@
 
   <div class="container">
 
-    <h1>🎱 로또 번호 추천기</h1>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" id="langKoBtn" class="active">한국어</button>
+      <button type="button" id="langEnBtn">EN</button>
+    </div>
 
-    <p class="description">
+    <h1 id="txtTitle">🎱 로또 번호 추천기</h1>
+
+    <p class="description" id="txtDescription">
       버튼을 누르면 로또 번호 6개로 구성된 5개 조합을 만들고,<br>
       과거 당첨번호의 통계적 패턴과 유사한 순서로<br>
       <strong>1순위부터 5순위까지</strong> 정렬해 드립니다.
     </p>
 
-    <div class="ad-slot" role="complementary" aria-label="광고 영역">
+    <div class="ad-slot" role="complementary" aria-label="광고 영역" id="txtAdSlot1">
       광고 영역 (Advertisement)
     </div>
-    <p class="ad-slot-cta">이 자리에 광고를 원하시나요? <a href="contact.html">제휴 문의 →</a></p>
+    <p class="ad-slot-cta" id="txtAdCta1">이 자리에 광고를 원하시나요? <a href="contact.html">제휴 문의 →</a></p>
 
     <div id="lottoResults" aria-live="polite">
       버튼을 눌러 로또 번호를 추천받아 보세요.
@@ -474,11 +504,11 @@
     </button>
 
     <div id="resultActions" class="result-actions" hidden>
-      <button type="button" onclick="copyResults()">📋 결과 복사</button>
-      <button type="button" onclick="shareResults()">🔗 공유하기</button>
+      <button type="button" id="txtCopyBtn" onclick="copyResults()">📋 결과 복사</button>
+      <button type="button" id="txtShareBtn" onclick="shareResults()">🔗 공유하기</button>
     </div>
 
-    <div class="notice">
+    <div class="notice" id="txtNotice">
       ※ 1~45 중 중복되지 않는 번호 6개를 무작위로 추첨합니다.<br>
       ※ 모든 번호 조합의 실제 당첨 확률은 수학적으로 동일합니다(약 1/8,145,060).
       "순위"는 홀짝 비율·합계·고저 분포·연속번호 등 과거 당첨번호에서 흔히
@@ -488,34 +518,34 @@
 
     <div id="historySection" class="history-section" hidden>
       <div class="history-header">
-        <h2>최근 생성 기록</h2>
-        <button type="button" onclick="clearHistory()">기록 삭제</button>
+        <h2 id="txtHistoryHead">최근 생성 기록</h2>
+        <button type="button" id="txtClearHistory" onclick="clearHistory()">기록 삭제</button>
       </div>
       <div id="historyList"></div>
     </div>
 
-    <div class="ad-slot" role="complementary" aria-label="광고 영역">
+    <div class="ad-slot" role="complementary" aria-label="광고 영역" id="txtAdSlot2">
       광고 영역 (Advertisement)
     </div>
-    <p class="ad-slot-cta">이 자리에 광고를 원하시나요? <a href="contact.html">제휴 문의 →</a></p>
+    <p class="ad-slot-cta" id="txtAdCta2">이 자리에 광고를 원하시나요? <a href="contact.html">제휴 문의 →</a></p>
 
     <div class="partner-cta">
       <div class="partner-cta-badge">PARTNERSHIP</div>
-      <h2>로또 번호 생성기와 함께 브랜드를 알려보세요</h2>
-      <p>광고·배너 노출부터 콘텐츠·데이터 제휴, 브랜드 협업까지 편하게 제안해주세요. 내용을 검토한 뒤 빠르게 이메일로 답변드립니다.</p>
-      <div class="partner-cta-tags">
+      <h2 id="txtPartnerHeadline">로또 번호 생성기와 함께 브랜드를 알려보세요</h2>
+      <p id="txtPartnerBody">광고·배너 노출부터 콘텐츠·데이터 제휴, 브랜드 협업까지 편하게 제안해주세요. 내용을 검토한 뒤 빠르게 이메일로 답변드립니다.</p>
+      <div class="partner-cta-tags" id="txtPartnerTags">
         <span>광고·배너</span><span>콘텐츠 제휴</span><span>데이터·API</span><span>브랜드 협업</span>
       </div>
-      <a href="contact.html" class="partner-cta-btn">제휴 문의하기 →</a>
-      <p class="partner-cta-note">응답은 보통 영업일 기준 1~2일 이내에 드립니다.</p>
+      <a href="contact.html" class="partner-cta-btn" id="txtPartnerBtn">제휴 문의하기 →</a>
+      <p class="partner-cta-note" id="txtPartnerNote">응답은 보통 영업일 기준 1~2일 이내에 드립니다.</p>
     </div>
 
     <div class="legal">
-      본 서비스에서 제공하는 번호는 무작위로 생성된 참고용 정보이며 실제 로또 당첨과는 무관하고
-      당첨을 보장하지 않습니다. 복권 구매는 신중히 결정하시기 바랍니다. (만 19세 미만 구매 불가)
+      <span id="txtLegal">본 서비스에서 제공하는 번호는 무작위로 생성된 참고용 정보이며 실제 로또 당첨과는 무관하고
+      당첨을 보장하지 않습니다. 복권 구매는 신중히 결정하시기 바랍니다. (만 19세 미만 구매 불가)</span>
       <div class="links">
         <!-- 실제 페이지 준비 후 아래 링크를 연결하세요 -->
-        <a href="#">이용약관</a>·<a href="#">개인정보처리방침</a>·<a href="contact.html">제휴 문의</a>
+        <a href="#" id="txtLinkTerms">이용약관</a>·<a href="#" id="txtLinkPrivacy">개인정보처리방침</a>·<a href="contact.html" id="txtLinkContact">제휴 문의</a>
       </div>
       <div id="copyright"></div>
     </div>
@@ -528,8 +558,160 @@
 
     const HISTORY_KEY = "lottoHistory";
     const HISTORY_LIMIT = 10;
+    const LANG_KEY = "sajuLang";
 
     let currentSets = [];
+    let LANG = "ko";
+
+    const STRINGS = {
+      ko: {
+        title: "🎱 로또 번호 추천기",
+        descriptionHtml:
+          "버튼을 누르면 로또 번호 6개로 구성된 5개 조합을 만들고,<br>" +
+          "과거 당첨번호의 통계적 패턴과 유사한 순서로<br>" +
+          "<strong>1순위부터 5순위까지</strong> 정렬해 드립니다.",
+        adSlot: "광고 영역 (Advertisement)",
+        adCtaHtml: '이 자리에 광고를 원하시나요? <a href="contact.html">제휴 문의 →</a>',
+        resultsPlaceholder: "버튼을 눌러 로또 번호를 추천받아 보세요.",
+        generateBtnIdle: "🎲 순위별 로또 번호 추천받기",
+        generateBtnLoading: "번호 생성 중...",
+        copyBtn: "📋 결과 복사",
+        shareBtn: "🔗 공유하기",
+        noticeHtml:
+          '※ 1~45 중 중복되지 않는 번호 6개를 무작위로 추첨합니다.<br>' +
+          '※ 모든 번호 조합의 실제 당첨 확률은 수학적으로 동일합니다(약 1/8,145,060). ' +
+          '"순위"는 홀짝 비율·합계·고저 분포·연속번호 등 과거 당첨번호에서 흔히 ' +
+          '나타나는 통계적 패턴과의 유사도를 점수화한 참고용 지표이며, 당첨 확률과는 ' +
+          '무관합니다.',
+        historyHead: "최근 생성 기록",
+        clearHistory: "기록 삭제",
+        partnerHeadline: "로또 번호 생성기와 함께 브랜드를 알려보세요",
+        partnerBody: "광고·배너 노출부터 콘텐츠·데이터 제휴, 브랜드 협업까지 편하게 제안해주세요. 내용을 검토한 뒤 빠르게 이메일로 답변드립니다.",
+        partnerTags: ["광고·배너", "콘텐츠 제휴", "데이터·API", "브랜드 협업"],
+        partnerBtn: "제휴 문의하기 →",
+        partnerNote: "응답은 보통 영업일 기준 1~2일 이내에 드립니다.",
+        legal:
+          "본 서비스에서 제공하는 번호는 무작위로 생성된 참고용 정보이며 실제 로또 당첨과는 무관하고 " +
+          "당첨을 보장하지 않습니다. 복권 구매는 신중히 결정하시기 바랍니다. (만 19세 미만 구매 불가)",
+        linkTerms: "이용약관",
+        linkPrivacy: "개인정보처리방침",
+        linkContact: "제휴 문의",
+        copyright: (year) => "© " + year + " 로또 번호 생성기",
+        rankLabel: (index) => (index === 0 ? "⭐ 1순위" : (index + 1) + "순위"),
+        scoreSuffix: "점",
+        copySuccess: "결과가 복사되었습니다.",
+        copyFail: "복사에 실패했습니다. 직접 선택해 복사해주세요.",
+        shareTitle: "로또 번호 추천",
+        dateLocale: "ko-KR"
+      },
+      en: {
+        title: "🎱 Lotto Number Recommender",
+        descriptionHtml:
+          "Press the button to generate 5 sets of 6 Lotto numbers,<br>" +
+          "ranked from <strong>Rank 1 to Rank 5</strong><br>" +
+          "by similarity to statistical patterns seen in past winning numbers.",
+        adSlot: "Advertisement",
+        adCtaHtml: 'Want to advertise here? <a href="contact.html">Partnership inquiries →</a>',
+        resultsPlaceholder: "Press the button to get your recommended Lotto numbers.",
+        generateBtnIdle: "🎲 Get Ranked Lotto Numbers",
+        generateBtnLoading: "Generating...",
+        copyBtn: "📋 Copy Results",
+        shareBtn: "🔗 Share",
+        noticeHtml:
+          '※ Six non-repeating numbers from 1–45 are drawn at random.<br>' +
+          '※ Every possible combination has exactly the same real odds of winning (about 1 in 8,145,060). ' +
+          '"Rank" is a reference-only score based on similarity to patterns commonly seen in past winning ' +
+          'numbers (odd/even ratio, sum, low/high split, consecutive numbers, etc.), and has nothing to do ' +
+          'with actual winning odds.',
+        historyHead: "Recent Draws",
+        clearHistory: "Clear History",
+        partnerHeadline: "Grow your brand with our Lotto number generator",
+        partnerBody: "From ad placements to content, data partnerships, and brand collaborations — send us a proposal. We review every message and reply by email.",
+        partnerTags: ["Ads & Banners", "Content Partnership", "Data & API", "Brand Collaboration"],
+        partnerBtn: "Get in Touch →",
+        partnerNote: "We usually reply within 1–2 business days.",
+        legal:
+          "The numbers provided by this service are randomly generated for reference only, have no connection to actual Lotto drawings, " +
+          "and do not guarantee a win. Please play responsibly. (Not for purchase by those under 19 in Korea.)",
+        linkTerms: "Terms",
+        linkPrivacy: "Privacy Policy",
+        linkContact: "Partnership Inquiries",
+        copyright: (year) => "© " + year + " Lotto Number Generator",
+        rankLabel: (index) => (index === 0 ? "⭐ Rank 1" : "Rank " + (index + 1)),
+        scoreSuffix: "pt",
+        copySuccess: "Results copied to clipboard.",
+        copyFail: "Copy failed. Please select and copy the text manually.",
+        shareTitle: "Lotto Number Recommendation",
+        dateLocale: "en-US"
+      }
+    };
+
+    function s() {
+      return STRINGS[LANG];
+    }
+
+    function rankLabel(index) {
+      return s().rankLabel(index);
+    }
+
+    function applyStaticI18n() {
+      const t = s();
+      document.documentElement.lang = LANG;
+
+      document.getElementById("txtTitle").textContent = t.title;
+      document.getElementById("txtDescription").innerHTML = t.descriptionHtml;
+      document.getElementById("txtAdSlot1").textContent = t.adSlot;
+      document.getElementById("txtAdSlot2").textContent = t.adSlot;
+      document.getElementById("txtAdCta1").innerHTML = t.adCtaHtml;
+      document.getElementById("txtAdCta2").innerHTML = t.adCtaHtml;
+      document.getElementById("txtCopyBtn").textContent = t.copyBtn;
+      document.getElementById("txtShareBtn").textContent = t.shareBtn;
+      document.getElementById("txtNotice").innerHTML = t.noticeHtml;
+      document.getElementById("txtHistoryHead").textContent = t.historyHead;
+      document.getElementById("txtClearHistory").textContent = t.clearHistory;
+      document.getElementById("txtPartnerHeadline").textContent = t.partnerHeadline;
+      document.getElementById("txtPartnerBody").textContent = t.partnerBody;
+      document.getElementById("txtPartnerBtn").textContent = t.partnerBtn;
+      document.getElementById("txtPartnerNote").textContent = t.partnerNote;
+      document.getElementById("txtLegal").textContent = t.legal;
+      document.getElementById("txtLinkTerms").textContent = t.linkTerms;
+      document.getElementById("txtLinkPrivacy").textContent = t.linkPrivacy;
+      document.getElementById("txtLinkContact").textContent = t.linkContact;
+
+      const tagsEl = document.getElementById("txtPartnerTags");
+      tagsEl.innerHTML = t.partnerTags.map((tag) => "<span>" + tag + "</span>").join("");
+
+      const copyrightEl = document.getElementById("copyright");
+      if (copyrightEl) {
+        copyrightEl.textContent = t.copyright(new Date().getFullYear());
+      }
+
+      const button = document.getElementById("generateBtn");
+      if (!button.disabled) {
+        button.textContent = t.generateBtnIdle;
+      }
+
+      if (!currentSets.length) {
+        document.getElementById("lottoResults").textContent = t.resultsPlaceholder;
+      } else {
+        renderSets(currentSets);
+      }
+
+      document.getElementById("langKoBtn").classList.toggle("active", LANG === "ko");
+      document.getElementById("langEnBtn").classList.toggle("active", LANG === "en");
+
+      renderHistory();
+    }
+
+    function setLang(lang) {
+      LANG = lang;
+      try {
+        localStorage.setItem(LANG_KEY, lang);
+      } catch (error) {
+        // 무시
+      }
+      applyStaticI18n();
+    }
 
     // 로또 번호 6개 생성
     function generateLottoNumbers() {
@@ -621,12 +803,6 @@
     }
 
 
-    // 순위 라벨 (0번 인덱스가 가장 높은 유사도 점수)
-    function rankLabel(index) {
-      return index === 0 ? "⭐ 1순위" : (index + 1) + "순위";
-    }
-
-
     // 5세트를 생성한 뒤 통계 패턴 유사도 점수 기준으로 정렬
     function buildRankedSets() {
 
@@ -643,24 +819,13 @@
     }
 
 
-    // 순위별 번호 생성
-    async function generateFiveSets() {
+    // 생성된 세트를 화면에 렌더링 (언어 전환 시 재사용)
+    function renderSets(sets) {
 
-      const button = document.getElementById("generateBtn");
       const results = document.getElementById("lottoResults");
-      const actions = document.getElementById("resultActions");
-
-      button.disabled = true;
-      button.textContent = "번호 생성 중...";
-
-      // 사용자에게 생성 중임을 인지시키는 짧은 지연
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
       results.innerHTML = "";
 
-      currentSets = buildRankedSets();
-
-      currentSets.forEach((entry, index) => {
+      sets.forEach((entry, index) => {
 
         const setDiv =
           document.createElement("div");
@@ -700,12 +865,29 @@
           document.createElement("div");
 
         scoreBadge.className = "score-badge";
-        scoreBadge.textContent = entry.score + "점";
+        scoreBadge.textContent = entry.score + s().scoreSuffix;
 
         setDiv.appendChild(scoreBadge);
 
         results.appendChild(setDiv);
       });
+    }
+
+
+    // 순위별 번호 생성
+    async function generateFiveSets() {
+
+      const button = document.getElementById("generateBtn");
+      const actions = document.getElementById("resultActions");
+
+      button.disabled = true;
+      button.textContent = s().generateBtnLoading;
+
+      // 사용자에게 생성 중임을 인지시키는 짧은 지연
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      currentSets = buildRankedSets();
+      renderSets(currentSets);
 
       actions.hidden = false;
 
@@ -713,7 +895,7 @@
       renderHistory();
 
       button.disabled = false;
-      button.textContent = "🎲 순위별 로또 번호 추천받기";
+      button.textContent = s().generateBtnIdle;
     }
 
 
@@ -739,7 +921,7 @@
     function formatSetsAsText(rankedSets) {
       return rankedSets
         .map((entry, idx) =>
-          rankLabel(idx) + ": " + entry.numbers.join(", ") + " (" + entry.score + "점)"
+          rankLabel(idx) + ": " + entry.numbers.join(", ") + " (" + entry.score + s().scoreSuffix + ")"
         )
         .join("\n");
     }
@@ -755,9 +937,9 @@
 
       try {
         await navigator.clipboard.writeText(text);
-        showToast("결과가 복사되었습니다.");
+        showToast(s().copySuccess);
       } catch (error) {
-        showToast("복사에 실패했습니다. 직접 선택해 복사해주세요.");
+        showToast(s().copyFail);
       }
     }
 
@@ -772,7 +954,7 @@
 
       if (navigator.share) {
         try {
-          await navigator.share({ title: "로또 번호 추천", text: text });
+          await navigator.share({ title: s().shareTitle, text: text });
         } catch (error) {
           // 사용자가 공유를 취소한 경우 등은 무시
         }
@@ -844,7 +1026,7 @@
 
         const dateLabel = document.createElement("div");
         dateLabel.className = "history-date";
-        dateLabel.textContent = new Date(entry.timestamp).toLocaleString("ko-KR");
+        dateLabel.textContent = new Date(entry.timestamp).toLocaleString(s().dateLocale);
         item.appendChild(dateLabel);
 
         entry.sets.forEach((setEntry, idx) => {
@@ -884,13 +1066,17 @@
     }
 
 
-    document.addEventListener("DOMContentLoaded", () => {
-      renderHistory();
+    document.getElementById("langKoBtn").addEventListener("click", () => setLang("ko"));
+    document.getElementById("langEnBtn").addEventListener("click", () => setLang("en"));
 
-      const copyrightEl = document.getElementById("copyright");
-      if (copyrightEl) {
-        copyrightEl.textContent = "© " + new Date().getFullYear() + " 로또 번호 생성기";
+    document.addEventListener("DOMContentLoaded", () => {
+      try {
+        const savedLang = localStorage.getItem(LANG_KEY);
+        if (savedLang === "en" || savedLang === "ko") LANG = savedLang;
+      } catch (error) {
+        // 무시
       }
+      applyStaticI18n();
     });
 
   </script>
