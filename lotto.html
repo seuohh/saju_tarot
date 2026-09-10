@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>무료 로또 번호 생성기 - 순위별 5세트 추천</title>
+  <meta name="description" content="1~45 중 중복 없는 로또 번호 6개씩 5세트를 생성하고, 과거 당첨번호의 통계 패턴과의 유사도로 1순위부터 5순위까지 정렬해 추천해 드립니다. 결과 복사·공유, 최근 생성 기록 확인이 가능한 무료 웹 서비스입니다.">
+  <meta name="keywords" content="로또, 로또번호, 로또 번호 생성기, 로또 추천, 랜덤 번호, 번호 추첨, 로또 순위">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#764ba2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="로또 번호 생성기">
+
+  <!-- 배포 시 실제 도메인으로 교체하세요 -->
+  <!-- <link rel="canonical" href="https://YOUR-DOMAIN/"> -->
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="무료 로또 번호 생성기 - 순위별 5세트 추천">
+  <meta property="og:description" content="중복 없는 로또 번호 6개씩 5세트를 만들고, 통계 패턴 유사도로 1~5순위를 매겨 추천해 드립니다.">
+  <!-- 배포 시 실제 도메인/대표 이미지로 교체하세요 -->
+  <!-- <meta property="og:url" content="https://YOUR-DOMAIN/"> -->
+  <!-- <meta property="og:image" content="https://YOUR-DOMAIN/og-image.png"> -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="무료 로또 번호 생성기">
+  <meta name="twitter:description" content="클릭 한 번으로 로또 번호 5세트를 무작위로 추천해 드립니다.">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%B1%3C/text%3E%3C/svg%3E">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "로또 번호 생성기",
+    "description": "1~45 중 중복 없는 로또 번호 6개씩 5세트를 생성하고, 통계 패턴 유사도 기준으로 순위를 매겨 추천하는 무료 웹 애플리케이션입니다.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "KRW"
+    }
+  }
+  </script>
+
+  <!--
+    광고 스크립트 삽입 위치 (예: Google AdSense)
+    실제 서비스 배포 시 아래에 발급받은 스크립트를 추가하세요.
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+  -->
+
+  <!--
+    분석 스크립트 삽입 위치 (예: Google Analytics / GA4)
+    실제 서비스 배포 시 발급받은 측정 ID로 아래에 gtag.js 스니펫을 추가하세요.
+  -->
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 0;
+      font-family: Arial, "Noto Sans KR", sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .container {
+      width: 90%;
+      max-width: 700px;
+      padding: 40px 30px;
+      text-align: center;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 32px;
+    }
+
+    .description {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .ad-slot {
+      margin: 20px 0;
+      padding: 14px;
+      border: 1px dashed #ccc;
+      border-radius: 8px;
+      color: #aaa;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .lotto-set {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .set-name {
+      width: 76px;
+      font-weight: bold;
+      color: #555;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .lotto-set.best-set {
+      position: relative;
+      background: linear-gradient(90deg, rgba(255, 215, 0, 0.12), transparent);
+      border-radius: 14px;
+      padding: 6px 4px;
+    }
+
+    .lotto-set.best-set .set-name {
+      color: #b8860b;
+    }
+
+    .score-badge {
+      width: 60px;
+      font-size: 12px;
+      color: #999;
+      text-align: right;
+    }
+
+    .best-set .score-badge {
+      color: #b8860b;
+      font-weight: bold;
+    }
+
+    .ball {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      animation: pop 0.35s ease;
+    }
+
+    .yellow { background: #e0a800; }
+    .blue   { background: #4285f4; }
+    .red    { background: #ea4335; }
+    .gray   { background: #6b6b6b; }
+    .green  { background: #34a853; }
+
+    button {
+      margin-top: 25px;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      background: #6c5ce7;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #5649c9;
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .result-actions button {
+      margin-top: 0;
+      background: #fff;
+      color: #6c5ce7;
+      border: 1.5px solid #6c5ce7;
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+
+    .result-actions button:hover {
+      background: #6c5ce7;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .history-section {
+      margin-top: 30px;
+      text-align: left;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .history-header h2 {
+      font-size: 16px;
+      margin: 0;
+      color: #444;
+    }
+
+    .history-header button {
+      margin-top: 0;
+      background: none;
+      border: none;
+      color: #999;
+      font-size: 13px;
+      font-weight: normal;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+    }
+
+    .history-header button:hover {
+      background: none;
+      color: #555;
+      transform: none;
+    }
+
+    .history-item {
+      background: #f8f8fb;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+    }
+
+    .history-date {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 6px;
+    }
+
+    .history-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .mini-rank-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: #888;
+      width: 42px;
+    }
+
+    .mini-ball {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+    }
+
+    .legal {
+      margin-top: 30px;
+      font-size: 11px;
+      color: #aaa;
+      line-height: 1.6;
+      border-top: 1px solid #eee;
+      padding-top: 16px;
+    }
+
+    .legal .links a {
+      color: #999;
+      text-decoration: none;
+      margin: 0 6px;
+    }
+
+    .legal .links a:hover {
+      text-decoration: underline;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translate(-50%, 20px);
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+
+      70% {
+        transform: scale(1.15);
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 15px;
+      }
+
+      .lotto-set {
+        gap: 5px;
+      }
+
+      .ball {
+        width: 42px;
+        height: 42px;
+        font-size: 16px;
+      }
+
+      .set-name {
+        width: 45px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>🎱 로또 번호 추천기</h1>
+
+    <p class="description">
+      버튼을 누르면 로또 번호 6개로 구성된 5개 조합을 만들고,<br>
+      과거 당첨번호의 통계적 패턴과 유사한 순서로<br>
+      <strong>1순위부터 5순위까지</strong> 정렬해 드립니다.
+    </p>
+
+    <div class="ad-slot" role="complementary" aria-label="광고 영역">
+      광고 영역 (Advertisement)
+    </div>
+
+    <div id="lottoResults" aria-live="polite">
+      버튼을 눌러 로또 번호를 추천받아 보세요.
+    </div>
+
+    <button id="generateBtn" type="button" onclick="generateFiveSets()">
+      🎲 순위별 로또 번호 추천받기
+    </button>
+
+    <div id="resultActions" class="result-actions" hidden>
+      <button type="button" onclick="copyResults()">📋 결과 복사</button>
+      <button type="button" onclick="shareResults()">🔗 공유하기</button>
+    </div>
+
+    <div class="notice">
+      ※ 1~45 중 중복되지 않는 번호 6개를 무작위로 추첨합니다.<br>
+      ※ 모든 번호 조합의 실제 당첨 확률은 수학적으로 동일합니다(약 1/8,145,060).
+      "순위"는 홀짝 비율·합계·고저 분포·연속번호 등 과거 당첨번호에서 흔히
+      나타나는 통계적 패턴과의 유사도를 점수화한 참고용 지표이며, 당첨 확률과는
+      무관합니다.
+    </div>
+
+    <div id="historySection" class="history-section" hidden>
+      <div class="history-header">
+        <h2>최근 생성 기록</h2>
+        <button type="button" onclick="clearHistory()">기록 삭제</button>
+      </div>
+      <div id="historyList"></div>
+    </div>
+
+    <div class="ad-slot" role="complementary" aria-label="광고 영역">
+      광고 영역 (Advertisement)
+    </div>
+
+    <div class="legal">
+      본 서비스에서 제공하는 번호는 무작위로 생성된 참고용 정보이며 실제 로또 당첨과는 무관하고
+      당첨을 보장하지 않습니다. 복권 구매는 신중히 결정하시기 바랍니다. (만 19세 미만 구매 불가)
+      <div class="links">
+        <!-- 실제 페이지 준비 후 아래 링크를 연결하세요 -->
+        <a href="#">이용약관</a>·<a href="#">개인정보처리방침</a>·<a href="#">문의하기</a>
+      </div>
+      <div id="copyright"></div>
+    </div>
+
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+
+    const HISTORY_KEY = "lottoHistory";
+    const HISTORY_LIMIT = 10;
+
+    let currentSets = [];
+
+    // 로또 번호 6개 생성
+    function generateLottoNumbers() {
+
+      const numbers = [];
+
+      while (numbers.length < 6) {
+
+        const randomNumber =
+          Math.floor(Math.random() * 45) + 1;
+
+        if (!numbers.includes(randomNumber)) {
+          numbers.push(randomNumber);
+        }
+      }
+
+      // 오름차순 정렬
+      numbers.sort((a, b) => a - b);
+
+      return numbers;
+    }
+
+
+    // 과거 당첨번호에서 흔히 나타나는 통계적 패턴과의 유사도 점수(0~100).
+    // 주의: 로또는 완전 무작위 추첨이므로 모든 조합의 실제 당첨 확률은
+    // 동일하다(1/8,145,060). 이 점수는 당첨 확률을 의미하지 않으며,
+    // 순위를 매기기 위한 참고용 지표일 뿐이다.
+    function scoreSet(numbers) {
+
+      let score = 0;
+
+      // 1) 홀짝 비율 (최대 30점) - 과거 당첨번호는 3:3 비율이 가장 흔함
+      const oddCount = numbers.filter((n) => n % 2 === 1).length;
+      const evenCount = 6 - oddCount;
+      const oddEvenGap = Math.abs(oddCount - evenCount);
+
+      if (oddEvenGap === 0) score += 30;
+      else if (oddEvenGap === 2) score += 22;
+      else if (oddEvenGap === 4) score += 10;
+      else score += 0;
+
+      // 2) 총합 범위 (최대 25점) - 역대 당첨번호 합계는 100~175 구간이 다수
+      const sum = numbers.reduce((a, b) => a + b, 0);
+
+      if (sum >= 100 && sum <= 175) score += 25;
+      else if ((sum >= 80 && sum < 100) || (sum > 175 && sum <= 195)) score += 15;
+      else score += 5;
+
+      // 3) 고저 비율 (최대 20점) - 1~22 저구간, 23~45 고구간의 균형
+      const lowCount = numbers.filter((n) => n <= 22).length;
+      const highCount = 6 - lowCount;
+      const lowHighGap = Math.abs(lowCount - highCount);
+
+      if (lowHighGap === 0) score += 20;
+      else if (lowHighGap === 2) score += 14;
+      else if (lowHighGap === 4) score += 6;
+      else score += 0;
+
+      // 4) 연속번호 개수 (최대 15점) - 연속번호가 너무 많으면 드묾
+      let consecutivePairs = 0;
+      for (let i = 1; i < numbers.length; i++) {
+        if (numbers[i] - numbers[i - 1] === 1) {
+          consecutivePairs++;
+        }
+      }
+
+      if (consecutivePairs <= 1) score += 15;
+      else if (consecutivePairs === 2) score += 8;
+      else score += 0;
+
+      // 5) 구간 분산 (최대 10점) - 1~9/10~19/20~29/30~39/40~45 다섯 구간에
+      //    번호가 고르게 퍼져 있을수록 높은 점수
+      const zones = new Set(
+        numbers.map((n) => {
+          if (n <= 9) return 0;
+          if (n <= 19) return 1;
+          if (n <= 29) return 2;
+          if (n <= 39) return 3;
+          return 4;
+        })
+      );
+
+      if (zones.size >= 5) score += 10;
+      else if (zones.size === 4) score += 7;
+      else if (zones.size === 3) score += 4;
+      else score += 0;
+
+      return score;
+    }
+
+
+    // 순위 라벨 (0번 인덱스가 가장 높은 유사도 점수)
+    function rankLabel(index) {
+      return index === 0 ? "⭐ 1순위" : (index + 1) + "순위";
+    }
+
+
+    // 5세트를 생성한 뒤 통계 패턴 유사도 점수 기준으로 정렬
+    function buildRankedSets() {
+
+      const raw = [];
+
+      for (let i = 0; i < 5; i++) {
+        const numbers = generateLottoNumbers();
+        raw.push({ numbers: numbers, score: scoreSet(numbers) });
+      }
+
+      raw.sort((a, b) => b.score - a.score);
+
+      return raw;
+    }
+
+
+    // 순위별 번호 생성
+    async function generateFiveSets() {
+
+      const button = document.getElementById("generateBtn");
+      const results = document.getElementById("lottoResults");
+      const actions = document.getElementById("resultActions");
+
+      button.disabled = true;
+      button.textContent = "번호 생성 중...";
+
+      // 사용자에게 생성 중임을 인지시키는 짧은 지연
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      results.innerHTML = "";
+
+      currentSets = buildRankedSets();
+
+      currentSets.forEach((entry, index) => {
+
+        const setDiv =
+          document.createElement("div");
+
+        setDiv.className = "lotto-set" + (index === 0 ? " best-set" : "");
+
+
+        // 순위 라벨
+        const setName =
+          document.createElement("div");
+
+        setName.className = "set-name";
+        setName.textContent = rankLabel(index);
+
+        setDiv.appendChild(setName);
+
+
+        // 번호 6개 출력
+        entry.numbers.forEach((number) => {
+
+          const ball =
+            document.createElement("div");
+
+          ball.classList.add("ball");
+          ball.classList.add(
+            getBallColor(number)
+          );
+
+          ball.textContent = number;
+
+          setDiv.appendChild(ball);
+        });
+
+
+        // 패턴 유사도 점수
+        const scoreBadge =
+          document.createElement("div");
+
+        scoreBadge.className = "score-badge";
+        scoreBadge.textContent = entry.score + "점";
+
+        setDiv.appendChild(scoreBadge);
+
+        results.appendChild(setDiv);
+      });
+
+      actions.hidden = false;
+
+      saveToHistory(currentSets);
+      renderHistory();
+
+      button.disabled = false;
+      button.textContent = "🎲 순위별 로또 번호 추천받기";
+    }
+
+
+    // 실제 로또와 비슷한 번호별 색상
+    function getBallColor(number) {
+
+      if (number <= 10)
+        return "yellow";
+
+      if (number <= 20)
+        return "blue";
+
+      if (number <= 30)
+        return "red";
+
+      if (number <= 40)
+        return "gray";
+
+      return "green";
+    }
+
+
+    function formatSetsAsText(rankedSets) {
+      return rankedSets
+        .map((entry, idx) =>
+          rankLabel(idx) + ": " + entry.numbers.join(", ") + " (" + entry.score + "점)"
+        )
+        .join("\n");
+    }
+
+
+    async function copyResults() {
+
+      if (!currentSets.length) {
+        return;
+      }
+
+      const text = formatSetsAsText(currentSets);
+
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("결과가 복사되었습니다.");
+      } catch (error) {
+        showToast("복사에 실패했습니다. 직접 선택해 복사해주세요.");
+      }
+    }
+
+
+    async function shareResults() {
+
+      if (!currentSets.length) {
+        return;
+      }
+
+      const text = formatSetsAsText(currentSets);
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: "로또 번호 추천", text: text });
+        } catch (error) {
+          // 사용자가 공유를 취소한 경우 등은 무시
+        }
+      } else {
+        copyResults();
+      }
+    }
+
+
+    function showToast(message) {
+
+      const toast = document.getElementById("toast");
+
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(showToast._timerId);
+      showToast._timerId = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2000);
+    }
+
+
+    function saveToHistory(sets) {
+
+      try {
+        const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+
+        history.unshift({ sets: sets, timestamp: Date.now() });
+
+        localStorage.setItem(
+          HISTORY_KEY,
+          JSON.stringify(history.slice(0, HISTORY_LIMIT))
+        );
+      } catch (error) {
+        // localStorage를 사용할 수 없는 환경(예: 시크릿 모드)에서는 조용히 무시
+      }
+    }
+
+
+    function loadHistory() {
+
+      try {
+        return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      } catch (error) {
+        return [];
+      }
+    }
+
+
+    function renderHistory() {
+
+      const history = loadHistory();
+      const historySection = document.getElementById("historySection");
+      const historyList = document.getElementById("historyList");
+
+      if (!history.length) {
+        historySection.hidden = true;
+        return;
+      }
+
+      historySection.hidden = false;
+      historyList.innerHTML = "";
+
+      history.forEach((entry) => {
+
+        const item = document.createElement("div");
+        item.className = "history-item";
+
+        const dateLabel = document.createElement("div");
+        dateLabel.className = "history-date";
+        dateLabel.textContent = new Date(entry.timestamp).toLocaleString("ko-KR");
+        item.appendChild(dateLabel);
+
+        entry.sets.forEach((setEntry, idx) => {
+
+          const row = document.createElement("div");
+          row.className = "history-row";
+
+          const label = document.createElement("span");
+          label.className = "mini-rank-label";
+          label.textContent = rankLabel(idx) + " ";
+          row.appendChild(label);
+
+          setEntry.numbers.forEach((n) => {
+            const dot = document.createElement("span");
+            dot.className = "mini-ball " + getBallColor(n);
+            dot.textContent = n;
+            row.appendChild(dot);
+          });
+
+          item.appendChild(row);
+        });
+
+        historyList.appendChild(item);
+      });
+    }
+
+
+    function clearHistory() {
+
+      try {
+        localStorage.removeItem(HISTORY_KEY);
+      } catch (error) {
+        // 무시
+      }
+
+      renderHistory();
+    }
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderHistory();
+
+      const copyrightEl = document.getElementById("copyright");
+      if (copyrightEl) {
+        copyrightEl.textContent = "© " + new Date().getFullYear() + " 로또 번호 생성기";
+      }
+    });
+
+  </script>
+
+</body>
+</html>
