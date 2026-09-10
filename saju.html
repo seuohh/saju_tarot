@@ -309,6 +309,34 @@ footer .fcopy{margin-top:10px;}
 .ad-slot-cta a{color:var(--accent);text-decoration:none;}
 .ad-slot-cta a:hover{text-decoration:underline;}
 
+/* ---- partnership cta (bottom banner) ---- */
+.partner-cta{
+  max-width:920px;margin:56px auto 0;padding:0 20px;
+}
+.partner-cta-inner{
+  background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 16%, var(--paper-raised)), var(--paper-raised) 60%);
+  border:1px solid var(--line-strong);border-radius:22px;box-shadow:var(--shadow);
+  padding:44px 32px;text-align:center;
+}
+.partner-cta-badge{
+  display:inline-block;font-size:var(--fs-tiny);font-weight:800;letter-spacing:0.14em;
+  color:var(--accent-ink);background:var(--accent);border-radius:999px;padding:5px 14px;margin-bottom:18px;
+}
+.partner-cta-inner h2{font-size:var(--fs-h2);font-weight:900;max-width:520px;margin:0 auto;}
+.partner-cta-inner p{max-width:480px;margin:14px auto 0;color:var(--ink-soft);font-size:var(--fs-body);}
+.partner-cta-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px;}
+.partner-cta-tags span{
+  font-size:var(--fs-caption);color:var(--ink-soft);
+  border:1px solid var(--line-strong);border-radius:999px;padding:6px 14px;background:var(--paper);
+}
+.partner-cta-btn{
+  display:inline-block;margin-top:26px;font-weight:700;font-size:15px;color:var(--accent-ink);
+  background:var(--accent);border-radius:11px;padding:14px 30px;text-decoration:none;letter-spacing:0.01em;
+  box-shadow:0 6px 16px -6px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.partner-cta-btn:hover{filter:brightness(1.06);}
+.partner-cta-note{margin-top:16px;font-size:var(--fs-tiny);color:var(--ink-soft);}
+
 /* ---- saved-info note ---- */
 .saved-note{margin-top:12px;font-size:var(--fs-caption);color:var(--ink-soft);}
 .saved-note a{color:var(--ink-soft);text-decoration:underline;margin-left:4px;}
@@ -681,6 +709,17 @@ footer .fcopy{margin-top:10px;}
   <p class="tarot-deck-note" id="txtTarotDeckNote">정통 라이더-웨이트-스미스(Rider–Waite–Smith) 78장 덱(메이저 아르카나 22장 + 마이너 아르카나 56장)을 기반으로 하며, 카드 이미지는 저작권이 만료된 퍼블릭 도메인 원화(위키미디어 공용)를 사용합니다.</p>
 
 </div>
+</div>
+
+<div class="partner-cta">
+  <div class="partner-cta-inner">
+    <div class="partner-cta-badge" id="txtPartnerBadge">PARTNERSHIP</div>
+    <h2 id="txtPartnerHeadline">사주·타로·로또를 한 곳에서 — 브랜드와 함께 성장하고 싶습니다</h2>
+    <p id="txtPartnerBody">광고·배너 노출부터 콘텐츠·데이터 제휴, 브랜드 협업까지 편하게 제안해주세요. 내용을 검토한 뒤 빠르게 이메일로 답변드립니다.</p>
+    <div class="partner-cta-tags" id="partnerTags"></div>
+    <a href="contact.html" class="partner-cta-btn" id="txtPartnerBtn">제휴 문의하기 →</a>
+    <p class="partner-cta-note" id="txtPartnerNote">응답은 보통 영업일 기준 1~2일 이내에 드립니다.</p>
+  </div>
 </div>
 
 <footer>
@@ -1110,6 +1149,12 @@ const STRINGS={
     txtHeroDisclaimer:'양력 생년월일 기준으로 절기(24절기)를 계산해 연주·월주를 정합니다. 음력 입력과 진태양시 보정은 지원하지 않으며, 시간을 모르면 시주 없이 세 기둥만으로 풀이합니다. 결과는 전통 명리학의 해석 방식을 참고한 것으로, 재미와 자기 이해를 위한 참고 자료입니다.',
     txtAdSlot1:'광고 영역 (Advertisement)',
     adSlotCta:'이 자리에 광고를 원하시나요? <a href="contact.html">제휴 문의 →</a>',
+    txtPartnerBadge:'PARTNERSHIP',
+    txtPartnerHeadline:'사주·타로·로또를 한 곳에서 — 브랜드와 함께 성장하고 싶습니다',
+    txtPartnerBody:'광고·배너 노출부터 콘텐츠·데이터 제휴, 브랜드 협업까지 편하게 제안해주세요. 내용을 검토한 뒤 빠르게 이메일로 답변드립니다.',
+    partnerTags:['광고·배너','콘텐츠 제휴','데이터·API','브랜드 협업'],
+    txtPartnerBtn:'제휴 문의하기 →',
+    txtPartnerNote:'응답은 보통 영업일 기준 1~2일 이내에 드립니다.',
     txtAdSlot2:'광고 영역 (Advertisement)',
     txtFormHead:'생년월일 입력',
     txtLabelName:'이름 (선택)',
@@ -1205,6 +1250,12 @@ const STRINGS={
     txtHeroDisclaimer:'Year and month pillars are set using the 24 solar terms based on your solar (Gregorian) birth date. Lunar calendar input and true solar time correction are not supported; if the birth hour is unknown, the reading uses three pillars without an hour pillar. Results follow traditional Four Pillars (BaZi) interpretation and are provided for entertainment and self-reflection only.',
     txtAdSlot1:'Advertisement',
     adSlotCta:'Want to advertise here? <a href="contact.html">Partnership inquiries →</a>',
+    txtPartnerBadge:'PARTNERSHIP',
+    txtPartnerHeadline:'Saju, Tarot, and Lotto in one place — let’s grow together with your brand',
+    txtPartnerBody:'From ad placements to content, data partnerships, and brand collaborations — send us a proposal. We review every message and reply by email.',
+    partnerTags:['Ads & Banners','Content Partnership','Data & API','Brand Collaboration'],
+    txtPartnerBtn:'Get in Touch →',
+    txtPartnerNote:'We usually reply within 1–2 business days.',
     txtAdSlot2:'Advertisement',
     txtFormHead:'Enter Your Birth Details',
     txtLabelName:'Name (optional)',
@@ -1313,6 +1364,12 @@ function applyStaticI18n(){
   document.getElementById('txtAdSlot4').textContent=s.txtAdSlot1;
   document.getElementById('adCta1').innerHTML=s.adSlotCta;
   document.getElementById('adCta3').innerHTML=s.adSlotCta;
+  document.getElementById('txtPartnerBadge').textContent=s.txtPartnerBadge;
+  document.getElementById('txtPartnerHeadline').textContent=s.txtPartnerHeadline;
+  document.getElementById('txtPartnerBody').textContent=s.txtPartnerBody;
+  document.getElementById('txtPartnerBtn').textContent=s.txtPartnerBtn;
+  document.getElementById('txtPartnerNote').textContent=s.txtPartnerNote;
+  document.getElementById('partnerTags').innerHTML=s.partnerTags.map(function(t){return '<span>'+t+'</span>';}).join('');
   document.getElementById('txtTarotLede').textContent=s.txtTarotLede;
   document.getElementById('fTarotName').placeholder=(LANG==='en'?'e.g. Jane Doe':'예: 홍길동');
   document.getElementById('tarotDrawBtn').textContent=s.txtTarotDrawBtn;
