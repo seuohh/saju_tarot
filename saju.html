@@ -591,7 +591,12 @@ footer .fcopy{margin-top:10px;}
     <div class="hanja-strip" style="margin-top:6px;margin-bottom:2px;">日運</div>
     <p class="lotto-lede" id="txtFortuneNote" style="margin-top:8px;">오늘 날짜의 일진(日辰)을 기준으로 계산되며, 매일 자정이 지나면 자동으로 바뀝니다.</p>
     <div class="fortune-cards" id="fortuneCards"></div>
-    <div class="domains" id="fortuneDomains" style="margin-top:14px;"></div>
+
+    <h2 id="txtYearFortuneHead" style="font-size:var(--fs-h2);font-weight:900;margin-top:44px;">연간 운세</h2>
+    <div class="hanja-strip" style="margin-top:6px;margin-bottom:2px;">歲運</div>
+    <p class="lotto-lede" id="txtYearFortuneNote" style="margin-top:8px;">올해 세운(歲運)을 기준으로 자동 계산됩니다.</p>
+    <div class="fortune-cards" id="yearFortuneCards"></div>
+    <div class="domains" id="yearFortuneDomains" style="margin-top:14px;"></div>
 
     <h3 id="txtCelebHead" class="celeb-head">나와 같은 일간을 가진 유명인</h3>
     <div class="celeb-card" id="celebCard"></div>
@@ -1116,133 +1121,179 @@ const DAY_TENGOD_TEXT_EN={
     tip:'Embrace the chance to learn, but try to make it your own rather than leaning on others.'}
 };
 
-/* ================= 오늘의 운세: 상황별(직업/연애/재물/가족/친구/건강) 해설 =================
-   위 DAY_TENGOD_TEXT가 오늘의 전체 흐름을 한 문단으로 요약한다면, 이
-   데이터는 그 흐름을 상황별 풀이와 동일한 6개 영역으로 세분화해
-   "오늘은~" 톤으로 풀어낸다. */
-const DAY_TENGOD_DOMAIN_TEXT={
-  비견:{career:'오늘은 남의 도움 없이 스스로 판단해서 밀어붙이면 좋은 성과를 내는 날입니다.',
-    love:'오늘은 주도권을 쥐고 다가가면 좋은 하루지만, 상대와의 기 싸움은 피하세요.',
-    wealth:'오늘은 스스로 벌어들이는 힘은 강하지만, 동료·형제와 얽힌 지출은 조심하세요.',
-    family:'오늘은 가족 안에서 자기 몫을 분명히 하고 싶어지는 날입니다.',
-    friends:'오늘은 의리 있는 친구에게 힘을 받을 수 있지만, 자존심 대결은 피하세요.',
-    health:'오늘은 활동적으로 움직이기 좋지만, 무리해서 밀어붙이면 탈이 날 수 있어요.'},
-  겁재:{career:'오늘은 경쟁이 붙는 상황에서 오히려 두각을 나타내는 날입니다.',
-    love:'오늘은 매력이 넘치지만 소유욕이 강해질 수 있으니 한 발 물러서 보세요.',
-    wealth:'오늘은 큰돈을 만질 기회가 보이지만, 동업·보증 관련 결정은 미루는 게 좋습니다.',
-    family:'오늘은 가족 중 누군가와 비교당하거나 경쟁하는 기분이 들 수 있습니다.',
-    friends:'오늘은 사람이 몰리는 날이지만, 이해관계로 관계가 틀어지지 않게 조심하세요.',
-    health:'오늘은 승부욕에 몸을 혹사하기 쉬우니 의식적으로 쉬어가세요.'},
-  식신:{career:'오늘은 아이디어를 구체적인 결과물로 풀어내기 좋은, 여유 있는 하루입니다.',
-    love:'오늘은 다정하고 편안한 태도로 상대를 즐겁게 해줄 수 있는 날입니다.',
-    wealth:'오늘은 꾸준히 하던 일이 자연스럽게 돈으로 이어지는 흐름입니다.',
-    family:'오늘은 가족, 특히 자녀나 손아랫사람과 함께하는 시간이 즐거운 날입니다.',
-    friends:'오늘은 취미나 관심사를 나누는 사람들과 편안한 시간을 보내기 좋습니다.',
-    health:'오늘은 몸 상태가 무난하지만, 여유를 즐기다 과식하지 않도록 주의하세요.'},
-  상관:{career:'오늘은 개성과 재기를 발휘하기 좋은 날이지만, 기존 방식과 부딪힐 수 있습니다.',
-    love:'오늘은 솔직한 매력이 빛나지만, 직설적인 말이 상대를 서운하게 할 수 있습니다.',
-    wealth:'오늘은 순발력으로 기회를 만들 수 있지만, 즉흥적인 지출은 조심하세요.',
-    family:'오늘은 하고 싶은 말을 참지 못해 가족과 부딪힐 수 있는 날입니다.',
-    friends:'오늘은 재치 있는 모습으로 주목받지만, 날카로운 농담은 삼가세요.',
-    health:'오늘은 신경이 예민해지기 쉬우니 감정 기복을 다스리는 데 신경 쓰세요.'},
-  편재:{career:'오늘은 사업 확장이나 새로운 기회가 눈에 띄는 날입니다.',
-    love:'오늘은 화끈하고 통 큰 매력으로 관계에 활력을 줄 수 있는 날입니다.',
-    wealth:'오늘은 돈의 흐름이 빨라지는 날로, 씀씀이도 함께 커질 수 있으니 조심하세요.',
-    family:'오늘은 가족을 위해 통 크게 쓰고 싶어지는 날입니다.',
-    friends:'오늘은 사람들에게 베풀고 싶어지는 날이니 그 마음이 관계를 좋게 만듭니다.',
-    health:'오늘은 활력이 넘치지만, 유흥이나 과소비성 활동은 건강에도 무리를 줄 수 있어요.'},
-  정재:{career:'오늘은 꾸준히 해온 일을 착실히 마무리하기 좋은 날입니다.',
-    love:'오늘은 안정적이고 신뢰감 있는 태도로 관계를 다지기 좋은 하루입니다.',
-    wealth:'오늘은 저축이나 계획적인 지출 관리에 좋은 흐름입니다.',
-    family:'오늘은 가족을 위해 성실하게 역할을 다하고 싶어지는 날입니다.',
-    friends:'오늘은 오래 알고 지낸 사람과의 관계가 더 단단해지는 날입니다.',
-    health:'오늘은 규칙적인 생활 습관이 몸에 좋은 영향을 주는 날입니다.'},
-  편관:{career:'오늘은 책임이 무거운 자리에서 오히려 실력을 발휘할 수 있는 날입니다.',
-    love:'오늘은 관계에 긴장감이 흐를 수 있으니 감정적인 대응은 피하세요.',
-    wealth:'오늘은 큰 지출이나 투자 결정은 특히 신중하게 접근해야 하는 날입니다.',
-    family:'오늘은 가족 간 의견 충돌로 긴장이 생길 수 있는 날입니다.',
-    friends:'오늘은 대인관계에서 부담스러운 요청을 받을 수 있으니 선을 지키세요.',
-    health:'오늘은 스트레스가 몸에 영향을 줄 수 있으니 긴장을 푸는 시간이 필요합니다.'},
-  정관:{career:'오늘은 공식적인 자리에서 인정받거나 책임을 맡기 좋은 날입니다.',
-    love:'오늘은 진지하고 예의 바른 태도가 관계에 신뢰를 더하는 날입니다.',
-    wealth:'오늘은 원칙대로 처리하는 금전 문제(세금·계약 등)에 유리한 하루입니다.',
-    family:'오늘은 집안 어른이나 규칙을 존중하면 관계가 순조로운 날입니다.',
-    friends:'오늘은 예의와 신뢰를 지키는 태도가 대인관계에 좋은 인상을 남깁니다.',
-    health:'오늘은 규칙적인 병원 진료나 건강 검진을 챙기기에도 좋은 날입니다.'},
-  편인:{career:'오늘은 남들과 다른 방식으로 접근한 아이디어가 빛을 발할 수 있는 날입니다.',
-    love:'오늘은 혼자만의 생각에 빠져 상대에게 무심해 보일 수 있으니 주의하세요.',
-    wealth:'오늘은 즉흥적인 지출보다 계획을 세우는 데 시간을 쓰는 게 좋은 날입니다.',
-    family:'오늘은 가족과 거리를 두고 싶어지는 날이니, 적당한 선에서 조율하세요.',
-    friends:'오늘은 깊이 있는 대화를 나눌 한 사람과의 시간이 더 의미 있는 날입니다.',
-    health:'오늘은 생각이 많아 잠을 설칠 수 있으니 마음을 비우는 시간이 필요합니다.'},
-  정인:{career:'오늘은 배움이나 자격증 공부처럼 실력을 다지는 활동에 유리한 날입니다.',
-    love:'오늘은 서로를 이해하고 다독여주는 편안한 관계가 힘이 되는 날입니다.',
-    wealth:'오늘은 무리한 지출보다 배움이나 자기계발에 돈을 쓰는 것이 유리합니다.',
-    family:'오늘은 가족에게 도움을 받거나 마음의 안정을 얻기 좋은 날입니다.',
-    friends:'오늘은 믿을 수 있는 사람의 조언이 큰 힘이 되는 날입니다.',
-    health:'오늘은 충분한 휴식과 안정이 회복에 도움을 주는 날입니다.'}
+/* ================= 연간 운세(歲運) 전용 해설 =================
+   위 DAY_TENGOD_TEXT가 "오늘은/하루" 단위라면, 이 데이터는 "올해는/한 해"
+   단위로 세운(歲運)의 전체 흐름을 한 문단으로 요약한다. */
+const YEAR_TENGOD_TEXT={
+  비견:{flow:'나와 같은 기운이 들어오는 해로, 독립심과 추진력이 커지고 스스로 결정해서 밀고 나가는 힘이 강해집니다.',
+    tip:'새로운 도전이나 자기 이름을 건 일을 시작하기 좋은 흐름이지만, 형제·동료·경쟁자와의 마찰이나 지출 분산이 생기기 쉬우니 협업에서는 양보와 조율이 필요합니다.'},
+  겁재:{flow:'승부욕과 추진력이 강해지는 해로, 판을 뒤집는 과감한 선택을 하고 싶어지는 시기입니다.',
+    tip:'경쟁이 치열한 도전에서 오히려 두각을 나타낼 수 있지만, 동업·보증·무리한 투자로 인한 재물 손실 위험이 커지니 계약과 지출은 특히 신중히 결정하세요.'},
+  식신:{flow:'표현력과 창의력이 풍부해지고 마음의 여유가 생기는 해로, 아이디어를 구체적인 결과물로 풀어내기 좋은 시기입니다.',
+    tip:'기획·창작·교육 등 꾸준히 쌓아 올리는 일에서 성과가 자연스럽게 따라오지만, 여유를 즐기다 나태해지거나 과식으로 이어지지 않도록 몸을 움직이는 습관을 챙기세요.'},
+  상관:{flow:'재기와 표현력이 두드러지는 해로, 기존 틀을 깨고 자기만의 방식을 밀어붙이고 싶어지는 시기입니다.',
+    tip:'예술·기획·자기 사업처럼 개성을 드러내는 분야에서 재능이 빛나지만, 즉흥적인 발언이나 지출로 구설·마찰이 생기기 쉬우니 한 번 더 생각하고 표현하세요.'},
+  편재:{flow:'돈의 흐름이 빨라지는 해로, 기회를 잡아 크게 움직이고 싶은 마음이 커지는 시기입니다.',
+    tip:'사업 확장이나 투자 기회가 찾아올 수 있지만 씀씀이도 함께 커지기 쉬우니, 큰 지출 전에는 계획을 한 번 더 점검하세요.'},
+  정재:{flow:'성실하게 쌓아온 노력이 안정적인 결실로 이어지는 해로, 꾸준함이 특히 힘을 발휘하는 시기입니다.',
+    tip:'저축이나 안정적인 수입원을 다지기에 좋은 흐름이니, 무리한 확장보다는 지금 하는 일을 착실히 다지는 쪽에 무게를 두세요.'},
+  편관:{flow:'나를 강하게 억제하는 기운이 들어오는 해로, 위기 대응력과 승부 근성이 시험받는 시기입니다.',
+    tip:'책임이 무겁거나 경쟁이 치열한 자리에서 오히려 실력을 발휘할 수 있지만, 무리한 투자나 사업 확장은 부담이 커질 수 있으니 신중히 접근하세요.'},
+  정관:{flow:'책임과 명예가 따라오는 해로, 조직이나 사회적 위치에서 인정받을 기회가 커지는 시기입니다.',
+    tip:'승진·자격·계약처럼 공식적인 성과를 얻기 좋은 흐름이니 원칙을 지키며 신뢰를 쌓아가되, 규칙과 절차를 소홀히 하지 않도록 하세요.'},
+  편인:{flow:'생각이 많아지고 혼자만의 시간이 필요해지는 해로, 색다른 공부나 새로운 관점을 받아들이기 좋은 시기입니다.',
+    tip:'자격증·전문 지식·연구처럼 깊이 파고드는 활동에서 얻는 게 많지만, 생각에 갇혀 결정을 미루지 않도록 실행에도 신경 쓰세요.'},
+  정인:{flow:'주변의 도움과 배움의 기운이 들어오는 해로, 마음의 안정을 찾고 실력을 다지기 좋은 시기입니다.',
+    tip:'공부·자격·인맥을 통한 지원을 받기 좋은 흐름이니 배움의 기회를 적극적으로 잡되, 의존하기보다는 배운 것을 자기 것으로 만드는 데 집중하세요.'}
 };
-const DAY_TENGOD_DOMAIN_TEXT_EN={
-  비견:{career:"Today favors trusting your own judgment and pushing forward without relying on others.",
-    love:"Taking the lead today works well, but watch for a power struggle with your partner.",
-    wealth:"You're strong at earning on your own today, but be careful with spending tied to peers or siblings.",
-    family:"Today you feel the urge to stake out your own place within the family.",
-    friends:"A loyal friend could lift you up today, but avoid a clash of egos.",
-    health:"A good day to stay active, but pushing too hard could cause a strain."},
-  겁재:{career:"Today you may stand out precisely in a competitive situation.",
-    love:"You're magnetic today, but possessiveness could creep in — try giving a little space.",
-    wealth:"A chance at real money may show up today, but hold off on partnership or guarantee decisions.",
-    family:"You might feel compared to or in competition with a family member today.",
-    friends:"People are drawn to you today, but watch that shared interests don't sour a friendship.",
-    health:"Competitive drive could push your body too hard today — rest on purpose."},
-  식신:{career:"A relaxed day, good for turning an idea into something concrete.",
-    love:"Your warm, easygoing manner could genuinely delight your partner today.",
-    wealth:"Steady, ongoing work naturally turns into income today.",
-    family:"A pleasant day to spend time with family, especially children or younger relatives.",
-    friends:"A good day for easy time with people who share your hobbies or interests.",
-    health:"Your condition is steady today, just watch for overeating while you relax."},
-  상관:{career:"A good day to show your originality and wit, though it may clash with the usual way of doing things.",
-    love:"Your candid charm shines today, but blunt words could hurt your partner's feelings.",
-    wealth:"Quick thinking could create an opportunity today, but watch impulsive spending.",
-    family:"You may struggle to hold your tongue with family today, risking friction.",
-    friends:"Your wit draws attention today — just go easy on sharp jokes.",
-    health:"Nerves may run a little raw today — keep an eye on your mood swings."},
-  편재:{career:"A day when a business opportunity or expansion may catch your eye.",
-    love:"Your bold, generous charm could bring real energy to the relationship today.",
-    wealth:"Money moves fast today, but spending could grow just as fast — be mindful.",
-    family:"You may feel like spending generously on family today.",
-    friends:"A generous mood today works in your favor with friends.",
-    health:"Energy runs high today, but excess or overindulgence could strain your health too."},
-  정재:{career:"A good day to steadily wrap up work you've been consistently doing.",
-    love:"A stable, trustworthy attitude helps solidify the relationship today.",
-    wealth:"A favorable day for saving or careful, planned spending.",
-    family:"You feel motivated to diligently fulfill your role for the family today.",
-    friends:"A long-standing relationship grows stronger today.",
-    health:"A regular routine has a good effect on your body today."},
-  편관:{career:"Today you may actually perform well under heavy responsibility.",
-    love:"Tension may run through the relationship today — avoid reacting emotionally.",
-    wealth:"Approach any big spending or investment decision with extra caution today.",
-    family:"Disagreement within the family could create tension today.",
-    friends:"You may face an uncomfortable request in a relationship today — hold your boundary.",
-    health:"Stress could take a toll on your body today — make time to unwind."},
-  정관:{career:"A good day to be recognized or take on responsibility in a formal setting.",
-    love:"A sincere, respectful attitude adds real trust to the relationship today.",
-    wealth:"A favorable day for formal money matters like taxes or contracts.",
-    family:"Respecting family elders or house rules keeps things smooth today.",
-    friends:"Courtesy and reliability leave a good impression in your relationships today.",
-    health:"Also a good day to schedule a regular checkup or medical appointment."},
-  편인:{career:"An unconventional idea could shine today.",
+const YEAR_TENGOD_TEXT_EN={
+  비견:{flow:'A year when energy matching your own day master arrives, sharpening your independence and drive to push things forward on your own terms.',
+    tip:'Good timing to start something new or step out on your own, but watch for friction with peers, siblings, or rivals — and for money spreading thin through shared ventures.'},
+  겁재:{flow:'A year that stirs up competitive drive and a pull toward bold, game-changing moves.',
+    tip:'You may shine in head-to-head competition, but the risk of loss through partnerships, guarantees, or overreaching investments rises — review contracts and spending with extra care.'},
+  식신:{flow:'A year of creative flow and greater ease, well suited to turning your ideas into something concrete.',
+    tip:'Steady work in planning, creative, or teaching fields tends to pay off naturally — just watch that the relaxed mood doesn\'t slide into overindulgence or inactivity.'},
+  상관:{flow:'A year when wit and self-expression come to the fore, tempting you to break convention and do things your own way.',
+    tip:'Talent can shine in creative, planning, or entrepreneurial work, but impulsive words or spending may invite friction or rumor — pause before you speak or spend.'},
+  편재:{flow:'A year when money moves quickly, sparking the urge to seize opportunities and make bigger moves.',
+    tip:'Business expansion or investment opportunities may appear, but spending tends to grow just as fast — double-check the plan before any large outlay.'},
+  정재:{flow:'A year when steady effort turns into stable results, rewarding consistency more than usual.',
+    tip:'A good stretch for saving or securing reliable income — favor consolidating what you already have over chasing rapid expansion.'},
+  편관:{flow:'A year of strong pressure that tests your resilience and competitive nerve.',
+    tip:'You may perform well under heavy responsibility or fierce competition, but big investments or expansion carry more risk than usual — proceed carefully.'},
+  정관:{flow:'A year that brings responsibility and recognition, with more chances to be acknowledged within an organization or your community.',
+    tip:'Good timing for formal milestones like promotions, certifications, or contracts — build trust by following the rules rather than cutting corners.'},
+  편인:{flow:'A reflective year that calls for time alone, well suited to unconventional learning or new perspectives.',
+    tip:'Deep-dive activities like certification, specialized study, or research pay off, but don\'t let overthinking delay decisions — make room for action too.'},
+  정인:{flow:'A supportive year for learning, bringing help from mentors and a sense of stability.',
+    tip:'A good stretch to gain support through study, credentials, or your network — embrace the learning, but focus on making it your own rather than leaning on others.'}
+};
+
+/* ================= 연간 운세: 상황별(직업/연애/재물/가족/친구/건강) 해설 =================
+   상황별 풀이와 동일한 6개 영역을 "올해는~" 톤으로 세분화해 풀어낸다. */
+const YEAR_TENGOD_DOMAIN_TEXT={
+  비견:{career:'올해는 남의 도움 없이 스스로 판단해서 밀어붙이면 좋은 성과를 내는 해입니다.',
+    love:'올해는 주도권을 쥐고 다가가면 관계가 진전되는 해지만, 상대와의 기 싸움은 조심하세요.',
+    wealth:'올해는 스스로 벌어들이는 힘은 강하지만, 동료·형제와 얽힌 지출은 조심해야 하는 해입니다.',
+    family:'올해는 가족 안에서 자기 몫과 역할을 분명히 하고 싶어지는 해입니다.',
+    friends:'올해는 의리 있는 친구에게 힘을 받을 수 있지만, 자존심 대결로 소원해지지 않게 주의하세요.',
+    health:'올해는 활동적으로 움직이기 좋은 해지만, 무리해서 밀어붙이면 탈이 날 수 있어요.'},
+  겁재:{career:'올해는 경쟁이 치열한 상황에서 오히려 두각을 나타내는 해입니다.',
+    love:'올해는 매력이 넘치지만 소유욕이 강해질 수 있으니 여유를 두는 것이 좋습니다.',
+    wealth:'올해는 큰돈을 만질 기회가 보이지만, 동업·보증 관련 결정은 특히 신중히 하세요.',
+    family:'올해는 가족 중 누군가와 비교당하거나 경쟁하는 구도가 생기기 쉬운 해입니다.',
+    friends:'올해는 사람이 많이 모이는 해지만, 이해관계로 관계가 틀어지지 않게 조심하세요.',
+    health:'올해는 승부욕에 몸을 혹사하기 쉬우니 의식적으로 쉬는 시간을 가지세요.'},
+  식신:{career:'올해는 아이디어를 구체적인 결과물로 풀어내기 좋은, 여유 있는 해입니다.',
+    love:'올해는 다정하고 편안한 태도로 관계에 만족감을 더할 수 있는 해입니다.',
+    wealth:'올해는 꾸준히 하던 일이 자연스럽게 돈으로 이어지는 흐름입니다.',
+    family:'올해는 가족, 특히 자녀나 손아랫사람과 함께하는 시간이 즐거운 해입니다.',
+    friends:'올해는 취미나 관심사를 나누는 사람들과 편안한 관계를 넓히기 좋습니다.',
+    health:'올해는 몸 상태가 무난하지만, 여유를 즐기다 과식·나태로 흐르지 않게 주의하세요.'},
+  상관:{career:'올해는 개성과 재기를 발휘하기 좋은 해지만, 기존 방식과 부딪힐 수 있습니다.',
+    love:'올해는 솔직한 매력이 빛나지만, 직설적인 말이 상대를 서운하게 할 수 있습니다.',
+    wealth:'올해는 순발력으로 기회를 만들 수 있지만, 즉흥적인 지출은 조심하세요.',
+    family:'올해는 하고 싶은 말을 참지 못해 가족과 부딪힐 수 있는 해입니다.',
+    friends:'올해는 재치 있는 모습으로 주목받지만, 날카로운 언행은 삼가는 게 좋습니다.',
+    health:'올해는 신경이 예민해지기 쉬우니 감정 기복을 다스리는 데 신경 쓰세요.'},
+  편재:{career:'올해는 사업 확장이나 새로운 기회가 눈에 띄는 해입니다.',
+    love:'올해는 화끈하고 통 큰 매력으로 관계에 활력을 줄 수 있는 해입니다.',
+    wealth:'올해는 돈의 흐름이 빨라지는 해로, 씀씀이도 함께 커질 수 있으니 조심하세요.',
+    family:'올해는 가족을 위해 통 크게 쓰고 싶어지는 해입니다.',
+    friends:'올해는 사람들에게 베풀고 싶어지는 해이니 그 마음이 관계를 좋게 만듭니다.',
+    health:'올해는 활력이 넘치지만, 유흥이나 과소비성 활동은 건강에도 무리를 줄 수 있어요.'},
+  정재:{career:'올해는 꾸준히 해온 일을 착실히 마무리하기 좋은 해입니다.',
+    love:'올해는 안정적이고 신뢰감 있는 태도로 관계를 다지기 좋은 해입니다.',
+    wealth:'올해는 저축이나 계획적인 지출 관리에 좋은 흐름입니다.',
+    family:'올해는 가족을 위해 성실하게 역할을 다하고 싶어지는 해입니다.',
+    friends:'올해는 오래 알고 지낸 사람과의 관계가 더 단단해지는 해입니다.',
+    health:'올해는 규칙적인 생활 습관이 몸에 좋은 영향을 주는 해입니다.'},
+  편관:{career:'올해는 책임이 무거운 자리에서 오히려 실력을 발휘할 수 있는 해입니다.',
+    love:'올해는 관계에 긴장감이 흐를 수 있으니 감정적인 대응은 피하세요.',
+    wealth:'올해는 큰 지출이나 투자 결정은 특히 신중하게 접근해야 하는 해입니다.',
+    family:'올해는 가족 간 의견 충돌로 긴장이 생기기 쉬운 해입니다.',
+    friends:'올해는 대인관계에서 부담스러운 요청을 받을 수 있으니 선을 지키세요.',
+    health:'올해는 스트레스가 몸에 영향을 줄 수 있으니 긴장을 푸는 시간이 필요합니다.'},
+  정관:{career:'올해는 공식적인 자리에서 인정받거나 책임을 맡기 좋은 해입니다.',
+    love:'올해는 진지하고 예의 바른 태도가 관계에 신뢰를 더하는 해입니다.',
+    wealth:'올해는 원칙대로 처리하는 금전 문제(세금·계약 등)에 유리한 해입니다.',
+    family:'올해는 집안 어른이나 규칙을 존중하면 관계가 순조로운 해입니다.',
+    friends:'올해는 예의와 신뢰를 지키는 태도가 대인관계에 좋은 인상을 남깁니다.',
+    health:'올해는 규칙적인 건강 검진이나 병원 진료를 챙기기에도 좋은 해입니다.'},
+  편인:{career:'올해는 남들과 다른 방식으로 접근한 아이디어가 빛을 발할 수 있는 해입니다.',
+    love:'올해는 혼자만의 생각에 빠져 상대에게 무심해 보일 수 있으니 주의하세요.',
+    wealth:'올해는 즉흥적인 지출보다 계획을 세우는 데 시간을 쓰는 것이 유리합니다.',
+    family:'올해는 가족과 거리를 두고 싶어지는 해이니, 적당한 선에서 조율하세요.',
+    friends:'올해는 깊이 있는 대화를 나눌 한 사람과의 관계가 더 의미 있는 해입니다.',
+    health:'올해는 생각이 많아 잠을 설칠 수 있으니 마음을 비우는 시간이 필요합니다.'},
+  정인:{career:'올해는 배움이나 자격증 공부처럼 실력을 다지는 활동에 유리한 해입니다.',
+    love:'올해는 서로를 이해하고 다독여주는 편안한 관계가 힘이 되는 해입니다.',
+    wealth:'올해는 무리한 지출보다 배움이나 자기계발에 돈을 쓰는 것이 유리합니다.',
+    family:'올해는 가족에게 도움을 받거나 마음의 안정을 얻기 좋은 해입니다.',
+    friends:'올해는 믿을 수 있는 사람의 조언이 큰 힘이 되는 해입니다.',
+    health:'올해는 충분한 휴식과 안정이 회복에 도움을 주는 해입니다.'}
+};
+const YEAR_TENGOD_DOMAIN_TEXT_EN={
+  비견:{career:"This year favors trusting your own judgment and pushing forward without relying on others.",
+    love:"Taking the lead this year moves the relationship forward, but watch for a power struggle with your partner.",
+    wealth:"You're strong at earning on your own this year, but be careful with spending tied to peers or siblings.",
+    family:"This year you feel the urge to stake out your own place within the family.",
+    friends:"A loyal friend could lift you up this year, but avoid a clash of egos that cools the friendship.",
+    health:"A good year to stay active, but pushing too hard could cause a strain."},
+  겁재:{career:"This year you may stand out precisely in a competitive situation.",
+    love:"You're magnetic this year, but possessiveness could creep in — give it some room to breathe.",
+    wealth:"A chance at real money may show up this year, but hold off on partnership or guarantee decisions.",
+    family:"You might feel compared to or in competition with a family member this year.",
+    friends:"People are drawn to you this year, but watch that shared interests don't sour a friendship.",
+    health:"Competitive drive could push your body too hard this year — rest on purpose."},
+  식신:{career:"A relaxed year, good for turning an idea into something concrete.",
+    love:"Your warm, easygoing manner adds real satisfaction to the relationship this year.",
+    wealth:"Steady, ongoing work naturally turns into income this year.",
+    family:"An enjoyable year to spend time with family, especially children or younger relatives.",
+    friends:"A good year to widen easy relationships with people who share your hobbies or interests.",
+    health:"Your condition is steady this year, just watch for overeating or slacking off while you relax."},
+  상관:{career:"A good year to show your originality and wit, though it may clash with the usual way of doing things.",
+    love:"Your candid charm shines this year, but blunt words could hurt your partner's feelings.",
+    wealth:"Quick thinking could create an opportunity this year, but watch impulsive spending.",
+    family:"You may struggle to hold your tongue with family this year, risking friction.",
+    friends:"Your wit draws attention this year — just go easy on sharp words.",
+    health:"Nerves may run a little raw this year — keep an eye on your mood swings."},
+  편재:{career:"A year when a business opportunity or expansion may catch your eye.",
+    love:"Your bold, generous charm could bring real energy to the relationship this year.",
+    wealth:"Money moves fast this year, but spending could grow just as fast — be mindful.",
+    family:"You may feel like spending generously on family this year.",
+    friends:"A generous mood this year works in your favor with friends.",
+    health:"Energy runs high this year, but excess or overindulgence could strain your health too."},
+  정재:{career:"A good year to steadily wrap up work you've been consistently doing.",
+    love:"A stable, trustworthy attitude helps solidify the relationship this year.",
+    wealth:"A favorable year for saving or careful, planned spending.",
+    family:"You feel motivated to diligently fulfill your role for the family this year.",
+    friends:"A long-standing relationship grows stronger this year.",
+    health:"A regular routine has a good effect on your body this year."},
+  편관:{career:"This year you may actually perform well under heavy responsibility.",
+    love:"Tension may run through the relationship this year — avoid reacting emotionally.",
+    wealth:"Approach any big spending or investment decision with extra caution this year.",
+    family:"Disagreement within the family could create tension this year.",
+    friends:"You may face an uncomfortable request in a relationship this year — hold your boundary.",
+    health:"Stress could take a toll on your body this year — make time to unwind."},
+  정관:{career:"A good year to be recognized or take on responsibility in a formal setting.",
+    love:"A sincere, respectful attitude adds real trust to the relationship this year.",
+    wealth:"A favorable year for formal money matters like taxes or contracts.",
+    family:"Respecting family elders or house rules keeps things smooth this year.",
+    friends:"Courtesy and reliability leave a good impression in your relationships this year.",
+    health:"Also a good year to schedule a regular checkup or medical appointment."},
+  편인:{career:"An unconventional idea could shine this year.",
     love:"Getting lost in your own thoughts could make you seem distant — be mindful.",
-    wealth:"Better to spend time planning today than making an impulsive purchase.",
-    family:"You may want distance from family today — find a reasonable balance.",
-    friends:"Deep conversation with one person means more than a crowd today.",
+    wealth:"Better to spend time planning this year than making an impulsive purchase.",
+    family:"You may want distance from family this year — find a reasonable balance.",
+    friends:"Deep conversation with one person means more than a crowd this year.",
     health:"An overactive mind could disturb your sleep — make time to clear it."},
-  정인:{career:"A favorable day for study or certification-type work that builds real skill.",
-    love:"A calm relationship built on mutual understanding gives you strength today.",
-    wealth:"Better to spend on learning or self-development than on excess today.",
-    family:"A good day to receive support or find emotional stability from family.",
-    friends:"Advice from someone you trust carries real weight today.",
-    health:"Plenty of rest and stability aid your recovery today."}
+  정인:{career:"A favorable year for study or certification-type work that builds real skill.",
+    love:"A calm relationship built on mutual understanding gives you strength this year.",
+    wealth:"Better to spend on learning or self-development than on excess this year.",
+    family:"A good year to receive support or find emotional stability from family.",
+    friends:"Advice from someone you trust carries real weight this year.",
+    health:"Plenty of rest and stability aid your recovery this year."}
 };
 
 const DOMAIN_META=[
@@ -1315,7 +1366,10 @@ const STRINGS={
     daeunCurrent:'현재',
     daeunNote:'대운은 월주를 기준으로 10년 단위로 이어지는 큰 흐름으로, 절입일까지의 일수를 3일=1년으로 환산해 시작 나이를 정합니다. 성별과 연간(年干)의 음양에 따라 순행·역행이 갈립니다.',
     txtFortuneNote:'오늘 날짜의 일진(日辰)을 기준으로 계산되며, 매일 자정이 지나면 자동으로 바뀝니다.',
+    txtYearFortuneHead:'연간 운세',
+    txtYearFortuneNote:'올해 세운(歲運)을 기준으로 자동 계산됩니다.',
     fortuneToday:(dateLabel)=>dateLabel+' 오늘의 운세(日運)',
+    fortuneYear:(y)=>y+'년 세운(歲運)',
     fortuneGanzhiPrefix:'일간 기준 ',
     celebNoteFn:(dayLabel,others)=>dayLabel+' 일간을 가진 대표적인 인물이에요.'+(others.length?' 이 외에도 '+others.join(', ')+' 님도 같은 일간을 타고났어요.':''),
     celebEmpty:'아직 같은 일간의 유명인 데이터가 없어요.',
@@ -1414,7 +1468,10 @@ const STRINGS={
     daeunCurrent:'Now',
     daeunNote:'Daeun are 10-year arcs that continue on from your month pillar. The starting age is set by converting the days to the nearest solar-term boundary at a rate of 3 days per year. Whether the sequence moves forward or in reverse depends on your gender and the yin-yang polarity of your year stem.',
     txtFortuneNote:"Calculated from today's day pillar (日辰) — it automatically updates after midnight each day.",
+    txtYearFortuneHead:'Yearly Fortune',
+    txtYearFortuneNote:"Automatically calculated from this year's ganzhi (歲運).",
     fortuneToday:(dateLabel)=>dateLabel+" Fortune (日運)",
+    fortuneYear:(y)=>y+' Yearly Fortune (歲運)',
     fortuneGanzhiPrefix:'relative to day master: ',
     celebNoteFn:(dayLabel,others)=>'A well-known figure who shares your '+dayLabel+' day master.'+(others.length?' '+others.join(', ')+' also share this day master.':''),
     celebEmpty:'No matching celebrity data yet for this day master.',
@@ -1462,7 +1519,7 @@ function applyStaticI18n(){
   document.documentElement.lang=LANG;
   ['txtEyebrow','txtTitle','txtHeroDisclaimer','txtAdSlot1','txtAdSlot2','txtFormHead','txtLabelName',
    'txtLabelDate','txtLabelTime','txtHourUnknown','txtLabelGender','txtGenderMale','txtGenderFemale',
-   'txtSubmitBtn','txtSavedNote','txtDomainsHead','txtFortuneHead','txtFortuneNote',
+   'txtSubmitBtn','txtSavedNote','txtDomainsHead','txtFortuneHead','txtFortuneNote','txtYearFortuneHead','txtYearFortuneNote',
    'txtCelebHead','txtLottoHead','txtFooterMain',
    'tabSajuLabel','tabTarotLabel',
    'txtTarotEyebrow','txtTarotTitle','txtTarotHeroDisclaimer','txtTarotFormHead','txtTarotLabelName',
@@ -1738,29 +1795,35 @@ function fortuneCard(glyph,title,gz,dom,textKo,textEn){
 function renderFortune(profile){
   const now=new Date();
   const todayProfile=computeFourPillars(now.getFullYear(),now.getMonth()+1,now.getDate(),12,0,false);
+  const yearProfile=computeFourPillars(now.getFullYear(),7,15,12,0,false);
 
   const day=profile.day.stem;
   const dGz=todayProfile.day;
   const dDom=tenGod(day,dGz.stem);
+  const yGz=yearProfile.year;
+  const yDom=tenGod(day,yGz.stem);
 
   const s=STRINGS[LANG];
   const dateLabel=LANG==='en'
     ?now.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})
     :now.getFullYear()+'년 '+(now.getMonth()+1)+'월 '+now.getDate()+'일';
 
+  document.getElementById('txtFortuneHead').textContent=(LANG==='en'?"Today's Fortune":'오늘의 운세')+' ('+dateLabel+')';
   document.getElementById('fortuneCards').innerHTML=fortuneCard('日',s.fortuneToday(dateLabel),dGz,dDom,DAY_TENGOD_TEXT,DAY_TENGOD_TEXT_EN);
 
-  const DT=LANG==='en'?DAY_TENGOD_DOMAIN_TEXT_EN:DAY_TENGOD_DOMAIN_TEXT;
-  const domainText=DT[dDom];
-  let dh='';
+  document.getElementById('yearFortuneCards').innerHTML=fortuneCard('歲',s.fortuneYear(now.getFullYear()),yGz,yDom,YEAR_TENGOD_TEXT,YEAR_TENGOD_TEXT_EN);
+
+  const YDT=LANG==='en'?YEAR_TENGOD_DOMAIN_TEXT_EN:YEAR_TENGOD_DOMAIN_TEXT;
+  const yearDomainText=YDT[yDom];
+  let yh='';
   DOMAIN_META.forEach(dm=>{
-    dh+=`<div class="domain-card">
+    yh+=`<div class="domain-card">
       <div class="dhan">${dm.glyph}</div>
       <h4>${LANG==='en'?dm.titleEn:dm.title}</h4>
-      <p>${domainText[dm.key]}</p>
+      <p>${yearDomainText[dm.key]}</p>
     </div>`;
   });
-  document.getElementById('fortuneDomains').innerHTML=dh;
+  document.getElementById('yearFortuneDomains').innerHTML=yh;
 }
 
 /* ================= 사주와 같은 일간을 가진 유명인 =================
