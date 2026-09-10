@@ -595,6 +595,11 @@ footer .fcopy{margin-top:10px;}
     <div class="hanja-strip" style="margin-top:6px;margin-bottom:2px;">職業 · 戀愛 · 財物 · 家族 · 親舊 · 健康</div>
     <div class="domains" id="domains"></div>
 
+    <h2 id="txtDailyFortuneHead" style="font-size:var(--fs-h2);font-weight:900;margin-top:44px;">오늘의 운세</h2>
+    <div class="hanja-strip" style="margin-top:6px;margin-bottom:2px;">日運</div>
+    <p class="lotto-lede" id="txtDailyFortuneNote" style="margin-top:8px;">오늘 날짜의 일진(日辰)을 기준으로 계산되며, 매일 자정이 지나면 자동으로 바뀝니다.</p>
+    <div class="fortune-cards" id="dailyFortuneCards"></div>
+
     <h2 id="txtFortuneHead" style="font-size:var(--fs-h2);font-weight:900;margin-top:44px;">연간 운세</h2>
     <div class="hanja-strip" style="margin-top:6px;margin-bottom:2px;">歲運</div>
     <div class="fortune-controls">
@@ -1129,6 +1134,55 @@ const YEAR_TENGOD_TEXT_EN={
     tip:'A good stretch to gain support through study, credentials, or your network — embrace the learning, but focus on making it your own rather than leaning on others.'}
 };
 
+/* ================= 오늘의 운세(日運) 전용 해설 =================
+   세운(YEAR_TENGOD_TEXT)은 "이 해에는" 단위의 문장이라 하루 단위 운세에
+   그대로 쓰면 어색하다. 오늘의 운세 카드 전용으로 "오늘은/이날은" 톤의
+   짧은 문장을 별도로 둔다. */
+const DAY_TENGOD_TEXT={
+  비견:{flow:'오늘은 나와 같은 기운이 들어오는 날로, 독립심과 추진력이 커지는 하루입니다.',
+    tip:'새로운 시도를 해보기 좋은 날이지만, 주변 사람과의 사소한 신경전은 피하세요.'},
+  겁재:{flow:'오늘은 승부욕과 추진력이 강해지는 날로, 과감한 결정을 내리고 싶어지는 하루입니다.',
+    tip:'경쟁에서는 두각을 나타낼 수 있지만, 돈 문제나 동업 관련 결정은 신중히 하세요.'},
+  식신:{flow:'오늘은 표현력과 여유가 살아나는 날로, 하고 싶은 것을 편하게 즐길 수 있는 하루입니다.',
+    tip:'느긋한 하루를 보내되, 과식이나 나태해지는 것은 주의하세요.'},
+  상관:{flow:'오늘은 재기와 표현력이 두드러지는 날로, 기존 틀을 깨고 싶어지는 하루입니다.',
+    tip:'재능을 발휘하기 좋지만, 즉흥적인 말이나 지출은 한 번 더 생각하세요.'},
+  편재:{flow:'오늘은 돈의 흐름이 빨라지는 날로, 기회를 잡고 싶은 마음이 커지는 하루입니다.',
+    tip:'좋은 기회가 보일 수 있지만, 큰 지출 전에는 한 번 더 점검하세요.'},
+  정재:{flow:'오늘은 꾸준한 노력이 결실로 이어지는 날로, 하던 일을 착실히 마무리하기 좋은 하루입니다.',
+    tip:'무리한 확장보다는 지금 하는 일에 집중하세요.'},
+  편관:{flow:'오늘은 나를 강하게 압박하는 기운이 들어오는 날로, 긴장되는 하루가 될 수 있습니다.',
+    tip:'책임이 무거운 일에서는 오히려 실력을 발휘할 수 있지만, 무리한 결정은 피하세요.'},
+  정관:{flow:'오늘은 책임과 신뢰가 따라오는 날로, 공식적인 일 처리에 좋은 하루입니다.',
+    tip:'원칙을 지키며 신뢰를 쌓기 좋은 날이니, 약속과 절차를 소홀히 하지 마세요.'},
+  편인:{flow:'오늘은 생각이 많아지고 혼자만의 시간이 필요한 날입니다.',
+    tip:'깊이 파고드는 공부나 조사에는 좋지만, 결정을 너무 미루지 마세요.'},
+  정인:{flow:'오늘은 주변의 도움과 배움의 기운이 들어오는 날로, 마음이 안정되는 하루입니다.',
+    tip:'배움의 기회를 적극적으로 잡되, 의존하기보다 스스로 소화하려 노력하세요.'}
+};
+const DAY_TENGOD_TEXT_EN={
+  비견:{flow:'Today brings energy that matches your own, sharpening your independence and drive.',
+    tip:'A good day to try something new, but watch for minor friction with people around you.'},
+  겁재:{flow:'Today stirs up competitive drive and a pull toward bold decisions.',
+    tip:'You may shine in competition, but be careful with money or partnership decisions today.'},
+  식신:{flow:'Today brings creative ease — a good day to enjoy what you like without pressure.',
+    tip:'Enjoy the relaxed pace, but watch for overeating or slacking off.'},
+  상관:{flow:'Today wit and self-expression stand out, tempting you to break from routine.',
+    tip:'A good day to show your talent, but think twice before an impulsive word or purchase.'},
+  편재:{flow:'Today money moves quickly, sparking the urge to seize an opportunity.',
+    tip:'A good chance may appear, but double-check before any big spending.'},
+  정재:{flow:"Today steady effort pays off — a good day to finish what you've been working on.",
+    tip:'Favor focusing on current tasks over chasing something bigger today.'},
+  편관:{flow:'Today brings pressure that tests you, possibly a tense day.',
+    tip:'You may perform well under heavy responsibility, but avoid rash decisions.'},
+  정관:{flow:'Today brings responsibility and trust, a good day for formal matters.',
+    tip:"Good for building trust by following the rules — don't skip on promises or process."},
+  편인:{flow:'Today calls for some time alone with your thoughts.',
+    tip:"Good for deep study or research, but don't let it delay a decision you need to make."},
+  정인:{flow:'Today brings support and a chance to learn — a settling kind of day.',
+    tip:'Embrace the chance to learn, but try to make it your own rather than leaning on others.'}
+};
+
 const DOMAIN_META=[
   {key:'career',glyph:'職',title:'직업 · 진로',titleEn:'Career'},
   {key:'love',glyph:'戀',title:'연애 · 인연',titleEn:'Love'},
@@ -1200,6 +1254,9 @@ const STRINGS={
     daeunAge:(a,b)=>a+'–'+b+'세',
     daeunCurrent:'현재',
     daeunNote:'대운은 월주를 기준으로 10년 단위로 이어지는 큰 흐름으로, 절입일까지의 일수를 3일=1년으로 환산해 시작 나이를 정합니다. 성별과 연간(年干)의 음양에 따라 순행·역행이 갈립니다.',
+    txtDailyFortuneHead:'오늘의 운세',
+    txtDailyFortuneNote:'오늘 날짜의 일진(日辰)을 기준으로 계산되며, 매일 자정이 지나면 자동으로 바뀝니다.',
+    fortuneToday:(dateLabel)=>dateLabel+' 오늘의 운세(日運)',
     fortuneYear:(y)=>y+'년 세운(歲運)',
     fortuneGanzhiPrefix:'일간 기준 ',
     celebNoteFn:(dayLabel,others)=>dayLabel+' 일간을 가진 대표적인 인물이에요.'+(others.length?' 이 외에도 '+others.join(', ')+' 님도 같은 일간을 타고났어요.':''),
@@ -1300,6 +1357,9 @@ const STRINGS={
     daeunAge:(a,b)=>'Age '+a+'–'+b,
     daeunCurrent:'Now',
     daeunNote:'Daeun are 10-year arcs that continue on from your month pillar. The starting age is set by converting the days to the nearest solar-term boundary at a rate of 3 days per year. Whether the sequence moves forward or in reverse depends on your gender and the yin-yang polarity of your year stem.',
+    txtDailyFortuneHead:"Today's Fortune",
+    txtDailyFortuneNote:"Calculated from today's day pillar (日辰) — it automatically updates after midnight each day.",
+    fortuneToday:(dateLabel)=>dateLabel+" Fortune (日運)",
     fortuneYear:(y)=>y+' Yearly Fortune (歲運)',
     fortuneGanzhiPrefix:'relative to day master: ',
     celebNoteFn:(dayLabel,others)=>'A well-known figure who shares your '+dayLabel+' day master.'+(others.length?' '+others.join(', ')+' also share this day master.':''),
@@ -1348,7 +1408,7 @@ function applyStaticI18n(){
   document.documentElement.lang=LANG;
   ['txtEyebrow','txtTitle','txtHeroDisclaimer','txtAdSlot1','txtAdSlot2','txtFormHead','txtLabelName',
    'txtLabelDate','txtLabelTime','txtHourUnknown','txtLabelGender','txtGenderMale','txtGenderFemale',
-   'txtSubmitBtn','txtSavedNote','txtDomainsHead','txtFortuneHead','txtLabelYear',
+   'txtSubmitBtn','txtSavedNote','txtDomainsHead','txtDailyFortuneHead','txtDailyFortuneNote','txtFortuneHead','txtLabelYear',
    'txtCelebHead','txtLottoHead','txtFooterMain',
    'tabSajuLabel','tabTarotLabel',
    'txtTarotEyebrow','txtTarotTitle','txtTarotHeroDisclaimer','txtTarotFormHead','txtTarotLabelName',
@@ -1567,6 +1627,7 @@ function render(profile,name,isExample,gender){
   });
   document.getElementById('domains').innerHTML=dh;
 
+  renderDailyFortune(profile);
   renderFortune(profile);
   renderCelebrity(profile);
   renderSajuLotto(profile);
@@ -1608,9 +1669,9 @@ function renderDaeun(profile,gender){
   document.getElementById('daeunSection').innerHTML=dh;
 }
 
-function fortuneCard(glyph,title,gz,dom){
+function fortuneCard(glyph,title,gz,dom,textKo,textEn){
   const s=STRINGS[LANG];
-  const YT=LANG==='en'?YEAR_TENGOD_TEXT_EN:YEAR_TENGOD_TEXT;
+  const YT=LANG==='en'?textEn:textKo;
   const t=YT[dom];
   const stemName=LANG==='en'?gz.stem.en:gz.stem.h;
   const branchName=LANG==='en'?gz.branch.en:gz.branch.h;
@@ -1636,7 +1697,23 @@ function renderFortune(profile){
   const yGz=yearProfile.year;
   const yDom=tenGod(day,yGz.stem);
 
-  document.getElementById('fortuneCards').innerHTML=fortuneCard('歲',s.fortuneYear(y),yGz,yDom);
+  document.getElementById('fortuneCards').innerHTML=fortuneCard('歲',s.fortuneYear(y),yGz,yDom,YEAR_TENGOD_TEXT,YEAR_TENGOD_TEXT_EN);
+}
+
+function renderDailyFortune(profile){
+  const s=STRINGS[LANG];
+  const now=new Date();
+  const todayProfile=computeFourPillars(now.getFullYear(),now.getMonth()+1,now.getDate(),12,0,false);
+
+  const day=profile.day.stem;
+  const dGz=todayProfile.day;
+  const dDom=tenGod(day,dGz.stem);
+
+  const dateLabel=LANG==='en'
+    ?now.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})
+    :now.getFullYear()+'년 '+(now.getMonth()+1)+'월 '+now.getDate()+'일';
+
+  document.getElementById('dailyFortuneCards').innerHTML=fortuneCard('日',s.fortuneToday(dateLabel),dGz,dDom,DAY_TENGOD_TEXT,DAY_TENGOD_TEXT_EN);
 }
 
 /* ================= 사주와 같은 일간을 가진 유명인 =================
