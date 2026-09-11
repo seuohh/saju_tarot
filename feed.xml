@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>사주풀이 &amp; 타로</title>
+    <link>https://saju-tarot.com/</link>
+    <description>사주팔자·타로카드·AI 관상·사주 맞춤 로또 번호까지 무료로 확인할 수 있는 웹 서비스</description>
+    <language>ko</language>
+    <lastBuildDate>Fri, 11 Sep 2026 00:00:00 GMT</lastBuildDate>
+
+    <item>
+      <title>오늘의 운세 · 사주풀이</title>
+      <link>https://saju-tarot.com/</link>
+      <guid>https://saju-tarot.com/</guid>
+      <description>생년월일시로 사주팔자와 대운·용신을 계산하고, 오행 균형과 상황별 운세, 나와 같은 일간의 유명인을 확인해보세요.</description>
+      <pubDate>Fri, 11 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>오늘의 타로</title>
+      <link>https://saju-tarot.com/</link>
+      <guid>https://saju-tarot.com/#tarot</guid>
+      <description>정통 라이더-웨이트 78장 타로 덱으로 오늘의 카드를 뽑아 지금의 흐름을 확인해보세요.</description>
+      <pubDate>Fri, 11 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>오늘의 관상</title>
+      <link>https://saju-tarot.com/</link>
+      <guid>https://saju-tarot.com/#gwansang</guid>
+      <description>사진 한 장으로 전통 관상학의 해석 방식을 참고한 오늘의 관상 코멘트를 확인해보세요. 촬영·업로드한 사진은 서버로 전송되지 않습니다.</description>
+      <pubDate>Fri, 11 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>로또 번호 생성기</title>
+      <link>https://saju-tarot.com/lotto</link>
+      <guid>https://saju-tarot.com/lotto</guid>
+      <description>중복 없는 로또 번호 6개씩 5세트를 만들고, 과거 당첨번호의 통계 패턴과의 유사도로 1순위부터 5순위까지 추천해 드립니다.</description>
+      <pubDate>Fri, 11 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
