@@ -690,6 +690,10 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
         <label class="hour-unknown"><input type="checkbox" id="fHourUnknown"> <span id="txtHourUnknown">태어난 시간을 몰라요 (시주 없이 세 기둥만 풀이)</span></label>
       </div>
       <div class="field span2">
+        <label for="fTimezone" id="txtLabelTimezone">출생 국가·시간대 (기준시)</label>
+        <select id="fTimezone"></select>
+      </div>
+      <div class="field span2">
         <label id="txtLabelGender">성별 (대운 방향 계산에 사용)</label>
         <div class="radio-row">
           <label class="radio-chip"><input type="radio" name="fGender" id="fGenderMale" value="male" checked> <span id="txtGenderMale">남자</span></label>
@@ -1086,18 +1090,21 @@ function findSolarTermJD(targetLon,guessJD){
   }
   return jd;
 }
-/* KST 날짜/시각 -> UT 기준 JD */
-function kstToUtJD(y,m,d,hourKST,minuteKST){
-  const utcMs=Date.UTC(y,m-1,d,hourKST,minuteKST)-9*3600*1000;
+/* 지정한 시간대(국가별 UTC 오프셋, 시간 단위)의 날짜/시각 -> UT 기준 JD */
+function localToUtJD(y,m,d,hourLocal,minuteLocal,utcOffsetHours){
+  const utcMs=Date.UTC(y,m-1,d,hourLocal,minuteLocal)-utcOffsetHours*3600*1000;
   const dt=new Date(utcMs);
   const uh=dt.getUTCHours()+dt.getUTCMinutes()/60;
   return gregorianToJD(dt.getUTCFullYear(),dt.getUTCMonth()+1,dt.getUTCDate(),uh);
 }
 
-/* ================= 사주 계산 엔진 ================= */
-function computeFourPillars(y,m,d,hourKST,minuteKST,hourUnknown){
-  const bH=hourUnknown?12:hourKST, bMin=hourUnknown?0:minuteKST;
-  const birthJD=kstToUtJD(y,m,d,bH,bMin);
+/* ================= 사주 계산 엔진 =================
+   utcOffsetHours: 입력한 생년월일시가 기준으로 하는 국가/시간대의 UTC 오프셋(시간 단위).
+   지정하지 않으면 대한민국 표준시(KST, UTC+9)를 기본값으로 사용한다. */
+function computeFourPillars(y,m,d,hourLocal,minuteLocal,hourUnknown,utcOffsetHours){
+  if(utcOffsetHours===undefined||utcOffsetHours===null) utcOffsetHours=9;
+  const bH=hourUnknown?12:hourLocal, bMin=hourUnknown?0:minuteLocal;
+  const birthJD=localToUtJD(y,m,d,bH,bMin,utcOffsetHours);
 
   // 입춘 (연주 경계)
   const guessLichunThisYear=gregorianToJD(y,2,4,3);
@@ -1126,7 +1133,7 @@ function computeFourPillars(y,m,d,hourKST,minuteKST,hourUnknown){
 
   // 일주: 23시 이후는 다음날로 (야자시)
   let effY=y,effM=m,effD=d;
-  if(!hourUnknown&&hourKST>=23){
+  if(!hourUnknown&&hourLocal>=23){
     const nd=new Date(Date.UTC(y,m-1,d)+86400000);
     effY=nd.getUTCFullYear();effM=nd.getUTCMonth()+1;effD=nd.getUTCDate();
   }
@@ -1136,7 +1143,7 @@ function computeFourPillars(y,m,d,hourKST,minuteKST,hourUnknown){
 
   let hourStemIdx=null,hourBranchIdx=null;
   if(!hourUnknown){
-    hourBranchIdx=(hourKST>=23||hourKST<1)?0:mod(Math.floor((hourKST+1)/2),12);
+    hourBranchIdx=(hourLocal>=23||hourLocal<1)?0:mod(Math.floor((hourLocal+1)/2),12);
     const hourStemBase=[0,2,4,6,8][mod(dayStemIdx,5)];
     hourStemIdx=mod(hourStemBase+hourBranchIdx,10);
   }
@@ -1148,6 +1155,7 @@ function computeFourPillars(y,m,d,hourKST,minuteKST,hourUnknown){
     day:{stem:STEMS[dayStemIdx],branch:BRANCHES[dayBranchIdx]},
     hour: hourUnknown?null:{stem:STEMS[hourStemIdx],branch:BRANCHES[hourBranchIdx]},
     hourUnknown:!!hourUnknown,
+    utcOffsetHours,
     // 대운(大運) 계산에 필요한 값들 (기존 계산 로직은 그대로, 노출만 추가)
     birthJD,
     boundaries,
@@ -1737,6 +1745,7 @@ const STRINGS={
     txtLabelName:'이름 (선택)',
     txtLabelDate:'생년월일 (양력)',
     txtLabelTime:'태어난 시간',
+    txtLabelTimezone:'출생 국가·시간대 (기준시)',
     txtHourUnknown:'태어난 시간을 몰라요 (시주 없이 세 기둥만 풀이)',
     txtLabelGender:'성별 (대운 방향 계산에 사용)',
     txtGenderMale:'남자',
@@ -2003,6 +2012,7 @@ const STRINGS={
     txtLabelName:'Name (optional)',
     txtLabelDate:'Birth date (solar calendar)',
     txtLabelTime:'Birth time',
+    txtLabelTimezone:'Birth country / time zone',
     txtHourUnknown:'I do not know the birth time (reading will use three pillars, no hour pillar)',
     txtLabelGender:'Gender (used to determine Daeun direction)',
     txtGenderMale:'Male',
@@ -2257,7 +2267,7 @@ function applyStaticI18n(){
   const s=STRINGS[LANG];
   document.documentElement.lang=LANG;
   ['txtEyebrow','txtTitle','txtHeroDisclaimer','txtAdSlot1','txtAdSlot2','txtFormHead','txtLabelName',
-   'txtLabelDate','txtLabelTime','txtHourUnknown','txtLabelGender','txtGenderMale','txtGenderFemale',
+   'txtLabelDate','txtLabelTime','txtLabelTimezone','txtHourUnknown','txtLabelGender','txtGenderMale','txtGenderFemale',
    'txtSubmitBtn','txtSavedNote','txtDomainsHead','txtFortuneHead','txtFortuneNote','txtYearFortuneHead','txtYearFortuneNote',
    'txtCelebHead','txtLottoHead','txtFooterMain',
    'txtGlossaryHead','txtGlossaryTerm1Head','txtGlossaryTerm1Body','txtGlossaryTerm2Head','txtGlossaryTerm2Body',
@@ -2326,6 +2336,7 @@ function applyStaticI18n(){
   const copyrightEl=document.getElementById('copyright');
   if(copyrightEl) copyrightEl.textContent='© '+new Date().getFullYear()+s.copyrightSuffix;
   renderVisitorCounter();
+  populateTimezoneSelect();
 }
 
 /* ================= 계산 상태 & 렌더링 ================= */
@@ -2564,11 +2575,12 @@ function renderDomainCards(domainText){
   return h;
 }
 
-function todayDateLabel(){
-  const now=new Date();
+function todayDateLabel(y,m,d){
+  let now;
+  if(y===undefined){ now=new Date(); y=now.getFullYear(); m=now.getMonth()+1; d=now.getDate(); }
   return LANG==='en'
-    ?now.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})
-    :now.getFullYear()+'년 '+(now.getMonth()+1)+'월 '+now.getDate()+'일';
+    ?new Date(Date.UTC(y,m-1,d)).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'})
+    :y+'년 '+m+'월 '+d+'일';
 }
 
 function updateTarotTitleDate(){
@@ -2584,9 +2596,11 @@ function updateGwansangTitleDate(){
 }
 
 function renderFortune(profile){
-  const now=new Date();
-  const todayProfile=computeFourPillars(now.getFullYear(),now.getMonth()+1,now.getDate(),12,0,false);
-  const yearProfile=computeFourPillars(now.getFullYear(),7,15,12,0,false);
+  const tz=profile.utcOffsetHours===undefined?9:profile.utcOffsetHours;
+  const nowLocal=new Date(Date.now()+tz*3600*1000);
+  const ty=nowLocal.getUTCFullYear(),tm=nowLocal.getUTCMonth()+1,td=nowLocal.getUTCDate();
+  const todayProfile=computeFourPillars(ty,tm,td,12,0,false,tz);
+  const yearProfile=computeFourPillars(ty,7,15,12,0,false,tz);
 
   const day=profile.day.stem;
   const dGz=todayProfile.day;
@@ -2595,7 +2609,7 @@ function renderFortune(profile){
   const yDom=tenGod(day,yGz.stem);
 
   const s=STRINGS[LANG];
-  const dateLabel=todayDateLabel();
+  const dateLabel=todayDateLabel(ty,tm,td);
 
   document.getElementById('txtFortuneHead').textContent=(LANG==='en'?"Today's Fortune":'오늘의 운세')+' ('+dateLabel+')';
   document.getElementById('fortuneCards').innerHTML=fortuneCard('日',s.fortuneToday(dateLabel),dGz,dDom,DAY_TENGOD_TEXT,DAY_TENGOD_TEXT_EN);
@@ -2603,7 +2617,7 @@ function renderFortune(profile){
   const DT=LANG==='en'?DAY_TENGOD_DOMAIN_TEXT_EN:DAY_TENGOD_DOMAIN_TEXT;
   document.getElementById('fortuneDomains').innerHTML=renderDomainCards(DT[dDom]);
 
-  document.getElementById('yearFortuneCards').innerHTML=fortuneCard('歲',s.fortuneYear(now.getFullYear()),yGz,yDom,YEAR_TENGOD_TEXT,YEAR_TENGOD_TEXT_EN);
+  document.getElementById('yearFortuneCards').innerHTML=fortuneCard('歲',s.fortuneYear(ty),yGz,yDom,YEAR_TENGOD_TEXT,YEAR_TENGOD_TEXT_EN);
 
   const YDT=LANG==='en'?YEAR_TENGOD_DOMAIN_TEXT_EN:YEAR_TENGOD_DOMAIN_TEXT;
   document.getElementById('yearFortuneDomains').innerHTML=renderDomainCards(YDT[yDom]);
@@ -3083,9 +3097,57 @@ function setTheme(theme){
   try{ localStorage.setItem(THEME_KEY,theme); }catch(error){ /* 무시 */ }
 }
 
-function saveLastInput(name,dateVal,hourUnknown,timeVal,gender){
+/* ================= 출생 국가·시간대 선택 =================
+   사주 계산은 태어난 시각을 어느 국가/시간대의 표준시로 볼 것인지에 따라
+   결과가 달라질 수 있어, 국가별 UTC 오프셋을 직접 선택할 수 있게 한다.
+   시(時) 단위가 아닌 반시간 단위 시간대(인도 등)도 지원하기 위해 소수값을 쓴다. */
+const DEFAULT_TZ_OFFSET=9;
+const TIMEZONE_OPTIONS=[
+  {offset:-12,ko:'UTC-12 (베이커섬)',en:'UTC-12 (Baker Island)'},
+  {offset:-11,ko:'UTC-11 (사모아)',en:'UTC-11 (Samoa)'},
+  {offset:-10,ko:'UTC-10 (하와이)',en:'UTC-10 (Hawaii)'},
+  {offset:-9,ko:'UTC-9 (알래스카)',en:'UTC-9 (Alaska)'},
+  {offset:-8,ko:'UTC-8 (미국 서부)',en:'UTC-8 (US Pacific)'},
+  {offset:-7,ko:'UTC-7 (미국 산지)',en:'UTC-7 (US Mountain)'},
+  {offset:-6,ko:'UTC-6 (미국 중부)',en:'UTC-6 (US Central)'},
+  {offset:-5,ko:'UTC-5 (미국 동부)',en:'UTC-5 (US Eastern)'},
+  {offset:-4,ko:'UTC-4 (캐나다 대서양)',en:'UTC-4 (Atlantic Canada)'},
+  {offset:-3,ko:'UTC-3 (브라질)',en:'UTC-3 (Brazil)'},
+  {offset:-2,ko:'UTC-2',en:'UTC-2'},
+  {offset:-1,ko:'UTC-1 (아조레스)',en:'UTC-1 (Azores)'},
+  {offset:0,ko:'UTC+0 (영국)',en:'UTC+0 (UK)'},
+  {offset:1,ko:'UTC+1 (독일·프랑스)',en:'UTC+1 (Germany, France)'},
+  {offset:2,ko:'UTC+2 (남아공·이집트)',en:'UTC+2 (South Africa, Egypt)'},
+  {offset:3,ko:'UTC+3 (러시아 모스크바)',en:'UTC+3 (Moscow)'},
+  {offset:3.5,ko:'UTC+3:30 (이란)',en:'UTC+3:30 (Iran)'},
+  {offset:4,ko:'UTC+4 (아랍에미리트)',en:'UTC+4 (UAE)'},
+  {offset:5,ko:'UTC+5 (파키스탄)',en:'UTC+5 (Pakistan)'},
+  {offset:5.5,ko:'UTC+5:30 (인도)',en:'UTC+5:30 (India)'},
+  {offset:6,ko:'UTC+6 (방글라데시)',en:'UTC+6 (Bangladesh)'},
+  {offset:7,ko:'UTC+7 (베트남·태국)',en:'UTC+7 (Vietnam, Thailand)'},
+  {offset:8,ko:'UTC+8 (중국·싱가포르)',en:'UTC+8 (China, Singapore)'},
+  {offset:9,ko:'UTC+9 (대한민국·일본)',en:'UTC+9 (Korea, Japan)'},
+  {offset:9.5,ko:'UTC+9:30 (호주 중부)',en:'UTC+9:30 (Central Australia)'},
+  {offset:10,ko:'UTC+10 (호주 동부)',en:'UTC+10 (Eastern Australia)'},
+  {offset:11,ko:'UTC+11',en:'UTC+11'},
+  {offset:12,ko:'UTC+12 (뉴질랜드)',en:'UTC+12 (New Zealand)'},
+  {offset:13,ko:'UTC+13 (통가)',en:'UTC+13 (Tonga)'}
+];
+
+function populateTimezoneSelect(){
+  const sel=document.getElementById('fTimezone');
+  if(!sel) return;
+  const prevValue=sel.value;
+  sel.innerHTML=TIMEZONE_OPTIONS.map(function(t){
+    return '<option value="'+t.offset+'">'+(LANG==='en'?t.en:t.ko)+'</option>';
+  }).join('');
+  sel.value=prevValue||String(DEFAULT_TZ_OFFSET);
+  if(sel.selectedIndex<0) sel.value=String(DEFAULT_TZ_OFFSET);
+}
+
+function saveLastInput(name,dateVal,hourUnknown,timeVal,gender,tzOffset){
   try{
-    localStorage.setItem(PROFILE_KEY,JSON.stringify({name,dateVal,hourUnknown,timeVal,gender}));
+    localStorage.setItem(PROFILE_KEY,JSON.stringify({name,dateVal,hourUnknown,timeVal,gender,tzOffset}));
   }catch(error){
     // localStorage를 사용할 수 없는 환경(예: 시크릿 모드)에서는 조용히 무시
   }
@@ -4662,14 +4724,15 @@ document.getElementById('sajuForm').addEventListener('submit',function(e){
   const hourUnknown=document.getElementById('fHourUnknown').checked;
   const timeVal=document.getElementById('fTime').value;
   const gender=document.getElementById('fGenderFemale').checked?'female':'male';
+  const tzOffset=parseFloat(document.getElementById('fTimezone').value);
   if(!dateVal){return;}
   const[y,m,d]=dateVal.split('-').map(Number);
   let hh=0,mm=0;
   if(!hourUnknown){
     if(timeVal){const[a,b]=timeVal.split(':').map(Number);hh=a;mm=b;}
   }
-  const profile=computeFourPillars(y,m,d,hh,mm,hourUnknown||!timeVal);
-  saveLastInput(name,dateVal,hourUnknown,timeVal,gender);
+  const profile=computeFourPillars(y,m,d,hh,mm,hourUnknown||!timeVal,tzOffset);
+  saveLastInput(name,dateVal,hourUnknown,timeVal,gender,tzOffset);
   render(profile,name,false,gender);
   document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
 });
@@ -4843,6 +4906,7 @@ document.getElementById('fTarotName').value=loadTarotName();
 })();
 
 (function initExample(){
+  populateTimezoneSelect();
   const saved=loadLastInput();
   if(saved&&saved.dateVal){
     document.getElementById('fName').value=saved.name||'';
@@ -4853,16 +4917,19 @@ document.getElementById('fTarotName').value=loadTarotName();
     const gender=saved.gender==='female'?'female':'male';
     document.getElementById('fGenderFemale').checked=gender==='female';
     document.getElementById('fGenderMale').checked=gender==='male';
+    const tzOffset=(saved.tzOffset===undefined||saved.tzOffset===null)?9:saved.tzOffset;
+    document.getElementById('fTimezone').value=String(tzOffset);
     const[y,m,d]=saved.dateVal.split('-').map(Number);
     let hh=0,mm=0;
     if(!saved.hourUnknown&&saved.timeVal){const[a,b]=saved.timeVal.split(':').map(Number);hh=a;mm=b;}
-    const profile=computeFourPillars(y,m,d,hh,mm,saved.hourUnknown||!saved.timeVal);
+    const profile=computeFourPillars(y,m,d,hh,mm,saved.hourUnknown||!saved.timeVal,tzOffset);
     render(profile,saved.name||'',false,gender);
     return;
   }
   document.getElementById('fDate').value='1990-05-15';
   document.getElementById('fTime').value='14:30';
-  const example=computeFourPillars(1990,5,15,14,30,false);
+  document.getElementById('fTimezone').value='9';
+  const example=computeFourPillars(1990,5,15,14,30,false,9);
   render(example,'',true,'male');
 })();
 
