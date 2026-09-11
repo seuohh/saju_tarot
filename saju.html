@@ -7,7 +7,7 @@
 <meta name="description" content="생년월일시로 사주팔자(시주·일주·월주·년주)와 대운·용신을 계산하고, 일간과 오행 균형, 직업·연애·재물·가족·건강 운세, 나와 같은 일간의 유명인을 확인하세요. 78장 정통 타로카드로 오늘의 운세도 무료로 뽑아보고, 사주 행운번호가 담긴 맞춤 로또·파워볼 번호까지 확인해보세요.">
 <meta name="keywords" content="사주, 사주팔자, 사주풀이, 무료사주, 타로, 타로카드, 오늘의 타로, 무료 타로, tarot, tarot card reading, 오행, 일주, 대운, 용신, 신강신약, 사주 로또, 파워볼, 행운번호, 로또 번호 추천">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#0B0A08">
+<meta name="theme-color" content="#0B0A08" id="metaThemeColor">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="사주·타로">
 
@@ -73,6 +73,7 @@
   --water-ink:#141E28;
   --shadow:0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6);
   --font:"맑은 고딕","Malgun Gothic",sans-serif;
+  color-scheme:dark;
   /* 내용별 글자 크기 위계 (제목 > 소제목 > 본문 > 캡션 > 극소 라벨) */
   --fs-hero:clamp(34px,6vw,52px);
   --fs-h2:20px;
@@ -82,6 +83,23 @@
   --fs-caption:12.5px;
   --fs-tiny:11px;
 }
+:root[data-theme="light"]{
+  color-scheme:light;
+  --ink:#211A12;
+  --ink-soft:#6E6153;
+  --paper:#FFFFFF;
+  --paper-raised:#F7F3EA;
+  --paper-sunken:#EFE7D6;
+  --line:rgba(33,26,18,0.12);
+  --line-strong:rgba(33,26,18,0.22);
+  --accent:#B8402A;
+  --accent-ink:#FFF8F0;
+  --shadow:0 1px 2px rgba(24,18,12,0.07), 0 12px 32px -14px rgba(24,18,12,0.18);
+}
+/* 상황별 풀이 상단의 정/역방향 타로 태그는 옅게 섞인 배경 위에 원색 텍스트를
+   올리는 구조라, 밝은 테마에서는 진한 잉크 색으로 바꿔줘야 대비가 유지된다. */
+:root[data-theme="light"] .tarot-orient-tag.upright{color:var(--wood-ink);}
+:root[data-theme="light"] .tarot-orient-tag.reversed{color:var(--fire-ink);}
 *{box-sizing:border-box;}
 html{-webkit-text-size-adjust:100%;}
 body{
@@ -395,6 +413,9 @@ footer .fcopy{margin-top:10px;}
 }
 .app-tab.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
 
+/* ---- top-bar right-side control group ---- */
+.top-bar-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+
 /* ---- language toggle ---- */
 .lang-toggle{
   display:flex;gap:4px;flex:none;
@@ -407,6 +428,20 @@ footer .fcopy{margin-top:10px;}
   background:transparent;color:var(--ink-soft);
 }
 .lang-toggle button.active{background:var(--accent);color:var(--accent-ink);}
+
+/* ---- theme toggle ---- */
+.theme-toggle{
+  display:flex;gap:4px;flex:none;
+  border:1px solid var(--line-strong);border-radius:999px;padding:3px;
+  background:var(--paper);
+}
+.theme-toggle button{
+  font:inherit;font-size:var(--fs-caption);font-weight:700;
+  display:flex;align-items:center;gap:5px;
+  border:none;border-radius:999px;padding:6px 12px;cursor:pointer;
+  background:transparent;color:var(--ink-soft);
+}
+.theme-toggle button.active{background:var(--accent);color:var(--accent-ink);}
 
 /* ---- daeun (major fortune cycles) ---- */
 .daeun-section{margin-top:26px;background:var(--paper-raised);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow);}
@@ -509,9 +544,15 @@ footer .fcopy{margin-top:10px;}
     <button type="button" id="tabSajuBtn" class="app-tab active" role="tab" aria-selected="true">🔮 <span id="tabSajuLabel">오늘의 운세</span></button>
     <button type="button" id="tabTarotBtn" class="app-tab" role="tab" aria-selected="false">🎴 <span id="tabTarotLabel">오늘의 타로</span></button>
   </div>
-  <div class="lang-toggle" role="group" aria-label="Language">
-    <button type="button" id="langKoBtn" class="active">한국어</button>
-    <button type="button" id="langEnBtn">EN</button>
+  <div class="top-bar-controls">
+    <div class="theme-toggle" role="group" aria-label="Theme">
+      <button type="button" id="themeDarkBtn" class="active">🌙 <span id="txtThemeDark">검은색</span></button>
+      <button type="button" id="themeLightBtn">☀️ <span id="txtThemeLight">하얀색</span></button>
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" id="langKoBtn" class="active">한국어</button>
+      <button type="button" id="langEnBtn">EN</button>
+    </div>
   </div>
 </div>
 
@@ -1517,6 +1558,8 @@ const STRINGS={
     ptFallback:'점',
     tabSajuLabel:'오늘의 운세',
     tabTarotLabel:'오늘의 타로',
+    txtThemeDark:'검은색',
+    txtThemeLight:'하얀색',
     txtTarotEyebrow:'오늘의 타로카드',
     txtTarotTitle:'오늘의 타로',
     txtTarotLede:'정통 라이더-웨이트(Rider–Waite) 78장 덱으로 오늘의 카드 한 장을 뽑아, 지금 흐름과 마음 써야 할 부분을 짚어드립니다.',
@@ -1619,6 +1662,8 @@ const STRINGS={
     ptFallback:'pt',
     tabSajuLabel:"Today's Fortune",
     tabTarotLabel:"Today's Tarot",
+    txtThemeDark:'Black',
+    txtThemeLight:'White',
     txtTarotEyebrow:"Today's Tarot Card",
     txtTarotTitle:"Today's Tarot",
     txtTarotLede:'Draw one card for today from the classic 78-card Rider–Waite deck, and see what it points to right now.',
@@ -1651,7 +1696,7 @@ function applyStaticI18n(){
    'txtLabelDate','txtLabelTime','txtHourUnknown','txtLabelGender','txtGenderMale','txtGenderFemale',
    'txtSubmitBtn','txtSavedNote','txtDomainsHead','txtFortuneHead','txtFortuneNote','txtYearFortuneHead','txtYearFortuneNote',
    'txtCelebHead','txtLottoHead','txtFooterMain',
-   'tabSajuLabel','tabTarotLabel',
+   'tabSajuLabel','tabTarotLabel','txtThemeDark','txtThemeLight',
    'txtTarotEyebrow','txtTarotTitle','txtTarotHeroDisclaimer','txtTarotFormHead','txtTarotLabelName',
    'txtTarotReshuffleNote','txtTarotSavedNote'
   ].forEach(id=>{
@@ -2395,6 +2440,20 @@ function showToast(message){
 /* ================= 입력 정보 저장 (로컬 전용) ================= */
 const PROFILE_KEY='sajuLastInput';
 const LANG_KEY='sajuLang';
+const THEME_KEY='siteTheme';
+
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  const meta=document.getElementById('metaThemeColor');
+  if(meta) meta.setAttribute('content',theme==='light'?'#FFFFFF':'#0B0A08');
+  document.getElementById('themeDarkBtn').classList.toggle('active',theme==='dark');
+  document.getElementById('themeLightBtn').classList.toggle('active',theme==='light');
+}
+
+function setTheme(theme){
+  applyTheme(theme);
+  try{ localStorage.setItem(THEME_KEY,theme); }catch(error){ /* 무시 */ }
+}
 
 function saveLastInput(name,dateVal,hourUnknown,timeVal,gender){
   try{
@@ -3660,6 +3719,9 @@ document.getElementById('clearSavedLink').addEventListener('click',function(e){
 document.getElementById('langKoBtn').addEventListener('click',function(){ setLang('ko'); });
 document.getElementById('langEnBtn').addEventListener('click',function(){ setLang('en'); });
 
+document.getElementById('themeDarkBtn').addEventListener('click',function(){ setTheme('dark'); });
+document.getElementById('themeLightBtn').addEventListener('click',function(){ setTheme('light'); });
+
 /* ================= 상단 탭: 사주 / 타로 ================= */
 function setActiveApp(app){
   const isSaju=app==='saju';
@@ -3716,6 +3778,17 @@ try{
   // 무시
 }
 applyStaticI18n();
+
+(function initTheme(){
+  let theme='dark';
+  try{
+    const savedTheme=localStorage.getItem(THEME_KEY);
+    if(savedTheme==='light'||savedTheme==='dark') theme=savedTheme;
+  }catch(error){
+    // 무시
+  }
+  applyTheme(theme);
+})();
 
 document.getElementById('fTarotName').value=loadTarotName();
 

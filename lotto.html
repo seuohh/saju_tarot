@@ -7,7 +7,7 @@
   <meta name="description" content="1~45 중 중복 없는 로또 번호 6개씩 5세트를 생성하고, 과거 당첨번호의 통계 패턴과의 유사도로 1순위부터 5순위까지 정렬해 추천해 드립니다. 결과 복사·공유, 최근 생성 기록 확인이 가능한 무료 웹 서비스입니다.">
   <meta name="keywords" content="로또, 로또번호, 로또 번호 생성기, 로또 추천, 랜덤 번호, 번호 추첨, 로또 순위">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#764ba2">
+  <meta name="theme-color" content="#764ba2" id="metaThemeColor">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="로또 번호 생성기">
 
@@ -51,6 +51,60 @@
   -->
 
   <style>
+    :root {
+      --page-bg-a: #667eea;
+      --page-bg-b: #764ba2;
+      --card-bg: #ffffff;
+      --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      --ink: #221c33;
+      --ink-soft: #5b5470;
+      --ink-mute: #8b849f;
+      --ink-faint: #a39cb5;
+      --line: #ececf5;
+      --line-dashed: #d6d0e6;
+      --toggle-bg: #ffffff;
+      --toggle-border: #dddaea;
+      --toggle-ink: #8b849f;
+      --accent-fill: #6c5ce7;
+      --accent-fill-hover: #5649c9;
+      --accent-text: #6c5ce7;
+      --brand-a: #667eea;
+      --brand-b: #764ba2;
+      --partner-bg-a: #f4f1fb;
+      --partner-bg-b: #eef0fb;
+      --partner-border: #e3ddf5;
+      --chip-bg: #ffffff;
+      --chip-border: #d9cff0;
+      --history-item-bg: #f8f8fb;
+      --best-ink: #b8860b;
+      color-scheme: light;
+    }
+
+    :root[data-theme="dark"] {
+      --page-bg-a: #2a2350;
+      --page-bg-b: #100d1c;
+      --card-bg: #1c1830;
+      --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+      --ink: #EDEAF7;
+      --ink-soft: #B7AFD9;
+      --ink-mute: #9089B0;
+      --ink-faint: #7A7396;
+      --line: rgba(237, 234, 247, 0.14);
+      --line-dashed: rgba(237, 234, 247, 0.28);
+      --toggle-bg: #241f3d;
+      --toggle-border: rgba(237, 234, 247, 0.2);
+      --toggle-ink: #B7AFD9;
+      --accent-text: #C4B5FD;
+      --partner-bg-a: #241f3d;
+      --partner-bg-b: #1c1830;
+      --partner-border: rgba(237, 234, 247, 0.16);
+      --chip-bg: #2b2547;
+      --chip-border: rgba(237, 234, 247, 0.22);
+      --history-item-bg: #241f3d;
+      --best-ink: #FFD36B;
+      color-scheme: dark;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -63,7 +117,8 @@
       align-items: flex-start;
       padding: 24px 0;
       font-family: Arial, "Noto Sans KR", sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(135deg, var(--page-bg-a), var(--page-bg-b));
+      color: var(--ink);
     }
 
     .container {
@@ -71,52 +126,65 @@
       max-width: 700px;
       padding: 40px 30px;
       text-align: center;
-      background: white;
+      background: var(--card-bg);
       border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--card-shadow);
     }
 
-    .lang-toggle {
+    .top-controls {
       display: flex;
       justify-content: flex-end;
-      gap: 4px;
+      gap: 6px;
+      flex-wrap: wrap;
       margin-bottom: 18px;
     }
 
-    .lang-toggle button {
+    .lang-toggle,
+    .theme-toggle {
+      display: flex;
+      gap: 4px;
+    }
+
+    .lang-toggle button,
+    .theme-toggle button {
       font: inherit;
       font-size: 12px;
       font-weight: 700;
-      border: 1px solid #ddd;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid var(--toggle-border);
       border-radius: 999px;
       padding: 6px 14px;
       cursor: pointer;
-      background: #fff;
-      color: #888;
+      background: var(--toggle-bg);
+      color: var(--toggle-ink);
     }
 
-    .lang-toggle button.active {
-      background: #6c5ce7;
+    .lang-toggle button.active,
+    .theme-toggle button.active {
+      background: var(--accent-fill);
       color: #fff;
-      border-color: #6c5ce7;
+      border-color: var(--accent-fill);
     }
 
     h1 {
       margin-top: 0;
       font-size: 32px;
+      color: var(--ink);
     }
 
     .description {
-      color: #666;
+      color: var(--ink-soft);
       margin-bottom: 20px;
     }
 
     .ad-slot {
       margin: 20px 0;
       padding: 14px;
-      border: 1px dashed #ccc;
+      border: 1px dashed var(--line-dashed);
       border-radius: 8px;
-      color: #aaa;
+      color: var(--ink-faint);
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -125,11 +193,11 @@
     .ad-slot-cta {
       margin: 8px 0 0;
       font-size: 12px;
-      color: #999;
+      color: var(--ink-mute);
       text-align: center;
     }
     .ad-slot-cta a {
-      color: #764ba2;
+      color: var(--accent-text);
       text-decoration: none;
       font-weight: 600;
     }
@@ -137,12 +205,16 @@
       text-decoration: underline;
     }
 
+    #lottoResults {
+      color: var(--ink);
+    }
+
     .partner-cta {
       margin: 32px 0 0;
       padding: 36px 26px;
       border-radius: 18px;
-      background: linear-gradient(135deg, #f4f1fb, #eef0fb);
-      border: 1px solid #e3ddf5;
+      background: linear-gradient(135deg, var(--partner-bg-a), var(--partner-bg-b));
+      border: 1px solid var(--partner-border);
       text-align: center;
     }
     .partner-cta-badge {
@@ -151,7 +223,7 @@
       font-weight: 800;
       letter-spacing: 0.12em;
       color: #fff;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(135deg, var(--brand-a), var(--brand-b));
       border-radius: 999px;
       padding: 5px 14px;
       margin-bottom: 16px;
@@ -160,12 +232,12 @@
       font-size: 20px;
       margin: 0 auto;
       max-width: 480px;
-      color: #333;
+      color: var(--ink);
     }
     .partner-cta p {
       max-width: 440px;
       margin: 12px auto 0;
-      color: #666;
+      color: var(--ink-soft);
       font-size: 14px;
     }
     .partner-cta-tags {
@@ -177,11 +249,11 @@
     }
     .partner-cta-tags span {
       font-size: 12px;
-      color: #764ba2;
-      border: 1px solid #d9cff0;
+      color: var(--accent-text);
+      border: 1px solid var(--chip-border);
       border-radius: 999px;
       padding: 6px 13px;
-      background: #fff;
+      background: var(--chip-bg);
     }
     .partner-cta-btn {
       display: inline-block;
@@ -189,7 +261,7 @@
       font-weight: 700;
       font-size: 15px;
       color: #fff;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(135deg, var(--brand-a), var(--brand-b));
       border-radius: 10px;
       padding: 13px 28px;
       text-decoration: none;
@@ -201,7 +273,7 @@
     .partner-cta-note {
       margin-top: 14px;
       font-size: 11px;
-      color: #999;
+      color: var(--ink-mute);
     }
 
     .lotto-set {
@@ -215,7 +287,7 @@
     .set-name {
       width: 76px;
       font-weight: bold;
-      color: #555;
+      color: var(--ink-soft);
       font-size: 14px;
       line-height: 1.3;
     }
@@ -228,18 +300,18 @@
     }
 
     .lotto-set.best-set .set-name {
-      color: #b8860b;
+      color: var(--best-ink);
     }
 
     .score-badge {
       width: 60px;
       font-size: 12px;
-      color: #999;
+      color: var(--ink-mute);
       text-align: right;
     }
 
     .best-set .score-badge {
-      color: #b8860b;
+      color: var(--best-ink);
       font-weight: bold;
     }
 
@@ -272,13 +344,13 @@
       font-size: 18px;
       font-weight: bold;
       color: white;
-      background: #6c5ce7;
+      background: var(--accent-fill);
       cursor: pointer;
       transition: 0.2s;
     }
 
     button:hover {
-      background: #5649c9;
+      background: var(--accent-fill-hover);
       transform: translateY(-2px);
     }
 
@@ -302,23 +374,24 @@
 
     .result-actions button {
       margin-top: 0;
-      background: #fff;
-      color: #6c5ce7;
-      border: 1.5px solid #6c5ce7;
+      background: var(--card-bg);
+      color: var(--accent-text);
+      border: 1.5px solid var(--accent-text);
       padding: 10px 20px;
       font-size: 14px;
     }
 
     .result-actions button:hover {
-      background: #6c5ce7;
+      background: var(--accent-fill);
       color: #fff;
+      border-color: var(--accent-fill);
       transform: translateY(-2px);
     }
 
     .history-section {
       margin-top: 30px;
       text-align: left;
-      border-top: 1px solid #eee;
+      border-top: 1px solid var(--line);
       padding-top: 20px;
     }
 
@@ -332,14 +405,14 @@
     .history-header h2 {
       font-size: 16px;
       margin: 0;
-      color: #444;
+      color: var(--ink);
     }
 
     .history-header button {
       margin-top: 0;
       background: none;
       border: none;
-      color: #999;
+      color: var(--ink-mute);
       font-size: 13px;
       font-weight: normal;
       cursor: pointer;
@@ -349,12 +422,12 @@
 
     .history-header button:hover {
       background: none;
-      color: #555;
+      color: var(--ink-soft);
       transform: none;
     }
 
     .history-item {
-      background: #f8f8fb;
+      background: var(--history-item-bg);
       border-radius: 10px;
       padding: 10px 14px;
       margin-bottom: 10px;
@@ -362,7 +435,7 @@
 
     .history-date {
       font-size: 12px;
-      color: #999;
+      color: var(--ink-mute);
       margin-bottom: 6px;
     }
 
@@ -377,7 +450,7 @@
     .mini-rank-label {
       font-size: 11px;
       font-weight: bold;
-      color: #888;
+      color: var(--ink-soft);
       width: 42px;
     }
 
@@ -397,14 +470,14 @@
     .legal {
       margin-top: 30px;
       font-size: 11px;
-      color: #aaa;
+      color: var(--ink-mute);
       line-height: 1.6;
-      border-top: 1px solid #eee;
+      border-top: 1px solid var(--line);
       padding-top: 16px;
     }
 
     .legal .links a {
-      color: #999;
+      color: var(--ink-mute);
       text-decoration: none;
       margin: 0 6px;
     }
@@ -477,9 +550,15 @@
 
   <div class="container">
 
-    <div class="lang-toggle" role="group" aria-label="Language">
-      <button type="button" id="langKoBtn" class="active">한국어</button>
-      <button type="button" id="langEnBtn">EN</button>
+    <div class="top-controls">
+      <div class="theme-toggle" role="group" aria-label="Theme">
+        <button type="button" id="themeDarkBtn">🌙 <span id="txtThemeDark">검은색</span></button>
+        <button type="button" id="themeLightBtn" class="active">☀️ <span id="txtThemeLight">하얀색</span></button>
+      </div>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" id="langKoBtn" class="active">한국어</button>
+        <button type="button" id="langEnBtn">EN</button>
+      </div>
     </div>
 
     <h1 id="txtTitle">🎱 로또 번호 추천기</h1>
@@ -559,9 +638,27 @@
     const HISTORY_KEY = "lottoHistory";
     const HISTORY_LIMIT = 10;
     const LANG_KEY = "sajuLang";
+    const THEME_KEY = "siteTheme";
 
     let currentSets = [];
     let LANG = "ko";
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      const meta = document.getElementById("metaThemeColor");
+      if (meta) meta.setAttribute("content", theme === "dark" ? "#100d1c" : "#764ba2");
+      document.getElementById("themeDarkBtn").classList.toggle("active", theme === "dark");
+      document.getElementById("themeLightBtn").classList.toggle("active", theme === "light");
+    }
+
+    function setTheme(theme) {
+      applyTheme(theme);
+      try {
+        localStorage.setItem(THEME_KEY, theme);
+      } catch (error) {
+        // 무시
+      }
+    }
 
     const STRINGS = {
       ko: {
@@ -602,7 +699,9 @@
         copySuccess: "결과가 복사되었습니다.",
         copyFail: "복사에 실패했습니다. 직접 선택해 복사해주세요.",
         shareTitle: "로또 번호 추천",
-        dateLocale: "ko-KR"
+        dateLocale: "ko-KR",
+        themeDark: "검은색",
+        themeLight: "하얀색"
       },
       en: {
         title: "🎱 Lotto Number Recommender",
@@ -642,7 +741,9 @@
         copySuccess: "Results copied to clipboard.",
         copyFail: "Copy failed. Please select and copy the text manually.",
         shareTitle: "Lotto Number Recommendation",
-        dateLocale: "en-US"
+        dateLocale: "en-US",
+        themeDark: "Black",
+        themeLight: "White"
       }
     };
 
@@ -677,6 +778,8 @@
       document.getElementById("txtLinkTerms").textContent = t.linkTerms;
       document.getElementById("txtLinkPrivacy").textContent = t.linkPrivacy;
       document.getElementById("txtLinkContact").textContent = t.linkContact;
+      document.getElementById("txtThemeDark").textContent = t.themeDark;
+      document.getElementById("txtThemeLight").textContent = t.themeLight;
 
       const tagsEl = document.getElementById("txtPartnerTags");
       tagsEl.innerHTML = t.partnerTags.map((tag) => "<span>" + tag + "</span>").join("");
@@ -1069,6 +1172,9 @@
     document.getElementById("langKoBtn").addEventListener("click", () => setLang("ko"));
     document.getElementById("langEnBtn").addEventListener("click", () => setLang("en"));
 
+    document.getElementById("themeDarkBtn").addEventListener("click", () => setTheme("dark"));
+    document.getElementById("themeLightBtn").addEventListener("click", () => setTheme("light"));
+
     document.addEventListener("DOMContentLoaded", () => {
       try {
         const savedLang = localStorage.getItem(LANG_KEY);
@@ -1077,6 +1183,15 @@
         // 무시
       }
       applyStaticI18n();
+
+      let theme = "light";
+      try {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        if (savedTheme === "light" || savedTheme === "dark") theme = savedTheme;
+      } catch (error) {
+        // 무시
+      }
+      applyTheme(theme);
     });
 
   </script>
