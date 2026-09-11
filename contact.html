@@ -98,6 +98,8 @@ footer{max-width:640px;margin:48px auto 0;padding:24px 20px 0;border-top:1px sol
 footer .flinks a{color:var(--ink-soft);text-decoration:none;margin:0 6px;}
 footer .flinks a:hover{text-decoration:underline;}
 footer .fcopy{margin-top:10px;}
+footer .visitor-counter{margin-top:6px;font-size:var(--fs-tiny);color:var(--ink-soft);opacity:0.8;}
+footer .visitor-counter b{font-weight:700;color:var(--accent);}
 </style>
 </head>
 <body>
@@ -161,6 +163,7 @@ footer .fcopy{margin-top:10px;}
       <a href="index.html">사주 · 타로 · 관상</a>·<a href="lotto.html">로또 번호 생성기</a>
     </div>
     <div class="fcopy" id="copyright"></div>
+    <div class="visitor-counter" id="visitorCounter" hidden></div>
   </footer>
 </div>
 
@@ -168,6 +171,29 @@ footer .fcopy{margin-top:10px;}
 (function(){
 "use strict";
 document.getElementById('copyright').textContent='© '+new Date().getFullYear()+' 사주·타로·관상·로또';
+
+/* 사주/로또 페이지와 동일한 /api/visitor-count(Cloudflare Pages
+   Functions + KV)를 사용해 사이트 전체 누적 방문 수를 센다. */
+(async function initVisitorCounter(){
+  try{
+    const VISITOR_SESSION_KEY='visitorCountedThisSession';
+    let alreadyCounted=false;
+    try{ alreadyCounted=sessionStorage.getItem(VISITOR_SESSION_KEY)==='1'; }catch(error){ /* 무시 */ }
+    const res=await fetch('/api/visitor-count',{method:alreadyCounted?'GET':'POST'});
+    if(!res.ok) return;
+    const data=await res.json();
+    if(typeof data.count!=='number') return;
+    if(!alreadyCounted){
+      try{ sessionStorage.setItem(VISITOR_SESSION_KEY,'1'); }catch(error){ /* 무시 */ }
+    }
+    const el=document.getElementById('visitorCounter');
+    if(!el) return;
+    el.innerHTML='지금까지 <b>'+data.count.toLocaleString('ko-KR')+'</b>명이 다녀갔어요';
+    el.hidden=false;
+  }catch(error){
+    // API를 사용할 수 없는 환경(로컬 테스트 등)에서는 카운터를 조용히 숨긴 채로 둔다
+  }
+})();
 
 const form=document.getElementById('contactForm');
 const submitBtn=document.getElementById('submitBtn');

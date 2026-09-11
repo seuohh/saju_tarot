@@ -486,6 +486,17 @@
       text-decoration: underline;
     }
 
+    .visitor-counter {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--ink-mute);
+      opacity: 0.85;
+    }
+    .visitor-counter b {
+      font-weight: 700;
+      color: var(--accent-text);
+    }
+
     .toast {
       position: fixed;
       left: 50%;
@@ -627,6 +638,7 @@
         <a href="#" id="txtLinkTerms">이용약관</a>·<a href="#" id="txtLinkPrivacy">개인정보처리방침</a>·<a href="contact.html" id="txtLinkContact">제휴 문의</a>
       </div>
       <div id="copyright"></div>
+      <div class="visitor-counter" id="visitorCounter" hidden></div>
     </div>
 
   </div>
@@ -657,6 +669,49 @@
         localStorage.setItem(THEME_KEY, theme);
       } catch (error) {
         // 무시
+      }
+    }
+
+    /* ================= 방문자 수 카운터 =================
+       사주 페이지와 동일한 /api/visitor-count(Cloudflare Pages
+       Functions + KV)를 사용해 사이트 전체 누적 방문 수를 센다. 같은
+       브라우저 세션에는 한 번만 증가시키고, API 호출이 실패해도(로컬
+       테스트 등) 조용히 무시한다. */
+    const VISITOR_SESSION_KEY = "visitorCountedThisSession";
+    let visitorCount = null;
+
+    function renderVisitorCounter() {
+      if (visitorCount === null) return;
+      const el = document.getElementById("visitorCounter");
+      if (!el) return;
+      const formatted = visitorCount.toLocaleString(LANG === "en" ? "en-US" : "ko-KR");
+      el.innerHTML = s().visitorCountFn(formatted);
+      el.hidden = false;
+    }
+
+    async function initVisitorCounter() {
+      try {
+        let alreadyCounted = false;
+        try {
+          alreadyCounted = sessionStorage.getItem(VISITOR_SESSION_KEY) === "1";
+        } catch (error) {
+          // 무시
+        }
+        const res = await fetch("/api/visitor-count", { method: alreadyCounted ? "GET" : "POST" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (typeof data.count !== "number") return;
+        visitorCount = data.count;
+        if (!alreadyCounted) {
+          try {
+            sessionStorage.setItem(VISITOR_SESSION_KEY, "1");
+          } catch (error) {
+            // 무시
+          }
+        }
+        renderVisitorCounter();
+      } catch (error) {
+        // API를 사용할 수 없는 환경(로컬 테스트 등)에서는 카운터를 조용히 숨긴 채로 둔다
       }
     }
 
@@ -694,6 +749,7 @@
         linkPrivacy: "개인정보처리방침",
         linkContact: "제휴 문의",
         copyright: (year) => "© " + year + " 로또 번호 생성기",
+        visitorCountFn: (n) => "지금까지 <b>" + n + "</b>명이 다녀갔어요",
         rankLabel: (index) => (index === 0 ? "⭐ 1순위" : (index + 1) + "순위"),
         scoreSuffix: "점",
         copySuccess: "결과가 복사되었습니다.",
@@ -736,6 +792,7 @@
         linkPrivacy: "Privacy Policy",
         linkContact: "Partnership Inquiries",
         copyright: (year) => "© " + year + " Lotto Number Generator",
+        visitorCountFn: (n) => "<b>" + n + "</b> visitors and counting",
         rankLabel: (index) => (index === 0 ? "⭐ Rank 1" : "Rank " + (index + 1)),
         scoreSuffix: "pt",
         copySuccess: "Results copied to clipboard.",
@@ -788,6 +845,7 @@
       if (copyrightEl) {
         copyrightEl.textContent = t.copyright(new Date().getFullYear());
       }
+      renderVisitorCounter();
 
       const button = document.getElementById("generateBtn");
       if (!button.disabled) {
@@ -1192,6 +1250,8 @@
         // 무시
       }
       applyTheme(theme);
+
+      initVisitorCounter();
     });
 
   </script>
