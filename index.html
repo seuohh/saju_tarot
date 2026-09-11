@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>무료 사주풀이 & 타로 - 사주팔자·타로카드 분석과 로또·파워볼 행운번호</title>
 <meta name="description" content="생년월일시로 사주팔자(시주·일주·월주·년주)와 대운·용신을 계산하고, 일간과 오행 균형, 직업·연애·재물·가족·건강 운세, 나와 같은 일간의 유명인을 확인하세요. 78장 정통 타로카드로 오늘의 운세도 무료로 뽑아보고, 사주 행운번호가 담긴 맞춤 로또·파워볼 번호까지 확인해보세요.">
-<meta name="keywords" content="사주, 사주팔자, 사주풀이, 무료사주, 타로, 타로카드, 오늘의 타로, 무료 타로, tarot, tarot card reading, 오행, 일주, 대운, 용신, 신강신약, 사주 로또, 파워볼, 행운번호, 로또 번호 추천">
+<meta name="keywords" content="사주, 사주팔자, 사주풀이, 무료사주, 타로, 타로카드, 오늘의 타로, 무료 타로, tarot, tarot card reading, 관상, 오늘의 관상, 얼굴 관상, AI 관상, face reading, physiognomy, 오행, 일주, 대운, 용신, 신강신약, 사주 로또, 파워볼, 행운번호, 로또 번호 추천">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#0B0A08" id="metaThemeColor">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -535,6 +535,34 @@ footer .fcopy{margin-top:10px;}
 .tarot-cross-link a{color:var(--accent);text-decoration:none;}
 .tarot-cross-link a:hover{text-decoration:underline;}
 .tarot-deck-note{margin-top:26px;font-size:var(--fs-caption);color:var(--ink-soft);text-align:center;}
+
+/* ---- 오늘의 관상 ---- */
+.gwansang-choice-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:4px;}
+#gwansangVideo{
+  width:100%;max-width:340px;aspect-ratio:3/4;object-fit:cover;
+  border-radius:16px;display:block;margin:0 auto 16px;
+  background:var(--paper-sunken);border:2px solid var(--accent);
+  transform:scaleX(-1);
+}
+#gwansangCameraStage{margin-top:14px;}
+#gwansangCanvas{display:none;}
+.gwansang-photo-stage{display:flex;justify-content:center;margin-bottom:18px;}
+.gwansang-photo-stage img{
+  width:140px;height:140px;object-fit:cover;border-radius:50%;
+  border:3px solid var(--accent);box-shadow:var(--shadow);
+}
+#gwansangLoading{margin-top:22px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.gwansang-spinner{
+  width:34px;height:34px;border-radius:50%;
+  border:3px solid var(--line-strong);border-top-color:var(--accent);
+  animation:gwansang-spin 0.8s linear infinite;
+}
+@keyframes gwansang-spin{to{transform:rotate(360deg);}}
+#gwansangLoading p{font-size:var(--fs-caption);color:var(--ink-soft);margin:0;}
+.gwansang-note{
+  margin-top:16px;padding:12px 16px;border:1px solid var(--line);border-radius:10px;
+  background:var(--paper-sunken);font-size:var(--fs-caption);color:var(--ink-soft);text-align:center;
+}
 </style>
 </head>
 
@@ -543,6 +571,7 @@ footer .fcopy{margin-top:10px;}
   <div class="app-tabs" role="tablist">
     <button type="button" id="tabSajuBtn" class="app-tab active" role="tab" aria-selected="true">🔮 <span id="tabSajuLabel">오늘의 운세</span></button>
     <button type="button" id="tabTarotBtn" class="app-tab" role="tab" aria-selected="false">🎴 <span id="tabTarotLabel">오늘의 타로</span></button>
+    <button type="button" id="tabGwansangBtn" class="app-tab" role="tab" aria-selected="false">🪞 <span id="tabGwansangLabel">오늘의 관상</span></button>
   </div>
   <div class="top-bar-controls">
     <div class="theme-toggle" role="group" aria-label="Theme">
@@ -738,6 +767,79 @@ footer .fcopy{margin-top:10px;}
   <p class="tarot-cross-link" id="txtTarotCrossLink">사주 기반 맞춤 로또·파워볼 번호가 궁금하신가요? <a href="#" id="tarotToLottoLink">사주 탭에서 확인하기 →</a></p>
 
   <p class="tarot-deck-note" id="txtTarotDeckNote">정통 라이더-웨이트-스미스(Rider–Waite–Smith) 78장 덱(메이저 아르카나 22장 + 마이너 아르카나 56장)을 기반으로 하며, 카드 이미지는 저작권이 만료된 퍼블릭 도메인 원화(위키미디어 공용)를 사용합니다.</p>
+
+</div>
+</div>
+
+<div id="gwansangApp" hidden>
+<div class="bg-wash">
+<header class="hero">
+  <div class="eyebrow" id="txtGwansangEyebrow">오늘의 관상</div>
+  <h1 class="title" id="txtGwansangTitle">오늘의 관상</h1>
+  <div class="hanja-strip">觀相 · 面相</div>
+  <p class="lede" id="txtGwansangLede">사진을 올리거나 카메라로 얼굴을 비추면, 이목구비의 특징을 살펴 오늘의 관상 풀이를 보여드립니다.</p>
+  <div class="disclaimer" id="txtGwansangHeroDisclaimer">촬영하거나 업로드한 사진은 서버로 전송되지 않고 이 브라우저(기기) 안에서만 분석되며, 어디에도 저장되지 않습니다. 결과는 전통 관상학의 해석 방식을 참고한 것으로, 재미와 자기 이해를 위한 참고 자료이며 의학적·법률적·재정적 조언을 대신하지 않습니다.</div>
+</header>
+</div>
+
+<div class="wrap">
+
+  <div class="ad-slot" role="complementary" aria-label="광고 영역" id="txtAdSlot5">광고 영역 (Advertisement)</div>
+  <p class="ad-slot-cta" id="adCta5"></p>
+
+  <div class="tarot-draw-card" id="gwansangCard">
+    <div class="ledger-head" style="justify-content:center;margin-bottom:18px;">
+      <h2 id="txtGwansangFormHead">사진으로 관상 보기</h2>
+    </div>
+
+    <input type="file" accept="image/*" id="gwansangFileInput" hidden>
+
+    <div id="gwansangChooser">
+      <div class="gwansang-choice-actions">
+        <button type="button" class="tarot-draw-btn" id="gwansangUploadBtn">📁 <span id="txtGwansangUploadBtn">사진 업로드</span></button>
+        <button type="button" class="secondary" id="gwansangCameraBtn">📷 <span id="txtGwansangCameraBtn">카메라로 촬영</span></button>
+      </div>
+    </div>
+
+    <div id="gwansangCameraStage" hidden>
+      <video id="gwansangVideo" autoplay playsinline muted></video>
+      <div class="gwansang-choice-actions">
+        <button type="button" class="tarot-draw-btn" id="gwansangCaptureBtn">📸 <span id="txtGwansangCaptureBtn">촬영하기</span></button>
+        <button type="button" class="secondary" id="gwansangCancelCameraBtn"><span id="txtGwansangCancelBtn">취소</span></button>
+      </div>
+    </div>
+
+    <canvas id="gwansangCanvas" hidden></canvas>
+
+    <p class="saved-note" id="gwansangPrivacyNote">🔒 <span id="txtGwansangPrivacyNote">사진은 서버로 전송되지 않고 이 기기에서만 분석돼요.</span></p>
+
+    <div id="gwansangLoading" hidden>
+      <div class="gwansang-spinner"></div>
+      <p id="txtGwansangAnalyzing">AI가 이목구비를 살펴보고 있어요...</p>
+    </div>
+
+    <div id="gwansangError" class="gwansang-note" hidden></div>
+
+    <div class="tarot-result" id="gwansangResult" hidden>
+      <div class="gwansang-photo-stage">
+        <img id="gwansangPhoto" src="" alt="">
+      </div>
+      <div class="tarot-badge-row" id="gwansangTagRow"></div>
+      <div class="tarot-meaning" id="gwansangOverall"></div>
+      <div class="tarot-domains" id="gwansangDomains"></div>
+      <div class="tarot-actions">
+        <button type="button" class="secondary" id="gwansangCopyBtn">📋 <span id="txtGwansangCopyBtn">결과 복사</span></button>
+        <button type="button" class="secondary" id="gwansangShareBtn">🔗 <span id="txtGwansangShareBtn">공유하기</span></button>
+      </div>
+      <div class="tarot-actions">
+        <button type="button" class="secondary" id="gwansangRetakeBtn">🔄 <span id="txtGwansangRetakeBtn">다른 사진으로 다시 보기</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-slot wide" role="complementary" aria-label="광고 영역" id="txtAdSlot6">광고 영역 (Advertisement)</div>
+
+  <p class="tarot-deck-note" id="txtGwansangFooterNote">AI 얼굴 인식은 이 브라우저 안에서만 동작하며, 촬영·업로드한 사진이나 분석 결과는 서버로 전송되거나 저장되지 않습니다.</p>
 
 </div>
 </div>
@@ -1580,7 +1682,75 @@ const STRINGS={
     tarotMeaningLabel:'오늘의 의미',
     tarotAdviceLabel:'참고할 점',
     tarotShareTitle:'오늘의 타로카드',
-    tarotShareHeaderFn:(name,orient)=>'오늘의 타로카드: '+name+' ('+orient+')'
+    tarotShareHeaderFn:(name,orient)=>'오늘의 타로카드: '+name+' ('+orient+')',
+    tabGwansangLabel:'오늘의 관상',
+    txtGwansangEyebrow:'오늘의 관상',
+    txtGwansangTitle:'오늘의 관상',
+    txtGwansangLede:'사진을 올리거나 카메라로 얼굴을 비추면, 이목구비의 특징을 살펴 오늘의 관상 풀이를 보여드립니다.',
+    txtGwansangHeroDisclaimer:'촬영하거나 업로드한 사진은 서버로 전송되지 않고 이 브라우저(기기) 안에서만 분석되며, 어디에도 저장되지 않습니다. 결과는 전통 관상학의 해석 방식을 참고한 것으로, 재미와 자기 이해를 위한 참고 자료이며 의학적·법률적·재정적 조언을 대신하지 않습니다.',
+    txtGwansangFormHead:'사진으로 관상 보기',
+    txtGwansangUploadBtn:'사진 업로드',
+    txtGwansangCameraBtn:'카메라로 촬영',
+    txtGwansangCaptureBtn:'촬영하기',
+    txtGwansangCancelBtn:'취소',
+    txtGwansangRetakeBtn:'다른 사진으로 다시 보기',
+    txtGwansangPrivacyNote:'사진은 서버로 전송되지 않고 이 기기에서만 분석돼요.',
+    txtGwansangAnalyzing:'AI가 이목구비를 살펴보고 있어요...',
+    txtGwansangCameraError:'카메라를 사용할 수 없어요. 대신 사진을 업로드해주세요.',
+    txtGwansangNoFaceNote:'사진에서 얼굴을 뚜렷하게 찾지 못했지만, 대신 오늘의 관상을 봐드릴게요!',
+    txtGwansangOverallLabel:'총평',
+    txtGwansangTodayLabel:'오늘의 포인트',
+    txtGwansangCopyBtn:'결과 복사',
+    txtGwansangShareBtn:'공유하기',
+    txtGwansangShareTitle:'오늘의 관상',
+    txtGwansangFooterNote:'AI 얼굴 인식은 이 브라우저 안에서만 동작하며, 촬영·업로드한 사진이나 분석 결과는 서버로 전송되거나 저장되지 않습니다.',
+    gwansangFeatureLabel:{
+      faceShape:{round:'둥근형',oval:'계란형',angular:'각진형',long:'긴형'},
+      eyes:{bright:'크고 또렷한 눈',balanced:'균형 잡힌 눈',deep:'그윽한 눈'},
+      nose:{full:'복코',balanced:'균형 잡힌 코',sharp:'오뚝한 코'},
+      mouth:{wide:'시원한 입매',balanced:'균형 잡힌 입매',neat:'야무진 입매'}
+    },
+    gwansangFaceShape:{
+      round:{overall:'둥글고 부드러운 윤곽의 얼굴형으로, 사람을 편안하게 만드는 친화력과 무난한 복이 따르는 인상입니다.',
+        career:'사람을 상대하는 일이나 팀을 아우르는 자리에서 강점이 드러나며, 꾸준히 신뢰를 쌓아 자리를 잡는 흐름입니다.'},
+      oval:{overall:'이목구비의 균형이 잘 잡힌 계란형으로, 어느 자리에서도 무난하게 잘 어울리는 팔방미인형 인상입니다.',
+        career:'여러 분야에 두루 재능을 보이는 편이라 다양한 기회가 열려 있으며, 방향을 정하면 빠르게 적응하는 힘이 있습니다.'},
+      angular:{overall:'뚜렷한 턱선과 윤곽이 인상적인 각진 얼굴형으로, 강단 있고 결단력 있는 이미지를 줍니다.',
+        career:'책임지고 밀어붙여야 하는 자리나 전문성이 요구되는 분야에서 두각을 나타내는 편입니다.'},
+      long:{overall:'세로로 갸름하게 뻗은 긴 얼굴형으로, 차분하고 지적인 인상을 주는 편입니다.',
+        career:'깊이 파고드는 연구나 전문 분야, 혼자 몰입하는 업무에서 성과를 내는 경우가 많습니다.'}
+    },
+    gwansangEyes:{
+      bright:'눈매가 크고 또렷해 감정 표현이 솔직한 편으로, 마음을 여는 속도가 빨라 관계가 금방 가까워지는 편입니다.',
+      balanced:'이목구비 중에서도 눈의 균형이 좋아 상대에게 편안한 인상을 주며, 오래 볼수록 매력이 드러나는 관계를 만들어갑니다.',
+      deep:'그윽하고 깊은 눈빛을 지녀 신비로운 매력이 있으며, 천천히 마음을 여는 만큼 한번 맺은 인연을 오래 지키는 편입니다.'
+    },
+    gwansangNose:{
+      full:'콧대가 두툼하고 복스러운 코를 지녀 전통 관상에서 재물운이 따르는 상으로 보는 형태입니다. 꾸준히 모으는 힘이 있습니다.',
+      balanced:'코의 균형이 좋아 씀씀이와 벌이의 균형을 잘 맞추는 편으로, 무리하지 않고 안정적으로 재물을 관리합니다.',
+      sharp:'오뚝하고 시원하게 뻗은 코를 지녀 감각과 안목이 뛰어나며, 기회를 알아보는 눈이 재물운으로 이어지는 편입니다.'
+    },
+    gwansangMouth:{
+      wide:'시원시원하게 큰 입매를 지녀 사람을 끌어모으는 힘이 있고, 주변에 사람이 끊이지 않는 마당발형 대인관계를 만듭니다.',
+      balanced:'입매의 균형이 좋아 편안하고 무난한 인상을 주며, 폭넓게 두루두루 잘 지내는 대인관계를 만들어갑니다.',
+      neat:'야무지고 단정한 입매를 지녀 말과 행동에 신뢰가 쌓이는 편으로, 깊고 오래가는 소수의 인연을 소중히 하는 편입니다.'
+    },
+    gwansangTodayPoint:[
+      '오늘은 첫인상이 유난히 좋게 작용하는 날이에요. 새로운 사람을 만난다면 먼저 웃어보세요.',
+      '오늘은 눈빛에 힘이 실리는 날이라, 중요한 이야기를 할 때 설득력이 더해집니다.',
+      '오늘은 뜻밖의 재물운이 슬쩍 따라올 수 있는 날이에요. 작은 기회도 놓치지 마세요.',
+      '오늘은 표정 관리가 관계를 좌우하는 날입니다. 여유 있는 미소가 도움이 돼요.',
+      '오늘은 평소보다 직감이 예리해지는 날이에요. 고민하던 일이 있다면 마음이 가는 쪽을 믿어보세요.',
+      '오늘은 대인관계에서 좋은 인연이 스치는 날입니다. 주변 사람들에게 조금 더 마음을 열어보세요.',
+      '오늘은 컨디션이 얼굴에 그대로 드러나는 날이에요. 충분히 쉬면 내일 표정이 더 좋아질 거예요.',
+      '오늘은 스스로에게 자신감을 가져도 좋은 날입니다. 오늘의 나를 있는 그대로 인정해주세요.'
+    ],
+    gwansangDomainMeta:[
+      {key:'career',glyph:'職',title:'직업 · 진로'},
+      {key:'love',glyph:'戀',title:'연애 · 인연'},
+      {key:'wealth',glyph:'財',title:'재물'},
+      {key:'friends',glyph:'友',title:'친구 · 대인관계'}
+    ]
   },
   en:{
     txtEyebrow:'Four Pillars Calculation',
@@ -1684,7 +1854,75 @@ const STRINGS={
     tarotMeaningLabel:"Today's Meaning",
     tarotAdviceLabel:'Keep in Mind',
     tarotShareTitle:"Today's Tarot Card",
-    tarotShareHeaderFn:(name,orient)=>"Today's Tarot Card: "+name+' ('+orient+')'
+    tarotShareHeaderFn:(name,orient)=>"Today's Tarot Card: "+name+' ('+orient+')',
+    tabGwansangLabel:"Today's Face Reading",
+    txtGwansangEyebrow:"Today's Face Reading",
+    txtGwansangTitle:"Today's Face Reading",
+    txtGwansangLede:"Upload a photo or turn on your camera, and we'll read your features for a face-reading (gwansang) result for today.",
+    txtGwansangHeroDisclaimer:'Any photo you capture or upload is never sent to a server — it is analyzed entirely on this device and is never stored anywhere. Results follow traditional East Asian face-reading (gwansang) interpretation and are provided for entertainment and self-reflection only, not medical, legal, or financial advice.',
+    txtGwansangFormHead:'Read Your Face',
+    txtGwansangUploadBtn:'Upload Photo',
+    txtGwansangCameraBtn:'Use Camera',
+    txtGwansangCaptureBtn:'Capture',
+    txtGwansangCancelBtn:'Cancel',
+    txtGwansangRetakeBtn:'Try Another Photo',
+    txtGwansangPrivacyNote:'Your photo is never uploaded — it stays on this device.',
+    txtGwansangAnalyzing:'AI is reading your features...',
+    txtGwansangCameraError:'Camera unavailable. Please upload a photo instead.',
+    txtGwansangNoFaceNote:"We couldn't clearly find a face in the photo, but here's today's reading anyway!",
+    txtGwansangOverallLabel:'Overview',
+    txtGwansangTodayLabel:"Today's Point",
+    txtGwansangCopyBtn:'Copy Results',
+    txtGwansangShareBtn:'Share',
+    txtGwansangShareTitle:"Today's Face Reading",
+    txtGwansangFooterNote:"AI face detection runs entirely inside this browser — any photo you capture or upload, and the results, are never sent to a server or stored anywhere.",
+    gwansangFeatureLabel:{
+      faceShape:{round:'Round',oval:'Oval',angular:'Angular',long:'Long'},
+      eyes:{bright:'Big, Expressive Eyes',balanced:'Balanced Eyes',deep:'Deep-Set Eyes'},
+      nose:{full:'Full Nose',balanced:'Balanced Nose',sharp:'Sharp Nose'},
+      mouth:{wide:'Wide, Bold Mouth',balanced:'Balanced Mouth',neat:'Neat Mouth'}
+    },
+    gwansangFaceShape:{
+      round:{overall:'A round, softly contoured face shape that gives off warmth and approachability — the kind of face that puts people at ease and tends to draw steady, easy fortune.',
+        career:'You shine in people-facing roles or positions that bring a team together, building trust steadily until you find your footing.'},
+      oval:{overall:'A well-balanced oval face where the features sit in harmony — a versatile, all-around impression that fits comfortably into almost any setting.',
+        career:'Your talents span multiple areas, keeping many doors open, and once you settle on a direction you adapt to it quickly.'},
+      angular:{overall:'An angular face with a strong, defined jawline that reads as resolute and decisive.',
+        career:'You tend to stand out in roles that demand accountability or specialized expertise, especially where you need to take charge.'},
+      long:{overall:'A long, slender face that gives off a calm, intellectual air.',
+        career:'You often find success in deep research, specialized fields, or focused solo work that rewards sustained concentration.'}
+    },
+    gwansangEyes:{
+      bright:'Big, clear eyes that make your emotions easy to read — you open up quickly, so relationships tend to grow close in no time.',
+      balanced:'Well-proportioned eyes that give people a comfortable first impression, with a charm that deepens the longer someone gets to know you.',
+      deep:'Deep-set, soulful eyes with a quiet, mysterious charm — you open up slowly, but once a bond is formed you tend to keep it for a long time.'
+    },
+    gwansangNose:{
+      full:'A full, rounded nose bridge — a shape traditional face reading long associated with steady financial fortune and a real knack for saving.',
+      balanced:'A well-proportioned nose reflecting a good balance between spending and earning, managing money steadily without overreaching.',
+      sharp:'A sharp, high nose bridge that reflects good taste and sharp judgment — an eye for opportunity that tends to translate into financial luck.'
+    },
+    gwansangMouth:{
+      wide:'A wide, bold mouth that draws people in — the kind of sociable presence that keeps a wide circle of friends close by.',
+      balanced:'A well-balanced mouth that gives an easygoing, approachable impression, making it easy to get along broadly with many kinds of people.',
+      neat:'A neat, well-defined mouth that builds trust through consistent words and actions — you tend to treasure a smaller circle of long, deep bonds.'
+    },
+    gwansangTodayPoint:[
+      "Today your first impression works in your favor — if you meet someone new, smile first.",
+      "Today your gaze carries extra weight, adding persuasive power to anything important you say.",
+      "Today a stroke of unexpected financial luck could pass by — don't let small opportunities slip.",
+      "Today your expression shapes your relationships — a relaxed smile will serve you well.",
+      "Today your intuition is sharper than usual — if you've been undecided, trust the pull of your gut.",
+      "Today a good connection may cross your path — open up a little more to the people around you.",
+      "Today your condition shows plainly on your face — rest well and tomorrow's expression will thank you.",
+      "Today is a good day to feel confident in yourself — accept who you are, just as you are today."
+    ],
+    gwansangDomainMeta:[
+      {key:'career',glyph:'職',title:'Career'},
+      {key:'love',glyph:'戀',title:'Love'},
+      {key:'wealth',glyph:'財',title:'Wealth'},
+      {key:'friends',glyph:'友',title:'Friends'}
+    ]
   }
 };
 function S(key){ return STRINGS[LANG][key]; }
@@ -1696,14 +1934,24 @@ function applyStaticI18n(){
    'txtLabelDate','txtLabelTime','txtHourUnknown','txtLabelGender','txtGenderMale','txtGenderFemale',
    'txtSubmitBtn','txtSavedNote','txtDomainsHead','txtFortuneHead','txtFortuneNote','txtYearFortuneHead','txtYearFortuneNote',
    'txtCelebHead','txtLottoHead','txtFooterMain',
-   'tabSajuLabel','tabTarotLabel','txtThemeDark','txtThemeLight',
+   'tabSajuLabel','tabTarotLabel','tabGwansangLabel','txtThemeDark','txtThemeLight',
    'txtTarotEyebrow','txtTarotTitle','txtTarotHeroDisclaimer','txtTarotFormHead','txtTarotLabelName',
-   'txtTarotReshuffleNote','txtTarotSavedNote'
+   'txtTarotReshuffleNote','txtTarotSavedNote',
+   'txtGwansangEyebrow','txtGwansangHeroDisclaimer','txtGwansangFormHead',
+   'txtGwansangUploadBtn','txtGwansangCameraBtn','txtGwansangCaptureBtn','txtGwansangCancelBtn',
+   'txtGwansangRetakeBtn','txtGwansangPrivacyNote','txtGwansangAnalyzing','txtGwansangCopyBtn',
+   'txtGwansangShareBtn','txtGwansangFooterNote'
   ].forEach(id=>{
     const el=document.getElementById(id);
     if(el) el.textContent=s[id];
   });
   updateTarotTitleDate();
+  updateGwansangTitleDate();
+  document.getElementById('txtGwansangLede').textContent=s.txtGwansangLede;
+  document.getElementById('txtAdSlot5').textContent=s.txtAdSlot1;
+  document.getElementById('txtAdSlot6').textContent=s.txtAdSlot1;
+  document.getElementById('adCta5').innerHTML=s.adSlotCta;
+  if(currentGwansang) renderGwansangResult(currentGwansang.categories,currentGwansang.photoDataUrl);
   document.getElementById('txtAdSlot3').textContent=s.txtAdSlot1;
   document.getElementById('txtAdSlot4').textContent=s.txtAdSlot1;
   document.getElementById('adCta1').innerHTML=s.adSlotCta;
@@ -1991,6 +2239,12 @@ function updateTarotTitleDate(){
   const el=document.getElementById('txtTarotTitle');
   if(!el) return;
   el.textContent=(LANG==='en'?"Today's Tarot":'오늘의 타로')+' ('+todayDateLabel()+')';
+}
+
+function updateGwansangTitleDate(){
+  const el=document.getElementById('txtGwansangTitle');
+  if(!el) return;
+  el.textContent=(LANG==='en'?"Today's Face Reading":'오늘의 관상')+' ('+todayDateLabel()+')';
 }
 
 function renderFortune(profile){
@@ -3670,6 +3924,255 @@ async function shareTarotResult(){
   }
 }
 
+/* ================= 오늘의 관상 (얼굴 인식 기반) =================
+   촬영·업로드한 사진은 서버로 전송되지 않으며, MediaPipe FaceLandmarker를
+   이 브라우저 안에서(WASM) 실행해 이목구비 비율을 계산한다. 얼굴 인식에
+   실패하거나 모델 로딩이 지연되면, 사진의 픽셀 특징을 해시로 변환해
+   동일한 분류 체계로 결과를 대체(fallback)하므로 결과 화면은 항상 표시된다. */
+let currentGwansang=null;
+let gwansangStream=null;
+let faceLandmarkerPromise=null;
+
+const GWANSANG_LM_IDX={
+  faceLeft:234, faceRight:454,
+  faceTop:10, faceBottom:152,
+  eyeOuterA:33, eyeOuterB:263,
+  noseA:129, noseB:358,
+  mouthA:61, mouthB:291
+};
+
+function withTimeout(promise,ms){
+  return Promise.race([
+    promise,
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),ms))
+  ]);
+}
+
+function loadFaceLandmarker(){
+  if(!faceLandmarkerPromise){
+    faceLandmarkerPromise=(async function(){
+      const vision=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs');
+      const filesetResolver=await vision.FilesetResolver.forVisionTasks(
+        'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm'
+      );
+      return vision.FaceLandmarker.createFromOptions(filesetResolver,{
+        baseOptions:{
+          modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+          delegate:'CPU'
+        },
+        outputFaceBlendshapes:false,
+        outputFacialTransformationMatrixes:false,
+        runningMode:'IMAGE',
+        numFaces:1
+      });
+    })();
+  }
+  return faceLandmarkerPromise;
+}
+
+function gwansangDist(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
+
+function computeFaceRatios(lm,w,h){
+  const P=idx=>({x:lm[idx].x*w,y:lm[idx].y*h});
+  const faceWidth=gwansangDist(P(GWANSANG_LM_IDX.faceLeft),P(GWANSANG_LM_IDX.faceRight));
+  const faceHeight=gwansangDist(P(GWANSANG_LM_IDX.faceTop),P(GWANSANG_LM_IDX.faceBottom));
+  const eyeSpan=gwansangDist(P(GWANSANG_LM_IDX.eyeOuterA),P(GWANSANG_LM_IDX.eyeOuterB));
+  const noseWidth=gwansangDist(P(GWANSANG_LM_IDX.noseA),P(GWANSANG_LM_IDX.noseB));
+  const mouthWidth=gwansangDist(P(GWANSANG_LM_IDX.mouthA),P(GWANSANG_LM_IDX.mouthB));
+  return{
+    faceShapeRatio:faceWidth/faceHeight,
+    eyeRatio:eyeSpan/faceWidth,
+    noseRatio:noseWidth/faceWidth,
+    mouthRatio:mouthWidth/faceWidth
+  };
+}
+
+function classifyFaceShape(ratio){
+  if(ratio>=0.88) return 'round';
+  if(ratio>=0.80) return 'oval';
+  if(ratio>=0.72) return 'angular';
+  return 'long';
+}
+function classifyEyes(ratio){
+  if(ratio>=0.46) return 'bright';
+  if(ratio>=0.40) return 'balanced';
+  return 'deep';
+}
+function classifyNose(ratio){
+  if(ratio>=0.28) return 'full';
+  if(ratio>=0.22) return 'balanced';
+  return 'sharp';
+}
+function classifyMouth(ratio){
+  if(ratio>=0.42) return 'wide';
+  if(ratio>=0.34) return 'balanced';
+  return 'neat';
+}
+
+function fallbackGwansangCategories(canvas){
+  const FACE_KEYS=['round','oval','angular','long'];
+  const EYE_KEYS=['bright','balanced','deep'];
+  const NOSE_KEYS=['full','balanced','sharp'];
+  const MOUTH_KEYS=['wide','balanced','neat'];
+  let h=0;
+  try{
+    const ctx=canvas.getContext('2d');
+    const w=canvas.width,h2=canvas.height;
+    const stepX=Math.max(1,Math.floor(w/16));
+    const stepY=Math.max(1,Math.floor(h2/16));
+    const data=ctx.getImageData(0,0,w,h2).data;
+    let sum=0;
+    for(let y=0;y<h2;y+=stepY){
+      for(let x=0;x<w;x+=stepX){
+        const i=(y*w+x)*4;
+        sum+=data[i]+data[i+1]+data[i+2];
+      }
+    }
+    h=Math.abs(hashSeed('gwansang|'+sum+'|'+w+'x'+h2));
+  }catch(error){
+    h=Math.abs(hashSeed('gwansang|'+Date.now()));
+  }
+  return{
+    faceShape:FACE_KEYS[h%4],
+    eyes:EYE_KEYS[Math.floor(h/4)%3],
+    nose:NOSE_KEYS[Math.floor(h/12)%3],
+    mouth:MOUTH_KEYS[Math.floor(h/36)%3]
+  };
+}
+
+async function analyzeGwansangCategories(canvas){
+  try{
+    const landmarker=await withTimeout(loadFaceLandmarker(),15000);
+    const result=landmarker.detect(canvas);
+    if(!result.faceLandmarks||!result.faceLandmarks.length){
+      return Object.assign(fallbackGwansangCategories(canvas),{noFace:true});
+    }
+    const lm=result.faceLandmarks[0];
+    const r=computeFaceRatios(lm,canvas.width,canvas.height);
+    return{
+      faceShape:classifyFaceShape(r.faceShapeRatio),
+      eyes:classifyEyes(r.eyeRatio),
+      nose:classifyNose(r.noseRatio),
+      mouth:classifyMouth(r.mouthRatio),
+      noFace:false
+    };
+  }catch(error){
+    return Object.assign(fallbackGwansangCategories(canvas),{noFace:false});
+  }
+}
+
+function drawToCanvasScaled(source,naturalW,naturalH,maxDim){
+  const canvas=document.getElementById('gwansangCanvas');
+  let w=naturalW,h=naturalH;
+  if(w>=h&&w>maxDim){ h=Math.round(h*maxDim/w); w=maxDim; }
+  else if(h>w&&h>maxDim){ w=Math.round(w*maxDim/h); h=maxDim; }
+  canvas.width=w;
+  canvas.height=h;
+  canvas.getContext('2d').drawImage(source,0,0,w,h);
+  return canvas;
+}
+
+function stopGwansangStream(){
+  if(gwansangStream){
+    gwansangStream.getTracks().forEach(function(t){ t.stop(); });
+    gwansangStream=null;
+  }
+}
+
+async function startGwansangAnalysis(canvas){
+  const s=STRINGS[LANG];
+  document.getElementById('gwansangChooser').hidden=true;
+  document.getElementById('gwansangCameraStage').hidden=true;
+  document.getElementById('gwansangError').hidden=true;
+  document.getElementById('gwansangResult').hidden=true;
+  document.getElementById('gwansangLoading').hidden=false;
+
+  const photoDataUrl=canvas.toDataURL('image/jpeg',0.88);
+  const categories=await analyzeGwansangCategories(canvas);
+
+  document.getElementById('gwansangLoading').hidden=true;
+  const errorEl=document.getElementById('gwansangError');
+  if(categories.noFace){
+    errorEl.textContent=s.txtGwansangNoFaceNote;
+    errorEl.hidden=false;
+  }
+  renderGwansangResult(categories,photoDataUrl);
+}
+
+function renderGwansangResult(categories,photoDataUrl){
+  const s=STRINGS[LANG];
+  currentGwansang={categories,photoDataUrl};
+
+  document.getElementById('gwansangResult').hidden=false;
+  document.getElementById('gwansangPhoto').src=photoDataUrl;
+
+  const shapeInfo=s.gwansangFaceShape[categories.faceShape];
+  const dayIdx=Math.abs(hashSeed(todayKey()+'|'+categories.faceShape+categories.eyes+categories.nose+categories.mouth))%s.gwansangTodayPoint.length;
+  const todayPoint=s.gwansangTodayPoint[dayIdx];
+
+  let tagsHtml='';
+  ['faceShape','eyes','nose','mouth'].forEach(function(feat){
+    tagsHtml+='<span class="tarot-arcana-tag">'+s.gwansangFeatureLabel[feat][categories[feat]]+'</span>';
+  });
+  document.getElementById('gwansangTagRow').innerHTML=tagsHtml;
+
+  document.getElementById('gwansangOverall').innerHTML=
+    '<p><span class="lbl">'+s.txtGwansangOverallLabel+'</span>'+shapeInfo.overall+'</p>'+
+    '<p><span class="lbl">'+s.txtGwansangTodayLabel+'</span>'+todayPoint+'</p>';
+
+  let dh='';
+  s.gwansangDomainMeta.forEach(function(dm){
+    let text='';
+    if(dm.key==='career') text=shapeInfo.career;
+    else if(dm.key==='love') text=s.gwansangEyes[categories.eyes];
+    else if(dm.key==='wealth') text=s.gwansangNose[categories.nose];
+    else if(dm.key==='friends') text=s.gwansangMouth[categories.mouth];
+    dh+='<div class="domain-card"><div class="dhan">'+dm.glyph+'</div><h4>'+dm.title+'</h4><p>'+text+'</p></div>';
+  });
+  document.getElementById('gwansangDomains').innerHTML=dh;
+}
+
+function gwansangResultText(){
+  if(!currentGwansang) return '';
+  const s=STRINGS[LANG];
+  const{categories}=currentGwansang;
+  const shapeInfo=s.gwansangFaceShape[categories.faceShape];
+  const dayIdx=Math.abs(hashSeed(todayKey()+'|'+categories.faceShape+categories.eyes+categories.nose+categories.mouth))%s.gwansangTodayPoint.length;
+  const todayPoint=s.gwansangTodayPoint[dayIdx];
+  let text=s.txtGwansangShareTitle+'\n\n'+s.txtGwansangOverallLabel+': '+shapeInfo.overall+'\n'+s.txtGwansangTodayLabel+': '+todayPoint+'\n';
+  s.gwansangDomainMeta.forEach(function(dm){
+    let t='';
+    if(dm.key==='career') t=shapeInfo.career;
+    else if(dm.key==='love') t=s.gwansangEyes[categories.eyes];
+    else if(dm.key==='wealth') t=s.gwansangNose[categories.nose];
+    else if(dm.key==='friends') t=s.gwansangMouth[categories.mouth];
+    text+='\n'+dm.title+': '+t;
+  });
+  return text;
+}
+
+async function copyGwansangResult(){
+  const s=STRINGS[LANG];
+  if(!currentGwansang) return;
+  try{
+    await navigator.clipboard.writeText(gwansangResultText());
+    showToast(s.toastCopied);
+  }catch(error){
+    showToast(s.toastCopyFail);
+  }
+}
+
+async function shareGwansangResult(){
+  const s=STRINGS[LANG];
+  if(!currentGwansang) return;
+  const text=gwansangResultText();
+  if(navigator.share){
+    try{ await navigator.share({title:s.txtGwansangShareTitle,text}); }catch(error){ /* 취소 무시 */ }
+  }else{
+    copyGwansangResult();
+  }
+}
+
 let currentName='';
 let currentIsExample=false;
 
@@ -3725,15 +4228,76 @@ document.getElementById('themeLightBtn').addEventListener('click',function(){ se
 /* ================= 상단 탭: 사주 / 타로 ================= */
 function setActiveApp(app){
   const isSaju=app==='saju';
+  const isTarot=app==='tarot';
+  const isGwansang=app==='gwansang';
   document.getElementById('sajuApp').hidden=!isSaju;
-  document.getElementById('tarotApp').hidden=isSaju;
+  document.getElementById('tarotApp').hidden=!isTarot;
+  document.getElementById('gwansangApp').hidden=!isGwansang;
   document.getElementById('tabSajuBtn').classList.toggle('active',isSaju);
-  document.getElementById('tabTarotBtn').classList.toggle('active',!isSaju);
+  document.getElementById('tabTarotBtn').classList.toggle('active',isTarot);
+  document.getElementById('tabGwansangBtn').classList.toggle('active',isGwansang);
   document.getElementById('tabSajuBtn').setAttribute('aria-selected',String(isSaju));
-  document.getElementById('tabTarotBtn').setAttribute('aria-selected',String(!isSaju));
+  document.getElementById('tabTarotBtn').setAttribute('aria-selected',String(isTarot));
+  document.getElementById('tabGwansangBtn').setAttribute('aria-selected',String(isGwansang));
+  if(!isGwansang) stopGwansangStream();
 }
 document.getElementById('tabSajuBtn').addEventListener('click',function(){ setActiveApp('saju'); });
 document.getElementById('tabTarotBtn').addEventListener('click',function(){ setActiveApp('tarot'); });
+document.getElementById('tabGwansangBtn').addEventListener('click',function(){ setActiveApp('gwansang'); });
+
+/* ================= 오늘의 관상: 업로드/카메라 UI ================= */
+document.getElementById('gwansangUploadBtn').addEventListener('click',function(){
+  document.getElementById('gwansangFileInput').click();
+});
+document.getElementById('gwansangFileInput').addEventListener('change',function(e){
+  const file=e.target.files&&e.target.files[0];
+  if(!file) return;
+  const url=URL.createObjectURL(file);
+  const img=new Image();
+  img.onload=function(){
+    const canvas=drawToCanvasScaled(img,img.naturalWidth,img.naturalHeight,480);
+    URL.revokeObjectURL(url);
+    startGwansangAnalysis(canvas);
+  };
+  img.onerror=function(){ URL.revokeObjectURL(url); };
+  img.src=url;
+  e.target.value='';
+});
+document.getElementById('gwansangCameraBtn').addEventListener('click',async function(){
+  const s=STRINGS[LANG];
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    showToast(s.txtGwansangCameraError);
+    return;
+  }
+  try{
+    gwansangStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+    const video=document.getElementById('gwansangVideo');
+    video.srcObject=gwansangStream;
+    document.getElementById('gwansangChooser').hidden=true;
+    document.getElementById('gwansangCameraStage').hidden=false;
+  }catch(error){
+    showToast(s.txtGwansangCameraError);
+  }
+});
+document.getElementById('gwansangCancelCameraBtn').addEventListener('click',function(){
+  stopGwansangStream();
+  document.getElementById('gwansangCameraStage').hidden=true;
+  document.getElementById('gwansangChooser').hidden=false;
+});
+document.getElementById('gwansangCaptureBtn').addEventListener('click',function(){
+  const video=document.getElementById('gwansangVideo');
+  const canvas=drawToCanvasScaled(video,video.videoWidth,video.videoHeight,480);
+  stopGwansangStream();
+  document.getElementById('gwansangCameraStage').hidden=true;
+  startGwansangAnalysis(canvas);
+});
+document.getElementById('gwansangRetakeBtn').addEventListener('click',function(){
+  document.getElementById('gwansangResult').hidden=true;
+  document.getElementById('gwansangError').hidden=true;
+  document.getElementById('gwansangChooser').hidden=false;
+});
+document.getElementById('gwansangCopyBtn').addEventListener('click',copyGwansangResult);
+document.getElementById('gwansangShareBtn').addEventListener('click',shareGwansangResult);
 
 function drawTodayTarot(){
   const name=document.getElementById('fTarotName').value.trim();
