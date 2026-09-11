@@ -6,22 +6,22 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://saju-tarot.com/lotto.html</loc>
+    <loc>https://saju-tarot.com/lotto</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://saju-tarot.com/contact.html</loc>
+    <loc>https://saju-tarot.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://saju-tarot.com/privacy.html</loc>
+    <loc>https://saju-tarot.com/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
-    <loc>https://saju-tarot.com/terms.html</loc>
+    <loc>https://saju-tarot.com/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
