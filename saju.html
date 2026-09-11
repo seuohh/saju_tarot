@@ -811,7 +811,7 @@ footer .fcopy{margin-top:10px;}
 
     <canvas id="gwansangCanvas" hidden></canvas>
 
-    <p class="saved-note" id="gwansangPrivacyNote">🔒 <span id="txtGwansangPrivacyNote">사진은 서버로 전송되지 않고 이 기기에서만 분석돼요.</span></p>
+    <p class="saved-note" id="gwansangPrivacyNote">🔒 <span id="txtGwansangPrivacyNote">사진과 분석 결과는 서버로 전송되지 않고 이 브라우저에만 저장되며, 다음 방문 때 자동으로 불러와요.</span> <a href="#" id="clearGwansangSavedLink">저장된 정보 지우기</a></p>
 
     <div id="gwansangLoading" hidden>
       <div class="gwansang-spinner"></div>
@@ -1690,7 +1690,7 @@ const STRINGS={
     txtGwansangEyebrow:'오늘의 관상',
     txtGwansangTitle:'오늘의 관상',
     txtGwansangLede:'사진을 올리거나 카메라로 얼굴을 비추면, 이목구비의 특징을 살펴 오늘의 관상 풀이를 보여드립니다.',
-    txtGwansangHeroDisclaimer:'촬영하거나 업로드한 사진은 서버로 전송되지 않고 이 브라우저(기기) 안에서만 분석되며, 어디에도 저장되지 않습니다. 결과는 전통 관상학의 해석 방식을 참고한 것으로, 재미와 자기 이해를 위한 참고 자료이며 의학적·법률적·재정적 조언을 대신하지 않습니다.',
+    txtGwansangHeroDisclaimer:'촬영하거나 업로드한 사진은 서버로 전송되지 않고 이 브라우저(기기) 안에서만 분석됩니다. 분석 결과는 다음 방문 때 다시 보여드리기 위해 이 브라우저에만 저장되며, 언제든지 지울 수 있습니다. 결과는 전통 관상학의 해석 방식을 참고한 것으로, 재미와 자기 이해를 위한 참고 자료이며 의학적·법률적·재정적 조언을 대신하지 않습니다.',
     txtGwansangFormHead:'사진으로 관상 보기',
     txtGwansangUploadBtn:'사진 업로드',
     txtGwansangCameraBtn:'카메라로 촬영',
@@ -1699,7 +1699,7 @@ const STRINGS={
     txtGwansangRetakeCameraBtn:'재촬영하기',
     txtGwansangRetakeUploadBtn:'사진 재업로드',
     txtGwansangCelebHead:'이 관상과 닮은 글로벌 유명인',
-    txtGwansangPrivacyNote:'사진은 서버로 전송되지 않고 이 기기에서만 분석돼요.',
+    txtGwansangPrivacyNote:'사진과 분석 결과는 서버로 전송되지 않고 이 브라우저에만 저장되며, 다음 방문 때 자동으로 불러와요.',
     txtGwansangAnalyzing:'AI가 이목구비를 살펴보고 있어요...',
     txtGwansangCameraError:'카메라를 사용할 수 없어요. 대신 사진을 업로드해주세요.',
     txtGwansangNoFaceNote:'사진에서 얼굴을 뚜렷하게 찾지 못했지만, 대신 오늘의 관상을 봐드릴게요!',
@@ -1708,7 +1708,7 @@ const STRINGS={
     txtGwansangCopyBtn:'결과 복사',
     txtGwansangShareBtn:'공유하기',
     txtGwansangShareTitle:'오늘의 관상',
-    txtGwansangFooterNote:'AI 얼굴 인식은 이 브라우저 안에서만 동작하며, 촬영·업로드한 사진이나 분석 결과는 서버로 전송되거나 저장되지 않습니다.',
+    txtGwansangFooterNote:'AI 얼굴 인식은 이 브라우저 안에서만 동작하며, 촬영·업로드한 사진과 분석 결과는 서버로 전송되지 않고 이 브라우저에만 저장됩니다.',
     gwansangFeatureLabel:{
       faceShape:{round:'둥근형',oval:'계란형',angular:'각진형',long:'긴형'},
       eyes:{bright:'크고 또렷한 눈',balanced:'균형 잡힌 눈',deep:'그윽한 눈'},
@@ -1716,29 +1716,89 @@ const STRINGS={
       mouth:{wide:'시원한 입매',balanced:'균형 잡힌 입매',neat:'야무진 입매'}
     },
     gwansangFaceShape:{
-      round:{overall:'둥글고 부드러운 윤곽의 얼굴형으로, 사람을 편안하게 만드는 친화력과 무난한 복이 따르는 인상입니다.',
-        career:'사람을 상대하는 일이나 팀을 아우르는 자리에서 강점이 드러나며, 꾸준히 신뢰를 쌓아 자리를 잡는 흐름입니다.'},
-      oval:{overall:'이목구비의 균형이 잘 잡힌 계란형으로, 어느 자리에서도 무난하게 잘 어울리는 팔방미인형 인상입니다.',
-        career:'여러 분야에 두루 재능을 보이는 편이라 다양한 기회가 열려 있으며, 방향을 정하면 빠르게 적응하는 힘이 있습니다.'},
-      angular:{overall:'뚜렷한 턱선과 윤곽이 인상적인 각진 얼굴형으로, 강단 있고 결단력 있는 이미지를 줍니다.',
-        career:'책임지고 밀어붙여야 하는 자리나 전문성이 요구되는 분야에서 두각을 나타내는 편입니다.'},
-      long:{overall:'세로로 갸름하게 뻗은 긴 얼굴형으로, 차분하고 지적인 인상을 주는 편입니다.',
-        career:'깊이 파고드는 연구나 전문 분야, 혼자 몰입하는 업무에서 성과를 내는 경우가 많습니다.'}
+      round:[
+        {overall:'둥글고 부드러운 윤곽의 얼굴형으로, 사람을 편안하게 만드는 친화력과 무난한 복이 따르는 인상입니다.',
+          career:'사람을 상대하는 일이나 팀을 아우르는 자리에서 강점이 드러나며, 꾸준히 신뢰를 쌓아 자리를 잡는 흐름입니다.'},
+        {overall:'둥근 윤곽 속에 온화한 기운이 감도는 얼굴형으로, 곁에 있는 사람을 편안하게 풀어주는 힘이 있습니다.',
+          career:'분위기를 부드럽게 만드는 역할이나 사람과 사람을 이어주는 자리에서 특히 빛을 발합니다.'},
+        {overall:'부드러운 곡선이 도드라지는 둥근 얼굴형으로, 다투기보다 둥글게 풀어가는 지혜가 인상에 묻어납니다.',
+          career:'혼자보다 여럿이 함께하는 프로젝트에서 조율자 역할을 맡을 때 성과가 두드러집니다.'}
+      ],
+      oval:[
+        {overall:'이목구비의 균형이 잘 잡힌 계란형으로, 어느 자리에서도 무난하게 잘 어울리는 팔방미인형 인상입니다.',
+          career:'여러 분야에 두루 재능을 보이는 편이라 다양한 기회가 열려 있으며, 방향을 정하면 빠르게 적응하는 힘이 있습니다.'},
+        {overall:'균형 잡힌 계란형 얼굴로, 어느 자리에 서도 자연스럽게 녹아드는 무난하고 세련된 인상을 줍니다.',
+          career:'특정 분야에 얽매이지 않는 다재다능함이 강점이라, 변화가 잦은 환경에서도 유연하게 적응합니다.'},
+        {overall:'곡선과 균형이 조화를 이루는 계란형으로, 첫인상에서부터 신뢰감을 주는 편입니다.',
+          career:'협업과 조정이 필요한 자리에서 균형 잡힌 시각으로 중심을 잡아주는 역할을 잘 해냅니다.'}
+      ],
+      angular:[
+        {overall:'뚜렷한 턱선과 윤곽이 인상적인 각진 얼굴형으로, 강단 있고 결단력 있는 이미지를 줍니다.',
+          career:'책임지고 밀어붙여야 하는 자리나 전문성이 요구되는 분야에서 두각을 나타내는 편입니다.'},
+        {overall:'선이 뚜렷한 각진 얼굴형으로, 한번 마음먹은 일은 끝까지 밀고 나가는 뚝심이 느껴지는 인상입니다.',
+          career:'경쟁이 치열한 환경일수록 오히려 실력이 드러나며, 위기에서 침착하게 판단을 내리는 편입니다.'},
+        {overall:'윤곽이 또렷한 각진 얼굴형으로, 겉으로는 단단해 보이지만 속으로는 세심하게 챙기는 반전 매력이 있습니다.',
+          career:'원칙과 기준이 뚜렷한 조직이나 전문직에서 신뢰를 얻으며 자리를 넓혀가는 편입니다.'}
+      ],
+      long:[
+        {overall:'세로로 갸름하게 뻗은 긴 얼굴형으로, 차분하고 지적인 인상을 주는 편입니다.',
+          career:'깊이 파고드는 연구나 전문 분야, 혼자 몰입하는 업무에서 성과를 내는 경우가 많습니다.'},
+        {overall:'갸름하게 뻗은 긴 얼굴형으로, 서두르지 않고 침착하게 상황을 살피는 신중한 인상을 줍니다.',
+          career:'단기 성과보다 장기적인 계획을 세우는 일에 강하며, 꾸준함이 결국 성과로 이어지는 편입니다.'},
+        {overall:'세련되게 갸름한 긴 얼굴형으로, 말수는 적어도 생각이 깊다는 인상을 주는 편입니다.',
+          career:'혼자 집중해서 완성도를 높이는 작업이나 전문 지식이 쌓일수록 빛나는 분야에서 강점을 보입니다.'}
+      ]
     },
     gwansangEyes:{
-      bright:'눈매가 크고 또렷해 감정 표현이 솔직한 편으로, 마음을 여는 속도가 빨라 관계가 금방 가까워지는 편입니다.',
-      balanced:'이목구비 중에서도 눈의 균형이 좋아 상대에게 편안한 인상을 주며, 오래 볼수록 매력이 드러나는 관계를 만들어갑니다.',
-      deep:'그윽하고 깊은 눈빛을 지녀 신비로운 매력이 있으며, 천천히 마음을 여는 만큼 한번 맺은 인연을 오래 지키는 편입니다.'
+      bright:[
+        '눈매가 크고 또렷해 감정 표현이 솔직한 편으로, 마음을 여는 속도가 빨라 관계가 금방 가까워지는 편입니다.',
+        '눈에 생기가 가득해 표정만으로도 마음이 다 보인다는 말을 듣는 편으로, 사람들에게 먼저 다가가는 데 거침이 없습니다.',
+        '또렷하고 반짝이는 눈매 덕분에 자신감 있어 보인다는 인상을 자주 주며, 관계를 이끌어가는 힘이 있습니다.'
+      ],
+      balanced:[
+        '이목구비 중에서도 눈의 균형이 좋아 상대에게 편안한 인상을 주며, 오래 볼수록 매력이 드러나는 관계를 만들어갑니다.',
+        '눈매의 균형이 좋아 부담스럽지 않으면서도 진심이 느껴진다는 평을 자주 듣는 편입니다.',
+        '차분하고 균형 잡힌 눈매 덕분에 상대를 편안하게 만들며, 신뢰를 바탕으로 관계를 오래 이어가는 편입니다.'
+      ],
+      deep:[
+        '그윽하고 깊은 눈빛을 지녀 신비로운 매력이 있으며, 천천히 마음을 여는 만큼 한번 맺은 인연을 오래 지키는 편입니다.',
+        '깊이 있는 눈빛 덕분에 생각이 많아 보인다는 인상을 주며, 가까워질수록 진가를 알아보는 사람이 많습니다.',
+        '그윽한 눈매에 은근한 매력이 있어, 첫눈에 반하기보다 두고두고 생각나는 인연을 만드는 편입니다.'
+      ]
     },
     gwansangNose:{
-      full:'콧대가 두툼하고 복스러운 코를 지녀 전통 관상에서 재물운이 따르는 상으로 보는 형태입니다. 꾸준히 모으는 힘이 있습니다.',
-      balanced:'코의 균형이 좋아 씀씀이와 벌이의 균형을 잘 맞추는 편으로, 무리하지 않고 안정적으로 재물을 관리합니다.',
-      sharp:'오뚝하고 시원하게 뻗은 코를 지녀 감각과 안목이 뛰어나며, 기회를 알아보는 눈이 재물운으로 이어지는 편입니다.'
+      full:[
+        '콧대가 두툼하고 복스러운 코를 지녀 전통 관상에서 재물운이 따르는 상으로 보는 형태입니다. 꾸준히 모으는 힘이 있습니다.',
+        '풍성하고 복스러운 코 모양 덕분에 전통 관상에서 말하는 "재물이 드는 상"에 가깝다는 평을 듣는 편이며, 안정적으로 재산을 불려가는 힘이 있습니다.',
+        '두툼하고 넉넉한 코를 지녀 씀씀이보다 버는 힘이 크다는 인상을 주며, 큰 굴곡 없이 재물을 쌓아가는 편입니다.'
+      ],
+      balanced:[
+        '코의 균형이 좋아 씀씀이와 벌이의 균형을 잘 맞추는 편으로, 무리하지 않고 안정적으로 재물을 관리합니다.',
+        '균형 잡힌 콧대 덕분에 계획적인 소비 습관을 지녔다는 평을 들으며, 과하지도 부족하지도 않게 재물을 다룹니다.',
+        '적당한 콧대와 균형 잡힌 콧망울을 지녀, 무리한 투자보다 꾸준한 저축으로 자산을 불려가는 편입니다.'
+      ],
+      sharp:[
+        '오뚝하고 시원하게 뻗은 코를 지녀 감각과 안목이 뛰어나며, 기회를 알아보는 눈이 재물운으로 이어지는 편입니다.',
+        '오뚝한 콧대 덕분에 세련된 감각을 타고났다는 평을 들으며, 트렌드를 읽는 안목이 곧 기회로 이어지는 편입니다.',
+        '시원하게 뻗은 코 라인 덕분에 결단이 빠르다는 인상을 주며, 판단이 서면 주저 않고 움직여 성과를 만드는 편입니다.'
+      ]
     },
     gwansangMouth:{
-      wide:'시원시원하게 큰 입매를 지녀 사람을 끌어모으는 힘이 있고, 주변에 사람이 끊이지 않는 마당발형 대인관계를 만듭니다.',
-      balanced:'입매의 균형이 좋아 편안하고 무난한 인상을 주며, 폭넓게 두루두루 잘 지내는 대인관계를 만들어갑니다.',
-      neat:'야무지고 단정한 입매를 지녀 말과 행동에 신뢰가 쌓이는 편으로, 깊고 오래가는 소수의 인연을 소중히 하는 편입니다.'
+      wide:[
+        '시원시원하게 큰 입매를 지녀 사람을 끌어모으는 힘이 있고, 주변에 사람이 끊이지 않는 마당발형 대인관계를 만듭니다.',
+        '시원한 입매 덕분에 말 한마디에도 힘이 실린다는 평을 들으며, 자연스럽게 주변에 사람이 모이는 편입니다.',
+        '큼직하고 시원한 입매를 지녀 유쾌한 첫인상을 남기며, 새로운 사람과도 스스럼없이 가까워지는 편입니다.'
+      ],
+      balanced:[
+        '입매의 균형이 좋아 편안하고 무난한 인상을 주며, 폭넓게 두루두루 잘 지내는 대인관계를 만들어갑니다.',
+        '균형 잡힌 입매 덕분에 편안하면서도 예의 바르다는 인상을 주며, 어느 자리에서도 무난하게 어울리는 편입니다.',
+        '입매의 균형이 좋아 말과 표정에서 안정감이 느껴지며, 오래 알고 지낼수록 편해지는 관계를 만듭니다.'
+      ],
+      neat:[
+        '야무지고 단정한 입매를 지녀 말과 행동에 신뢰가 쌓이는 편으로, 깊고 오래가는 소수의 인연을 소중히 하는 편입니다.',
+        '단정한 입매 덕분에 신중하다는 인상을 주며, 넓지 않아도 깊은 관계를 오래 지켜가는 편입니다.',
+        '야무진 입매를 지녀 말수는 적어도 약속은 확실히 지킨다는 평을 들으며, 신뢰를 바탕으로 관계를 다져갑니다.'
+      ]
     },
     gwansangTodayPoint:[
       '오늘은 첫인상이 유난히 좋게 작용하는 날이에요. 새로운 사람을 만난다면 먼저 웃어보세요.',
@@ -1864,7 +1924,7 @@ const STRINGS={
     txtGwansangEyebrow:"Today's Face Reading",
     txtGwansangTitle:"Today's Face Reading",
     txtGwansangLede:"Upload a photo or turn on your camera, and we'll read your features for a face-reading (gwansang) result for today.",
-    txtGwansangHeroDisclaimer:'Any photo you capture or upload is never sent to a server — it is analyzed entirely on this device and is never stored anywhere. Results follow traditional East Asian face-reading (gwansang) interpretation and are provided for entertainment and self-reflection only, not medical, legal, or financial advice.',
+    txtGwansangHeroDisclaimer:"Any photo you capture or upload is never sent to a server — it is analyzed entirely on this device. The result is stored only in this browser so it's ready again on your next visit, and you can clear it anytime. Results follow traditional East Asian face-reading (gwansang) interpretation and are provided for entertainment and self-reflection only, not medical, legal, or financial advice.",
     txtGwansangFormHead:'Read Your Face',
     txtGwansangUploadBtn:'Upload Photo',
     txtGwansangCameraBtn:'Use Camera',
@@ -1873,7 +1933,7 @@ const STRINGS={
     txtGwansangRetakeCameraBtn:'Retake Photo',
     txtGwansangRetakeUploadBtn:'Upload New Photo',
     txtGwansangCelebHead:'Global Celebrities Who Share This Look',
-    txtGwansangPrivacyNote:'Your photo is never uploaded — it stays on this device.',
+    txtGwansangPrivacyNote:'Your photo and result are never sent to a server. They are stored only in this browser and loaded automatically on your next visit.',
     txtGwansangAnalyzing:'AI is reading your features...',
     txtGwansangCameraError:'Camera unavailable. Please upload a photo instead.',
     txtGwansangNoFaceNote:"We couldn't clearly find a face in the photo, but here's today's reading anyway!",
@@ -1882,7 +1942,7 @@ const STRINGS={
     txtGwansangCopyBtn:'Copy Results',
     txtGwansangShareBtn:'Share',
     txtGwansangShareTitle:"Today's Face Reading",
-    txtGwansangFooterNote:"AI face detection runs entirely inside this browser — any photo you capture or upload, and the results, are never sent to a server or stored anywhere.",
+    txtGwansangFooterNote:"AI face detection runs entirely inside this browser — any photo you capture or upload, along with the result, is never sent to a server and is stored only in this browser.",
     gwansangFeatureLabel:{
       faceShape:{round:'Round',oval:'Oval',angular:'Angular',long:'Long'},
       eyes:{bright:'Big, Expressive Eyes',balanced:'Balanced Eyes',deep:'Deep-Set Eyes'},
@@ -1890,29 +1950,89 @@ const STRINGS={
       mouth:{wide:'Wide, Bold Mouth',balanced:'Balanced Mouth',neat:'Neat Mouth'}
     },
     gwansangFaceShape:{
-      round:{overall:'A round, softly contoured face shape that gives off warmth and approachability — the kind of face that puts people at ease and tends to draw steady, easy fortune.',
-        career:'You shine in people-facing roles or positions that bring a team together, building trust steadily until you find your footing.'},
-      oval:{overall:'A well-balanced oval face where the features sit in harmony — a versatile, all-around impression that fits comfortably into almost any setting.',
-        career:'Your talents span multiple areas, keeping many doors open, and once you settle on a direction you adapt to it quickly.'},
-      angular:{overall:'An angular face with a strong, defined jawline that reads as resolute and decisive.',
-        career:'You tend to stand out in roles that demand accountability or specialized expertise, especially where you need to take charge.'},
-      long:{overall:'A long, slender face that gives off a calm, intellectual air.',
-        career:'You often find success in deep research, specialized fields, or focused solo work that rewards sustained concentration.'}
+      round:[
+        {overall:'A round, softly contoured face shape that gives off warmth and approachability — the kind of face that puts people at ease and tends to draw steady, easy fortune.',
+          career:'You shine in people-facing roles or positions that bring a team together, building trust steadily until you find your footing.'},
+        {overall:'A round face shape carrying a gentle warmth that puts the people around you at ease.',
+          career:"You're especially well-suited to softening the mood in a room or connecting people with each other."},
+        {overall:'A round face defined by soft curves, giving off the quiet wisdom of smoothing things over rather than confronting them head-on.',
+          career:'You tend to shine as the one holding a group project together rather than working solo.'}
+      ],
+      oval:[
+        {overall:'A well-balanced oval face where the features sit in harmony — a versatile, all-around impression that fits comfortably into almost any setting.',
+          career:'Your talents span multiple areas, keeping many doors open, and once you settle on a direction you adapt to it quickly.'},
+        {overall:'A balanced oval face that blends naturally into any setting, giving off a polished, easygoing impression.',
+          career:'Your versatility across fields is a real strength, letting you adapt smoothly even in fast-changing environments.'},
+        {overall:'An oval face where curve and balance meet in harmony, inspiring trust from the first impression.',
+          career:'You do well holding the center in roles that call for collaboration and coordination, bringing a balanced perspective.'}
+      ],
+      angular:[
+        {overall:'An angular face with a strong, defined jawline that reads as resolute and decisive.',
+          career:'You tend to stand out in roles that demand accountability or specialized expertise, especially where you need to take charge.'},
+        {overall:'An angular face with clean, defined lines that gives off real staying power once you set your mind to something.',
+          career:'You tend to perform even better under fierce competition, staying composed enough to make sharp calls in a crisis.'},
+        {overall:"An angular face with clearly defined contours — it looks firm on the surface, but there's a considerate, unexpected warmth underneath.",
+          career:'You tend to earn trust and grow your standing in organizations or professions built on clear principles and standards.'}
+      ],
+      long:[
+        {overall:'A long, slender face that gives off a calm, intellectual air.',
+          career:'You often find success in deep research, specialized fields, or focused solo work that rewards sustained concentration.'},
+        {overall:'A slender, elongated face that reads as composed — someone who surveys a situation carefully rather than rushing in.',
+          career:"You're strong at building long-term plans rather than chasing short-term wins, and your consistency tends to pay off."},
+        {overall:'An elegantly elongated face that suggests someone of few words but deep thought.',
+          career:'You tend to excel at focused, solo work that rewards polish, or fields where specialized knowledge compounds over time.'}
+      ]
     },
     gwansangEyes:{
-      bright:'Big, clear eyes that make your emotions easy to read — you open up quickly, so relationships tend to grow close in no time.',
-      balanced:'Well-proportioned eyes that give people a comfortable first impression, with a charm that deepens the longer someone gets to know you.',
-      deep:'Deep-set, soulful eyes with a quiet, mysterious charm — you open up slowly, but once a bond is formed you tend to keep it for a long time.'
+      bright:[
+        'Big, clear eyes that make your emotions easy to read — you open up quickly, so relationships tend to grow close in no time.',
+        'Eyes full of life that make people say your expression alone gives you away — you have no trouble being the one to approach first.',
+        'Clear, sparkling eyes that often give off a confident impression, giving you real ability to take the lead in a relationship.'
+      ],
+      balanced:[
+        'Well-proportioned eyes that give people a comfortable first impression, with a charm that deepens the longer someone gets to know you.',
+        "Balanced eyes that come across as sincere without being overwhelming — a combination people often comment on.",
+        'Calm, well-balanced eyes that put others at ease, helping you build relationships that last on a foundation of trust.'
+      ],
+      deep:[
+        'Deep-set, soulful eyes with a quiet, mysterious charm — you open up slowly, but once a bond is formed you tend to keep it for a long time.',
+        "Deep, thoughtful eyes that give the impression you're always thinking something over — the people who get close tend to see your real worth.",
+        "Deep-set eyes with a quiet, understated charm — you're less about love at first sight and more about being the one someone can't stop thinking about."
+      ]
     },
     gwansangNose:{
-      full:'A full, rounded nose bridge — a shape traditional face reading long associated with steady financial fortune and a real knack for saving.',
-      balanced:'A well-proportioned nose reflecting a good balance between spending and earning, managing money steadily without overreaching.',
-      sharp:'A sharp, high nose bridge that reflects good taste and sharp judgment — an eye for opportunity that tends to translate into financial luck.'
+      full:[
+        'A full, rounded nose bridge — a shape traditional face reading long associated with steady financial fortune and a real knack for saving.',
+        'A full, generous nose shape often read in traditional physiognomy as a sign of financial fortune, with a steady knack for building wealth.',
+        'A full, ample nose that suggests you earn more than you spend, steadily building wealth without major setbacks.'
+      ],
+      balanced:[
+        'A well-proportioned nose reflecting a good balance between spending and earning, managing money steadily without overreaching.',
+        'A balanced nose bridge that reflects a planned approach to spending — people often say you handle money without excess in either direction.',
+        'A moderate, well-proportioned nose that favors steady saving over risky investment when it comes to building your assets.'
+      ],
+      sharp:[
+        'A sharp, high nose bridge that reflects good taste and sharp judgment — an eye for opportunity that tends to translate into financial luck.',
+        'A sharp nose bridge that suggests a natural sense of style — an eye for trends that tends to translate directly into opportunity.',
+        'A sleek, well-defined nose line that gives off quick decisiveness — once your mind is made up, you move without hesitation and it pays off.'
+      ]
     },
     gwansangMouth:{
-      wide:'A wide, bold mouth that draws people in — the kind of sociable presence that keeps a wide circle of friends close by.',
-      balanced:'A well-balanced mouth that gives an easygoing, approachable impression, making it easy to get along broadly with many kinds of people.',
-      neat:'A neat, well-defined mouth that builds trust through consistent words and actions — you tend to treasure a smaller circle of long, deep bonds.'
+      wide:[
+        'A wide, bold mouth that draws people in — the kind of sociable presence that keeps a wide circle of friends close by.',
+        'A bold, expressive mouth that gives your words real weight, naturally drawing people toward you.',
+        'A generously wide mouth that leaves a cheerful first impression, making it easy to warm up to new people without hesitation.'
+      ],
+      balanced:[
+        'A well-balanced mouth that gives an easygoing, approachable impression, making it easy to get along broadly with many kinds of people.',
+        'A balanced mouth that reads as both easygoing and polite, helping you fit comfortably into almost any setting.',
+        'A well-balanced mouth that lends a sense of steadiness to your words and expressions, the kind of relationship that gets more comfortable with time.'
+      ],
+      neat:[
+        'A neat, well-defined mouth that builds trust through consistent words and actions — you tend to treasure a smaller circle of long, deep bonds.',
+        'A neat mouth that gives off a thoughtful impression — you may not keep a wide circle, but the bonds you do keep run deep and last.',
+        'A neat, well-formed mouth that suggests a person of few words who always keeps their promises, building relationships on that trust.'
+      ]
     },
     gwansangTodayPoint:[
       "Today your first impression works in your favor — if you meet someone new, smile first.",
@@ -1959,6 +2079,7 @@ function applyStaticI18n(){
   document.getElementById('txtAdSlot5').textContent=s.txtAdSlot1;
   document.getElementById('txtAdSlot6').textContent=s.txtAdSlot1;
   document.getElementById('adCta5').innerHTML=s.adSlotCta;
+  document.getElementById('clearGwansangSavedLink').textContent=s.txtClearSaved;
   if(currentGwansang) renderGwansangResult(currentGwansang.categories,currentGwansang.photoDataUrl);
   document.getElementById('txtAdSlot3').textContent=s.txtAdSlot1;
   document.getElementById('txtAdSlot4').textContent=s.txtAdSlot1;
@@ -3941,6 +4062,39 @@ let currentGwansang=null;
 let gwansangStream=null;
 let faceLandmarkerPromise=null;
 
+const GWANSANG_RESULT_KEY='gwansangLastResult';
+
+function saveGwansangResult(photoDataUrl,categories){
+  try{
+    localStorage.setItem(GWANSANG_RESULT_KEY,JSON.stringify({photoDataUrl,categories}));
+  }catch(error){
+    // localStorage를 사용할 수 없는 환경(예: 시크릿 모드)에서는 조용히 무시
+  }
+}
+
+function loadGwansangResult(){
+  try{
+    return JSON.parse(localStorage.getItem(GWANSANG_RESULT_KEY)||'null');
+  }catch(error){
+    return null;
+  }
+}
+
+function clearGwansangSaved(){
+  try{
+    localStorage.removeItem(GWANSANG_RESULT_KEY);
+  }catch(error){
+    // 무시
+  }
+  currentGwansang=null;
+  stopGwansangStream();
+  document.getElementById('gwansangResult').hidden=true;
+  document.getElementById('gwansangError').hidden=true;
+  document.getElementById('gwansangCameraStage').hidden=true;
+  document.getElementById('gwansangChooser').hidden=false;
+  showToast(STRINGS[LANG].toastCleared);
+}
+
 const GWANSANG_LM_IDX={
   faceLeft:234, faceRight:454,
   faceTop:10, faceBottom:152,
@@ -4099,24 +4253,47 @@ async function startGwansangAnalysis(canvas){
   const categories=await analyzeGwansangCategories(canvas);
 
   document.getElementById('gwansangLoading').hidden=true;
-  const errorEl=document.getElementById('gwansangError');
-  if(categories.noFace){
-    errorEl.textContent=s.txtGwansangNoFaceNote;
-    errorEl.hidden=false;
-  }
   renderGwansangResult(categories,photoDataUrl);
+}
+
+/* 같은 사진이라도 매일 다른 문구를 보여주기 위해, 카테고리별로 마련된
+   여러 문구 후보 중 (오늘 날짜+카테고리)로 시드를 섞어 하나를 고른다.
+   측정된 카테고리(얼굴형·눈·코·입) 자체는 사진에 따라 고정되지만,
+   그 카테고리를 설명하는 문구는 날짜가 바뀌면 함께 바뀐다. */
+function pickDailyVariant(list,seedSuffix){
+  if(!Array.isArray(list)) return list;
+  const idx=Math.abs(hashSeed(todayKey()+'|'+seedSuffix))%list.length;
+  return list[idx];
+}
+
+function resolveGwansangContent(categories){
+  const s=STRINGS[LANG];
+  const shapeInfo=pickDailyVariant(s.gwansangFaceShape[categories.faceShape],'shape|'+categories.faceShape);
+  const eyesText=pickDailyVariant(s.gwansangEyes[categories.eyes],'eyes|'+categories.eyes);
+  const noseText=pickDailyVariant(s.gwansangNose[categories.nose],'nose|'+categories.nose);
+  const mouthText=pickDailyVariant(s.gwansangMouth[categories.mouth],'mouth|'+categories.mouth);
+  const todayIdx=Math.abs(hashSeed(todayKey()+'|point|'+categories.faceShape+categories.eyes+categories.nose+categories.mouth))%s.gwansangTodayPoint.length;
+  const todayPoint=s.gwansangTodayPoint[todayIdx];
+  return{shapeInfo,eyesText,noseText,mouthText,todayPoint};
 }
 
 function renderGwansangResult(categories,photoDataUrl){
   const s=STRINGS[LANG];
   currentGwansang={categories,photoDataUrl};
+  saveGwansangResult(photoDataUrl,categories);
 
   document.getElementById('gwansangResult').hidden=false;
   document.getElementById('gwansangPhoto').src=photoDataUrl;
 
-  const shapeInfo=s.gwansangFaceShape[categories.faceShape];
-  const dayIdx=Math.abs(hashSeed(todayKey()+'|'+categories.faceShape+categories.eyes+categories.nose+categories.mouth))%s.gwansangTodayPoint.length;
-  const todayPoint=s.gwansangTodayPoint[dayIdx];
+  const errorEl=document.getElementById('gwansangError');
+  if(categories.noFace){
+    errorEl.textContent=s.txtGwansangNoFaceNote;
+    errorEl.hidden=false;
+  }else{
+    errorEl.hidden=true;
+  }
+
+  const content=resolveGwansangContent(categories);
 
   let tagsHtml='';
   ['faceShape','eyes','nose','mouth'].forEach(function(feat){
@@ -4125,16 +4302,16 @@ function renderGwansangResult(categories,photoDataUrl){
   document.getElementById('gwansangTagRow').innerHTML=tagsHtml;
 
   document.getElementById('gwansangOverall').innerHTML=
-    '<p><span class="lbl">'+s.txtGwansangOverallLabel+'</span>'+shapeInfo.overall+'</p>'+
-    '<p><span class="lbl">'+s.txtGwansangTodayLabel+'</span>'+todayPoint+'</p>';
+    '<p><span class="lbl">'+s.txtGwansangOverallLabel+'</span>'+content.shapeInfo.overall+'</p>'+
+    '<p><span class="lbl">'+s.txtGwansangTodayLabel+'</span>'+content.todayPoint+'</p>';
 
   let dh='';
   s.gwansangDomainMeta.forEach(function(dm){
     let text='';
-    if(dm.key==='career') text=shapeInfo.career;
-    else if(dm.key==='love') text=s.gwansangEyes[categories.eyes];
-    else if(dm.key==='wealth') text=s.gwansangNose[categories.nose];
-    else if(dm.key==='friends') text=s.gwansangMouth[categories.mouth];
+    if(dm.key==='career') text=content.shapeInfo.career;
+    else if(dm.key==='love') text=content.eyesText;
+    else if(dm.key==='wealth') text=content.noseText;
+    else if(dm.key==='friends') text=content.mouthText;
     dh+='<div class="domain-card"><div class="dhan">'+dm.glyph+'</div><h4>'+dm.title+'</h4><p>'+text+'</p></div>';
   });
   document.getElementById('gwansangDomains').innerHTML=dh;
@@ -4183,16 +4360,14 @@ function gwansangResultText(){
   if(!currentGwansang) return '';
   const s=STRINGS[LANG];
   const{categories}=currentGwansang;
-  const shapeInfo=s.gwansangFaceShape[categories.faceShape];
-  const dayIdx=Math.abs(hashSeed(todayKey()+'|'+categories.faceShape+categories.eyes+categories.nose+categories.mouth))%s.gwansangTodayPoint.length;
-  const todayPoint=s.gwansangTodayPoint[dayIdx];
-  let text=s.txtGwansangShareTitle+'\n\n'+s.txtGwansangOverallLabel+': '+shapeInfo.overall+'\n'+s.txtGwansangTodayLabel+': '+todayPoint+'\n';
+  const content=resolveGwansangContent(categories);
+  let text=s.txtGwansangShareTitle+'\n\n'+s.txtGwansangOverallLabel+': '+content.shapeInfo.overall+'\n'+s.txtGwansangTodayLabel+': '+content.todayPoint+'\n';
   s.gwansangDomainMeta.forEach(function(dm){
     let t='';
-    if(dm.key==='career') t=shapeInfo.career;
-    else if(dm.key==='love') t=s.gwansangEyes[categories.eyes];
-    else if(dm.key==='wealth') t=s.gwansangNose[categories.nose];
-    else if(dm.key==='friends') t=s.gwansangMouth[categories.mouth];
+    if(dm.key==='career') t=content.shapeInfo.career;
+    else if(dm.key==='love') t=content.eyesText;
+    else if(dm.key==='wealth') t=content.noseText;
+    else if(dm.key==='friends') t=content.mouthText;
     text+='\n'+dm.title+': '+t;
   });
   return text;
@@ -4350,6 +4525,10 @@ document.getElementById('gwansangRetakeUploadBtn').addEventListener('click',func
 });
 document.getElementById('gwansangCopyBtn').addEventListener('click',copyGwansangResult);
 document.getElementById('gwansangShareBtn').addEventListener('click',shareGwansangResult);
+document.getElementById('clearGwansangSavedLink').addEventListener('click',function(e){
+  e.preventDefault();
+  clearGwansangSaved();
+});
 
 function drawTodayTarot(){
   const name=document.getElementById('fTarotName').value.trim();
@@ -4407,6 +4586,14 @@ applyStaticI18n();
 })();
 
 document.getElementById('fTarotName').value=loadTarotName();
+
+(function initGwansang(){
+  const saved=loadGwansangResult();
+  if(saved&&saved.photoDataUrl&&saved.categories){
+    document.getElementById('gwansangChooser').hidden=true;
+    renderGwansangResult(saved.categories,saved.photoDataUrl);
+  }
+})();
 
 (function initExample(){
   const saved=loadLastInput();
