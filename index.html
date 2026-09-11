@@ -832,8 +832,11 @@ footer .fcopy{margin-top:10px;}
         <button type="button" class="secondary" id="gwansangShareBtn">🔗 <span id="txtGwansangShareBtn">공유하기</span></button>
       </div>
       <div class="tarot-actions">
-        <button type="button" class="secondary" id="gwansangRetakeBtn">🔄 <span id="txtGwansangRetakeBtn">다른 사진으로 다시 보기</span></button>
+        <button type="button" class="secondary" id="gwansangRetakeCameraBtn">🔄 <span id="txtGwansangRetakeCameraBtn">재촬영하기</span></button>
+        <button type="button" class="secondary" id="gwansangRetakeUploadBtn">📁 <span id="txtGwansangRetakeUploadBtn">사진 재업로드</span></button>
       </div>
+      <h3 class="celeb-head" id="txtGwansangCelebHead">이 관상과 닮은 글로벌 유명인</h3>
+      <div class="celeb-card" id="gwansangCelebCard"></div>
     </div>
   </div>
 
@@ -1693,7 +1696,9 @@ const STRINGS={
     txtGwansangCameraBtn:'카메라로 촬영',
     txtGwansangCaptureBtn:'촬영하기',
     txtGwansangCancelBtn:'취소',
-    txtGwansangRetakeBtn:'다른 사진으로 다시 보기',
+    txtGwansangRetakeCameraBtn:'재촬영하기',
+    txtGwansangRetakeUploadBtn:'사진 재업로드',
+    txtGwansangCelebHead:'이 관상과 닮은 글로벌 유명인',
     txtGwansangPrivacyNote:'사진은 서버로 전송되지 않고 이 기기에서만 분석돼요.',
     txtGwansangAnalyzing:'AI가 이목구비를 살펴보고 있어요...',
     txtGwansangCameraError:'카메라를 사용할 수 없어요. 대신 사진을 업로드해주세요.',
@@ -1865,7 +1870,9 @@ const STRINGS={
     txtGwansangCameraBtn:'Use Camera',
     txtGwansangCaptureBtn:'Capture',
     txtGwansangCancelBtn:'Cancel',
-    txtGwansangRetakeBtn:'Try Another Photo',
+    txtGwansangRetakeCameraBtn:'Retake Photo',
+    txtGwansangRetakeUploadBtn:'Upload New Photo',
+    txtGwansangCelebHead:'Global Celebrities Who Share This Look',
     txtGwansangPrivacyNote:'Your photo is never uploaded — it stays on this device.',
     txtGwansangAnalyzing:'AI is reading your features...',
     txtGwansangCameraError:'Camera unavailable. Please upload a photo instead.',
@@ -1939,7 +1946,8 @@ function applyStaticI18n(){
    'txtTarotReshuffleNote','txtTarotSavedNote',
    'txtGwansangEyebrow','txtGwansangHeroDisclaimer','txtGwansangFormHead',
    'txtGwansangUploadBtn','txtGwansangCameraBtn','txtGwansangCaptureBtn','txtGwansangCancelBtn',
-   'txtGwansangRetakeBtn','txtGwansangPrivacyNote','txtGwansangAnalyzing','txtGwansangCopyBtn',
+   'txtGwansangRetakeCameraBtn','txtGwansangRetakeUploadBtn','txtGwansangCelebHead',
+   'txtGwansangPrivacyNote','txtGwansangAnalyzing','txtGwansangCopyBtn',
    'txtGwansangShareBtn','txtGwansangFooterNote'
   ].forEach(id=>{
     const el=document.getElementById(id);
@@ -4130,6 +4138,45 @@ function renderGwansangResult(categories,photoDataUrl){
     dh+='<div class="domain-card"><div class="dhan">'+dm.glyph+'</div><h4>'+dm.title+'</h4><p>'+text+'</p></div>';
   });
   document.getElementById('gwansangDomains').innerHTML=dh;
+
+  renderGwansangCelebMatch(categories.faceShape);
+}
+
+/* 얼굴형(faceShape) 카테고리별로 이미 검증된 CELEBRITIES 이미지·바이오를
+   재사용해 "닮은꼴 글로벌 유명인"을 보여준다. 오늘 날짜로 시드를 섞어
+   같은 얼굴형이라도 날짜가 바뀌면 다른 인물이 나올 수 있게 한다. */
+const GWANSANG_FACE_CELEBS={
+  round:['오프라 윈프리','BTS 진'],
+  oval:['리오넬 메시','테일러 스위프트'],
+  angular:['크리스티아누 호날두','마이클 조던'],
+  long:['스티브 잡스','봉준호']
+};
+
+function findGwansangCelebMatch(faceShape){
+  const names=GWANSANG_FACE_CELEBS[faceShape]||GWANSANG_FACE_CELEBS.oval;
+  const idx=Math.abs(hashSeed(todayKey()+'|gwansang-celeb|'+faceShape))%names.length;
+  const targetName=names[idx];
+  return CELEBRITIES.find(function(c){ return c.name===targetName; })||CELEBRITIES[0];
+}
+
+function renderGwansangCelebMatch(faceShape){
+  const container=document.getElementById('gwansangCelebCard');
+  if(!container) return;
+  const pick=findGwansangCelebMatch(faceShape);
+  const name=LANG==='en'?pick.nameEn:pick.name;
+  const field=LANG==='en'?pick.fieldEn:pick.field;
+  const bio=LANG==='en'?pick.bioEn:pick.bio;
+  const initial=name.charAt(0);
+  const avatarHtml=pick.img
+    ? '<img src="'+pick.img+'" alt="'+name+'" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{textContent:\''+initial+'\'}))">'
+    : initial;
+  container.innerHTML=
+    '<div class="celeb-avatar">'+avatarHtml+'</div>'+
+    '<div class="celeb-info">'+
+      '<div class="celeb-name">'+name+'</div>'+
+      '<div class="celeb-field">'+field+'</div>'+
+      (bio?'<p class="celeb-bio">'+bio+'</p>':'')+
+    '</div>';
 }
 
 function gwansangResultText(){
@@ -4291,10 +4338,15 @@ document.getElementById('gwansangCaptureBtn').addEventListener('click',function(
   document.getElementById('gwansangCameraStage').hidden=true;
   startGwansangAnalysis(canvas);
 });
-document.getElementById('gwansangRetakeBtn').addEventListener('click',function(){
+document.getElementById('gwansangRetakeCameraBtn').addEventListener('click',function(){
   document.getElementById('gwansangResult').hidden=true;
   document.getElementById('gwansangError').hidden=true;
-  document.getElementById('gwansangChooser').hidden=false;
+  document.getElementById('gwansangCameraBtn').click();
+});
+document.getElementById('gwansangRetakeUploadBtn').addEventListener('click',function(){
+  document.getElementById('gwansangResult').hidden=true;
+  document.getElementById('gwansangError').hidden=true;
+  document.getElementById('gwansangFileInput').click();
 });
 document.getElementById('gwansangCopyBtn').addEventListener('click',copyGwansangResult);
 document.getElementById('gwansangShareBtn').addEventListener('click',shareGwansangResult);
