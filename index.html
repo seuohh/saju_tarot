@@ -399,6 +399,14 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 }
 .toast.show{opacity:1;transform:translate(-50%,0);}
 
+/* ---- top-of-page visitor counter banner ---- */
+.visitor-banner{
+  text-align:center;padding:6px 12px;font-size:var(--fs-tiny);
+  background:var(--paper-sunken);color:var(--ink-soft);
+  border-bottom:1px solid var(--line);
+}
+.visitor-banner b{color:var(--accent);font-weight:700;}
+
 /* ---- top bar: app tabs + language toggle ---- */
 .top-bar{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -569,6 +577,7 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 </head>
 
 <body>
+<div class="visitor-banner" id="visitorBanner" hidden></div>
 <div class="top-bar">
   <div class="app-tabs" role="tablist">
     <button type="button" id="tabSajuBtn" class="app-tab active" role="tab" aria-selected="true">🔮 <span id="tabSajuLabel">오늘의 운세</span></button>
@@ -2836,11 +2845,14 @@ let visitorCount=null;
 
 function renderVisitorCounter(){
   if(visitorCount===null) return;
-  const el=document.getElementById('visitorCounter');
-  if(!el) return;
   const formatted=visitorCount.toLocaleString(LANG==='en'?'en-US':'ko-KR');
-  el.innerHTML=STRINGS[LANG].visitorCountFn(formatted);
-  el.hidden=false;
+  const html=STRINGS[LANG].visitorCountFn(formatted);
+  ['visitorBanner','visitorCounter'].forEach(function(id){
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.innerHTML=html;
+    el.hidden=false;
+  });
 }
 
 async function initVisitorCounter(){
