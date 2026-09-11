@@ -392,6 +392,41 @@
       padding-top: 20px;
     }
 
+    .info-section {
+      margin-top: 30px;
+      text-align: left;
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
+    }
+
+    .info-section h2 {
+      font-size: 18px;
+      margin: 0 0 14px;
+      color: var(--ink);
+    }
+
+    .glossary-term, .faq-item {
+      margin-top: 16px;
+    }
+
+    .glossary-term:first-child, .faq-item:first-child {
+      margin-top: 0;
+    }
+
+    .glossary-term h3, .faq-item .faq-q {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 4px;
+    }
+
+    .glossary-term p, .faq-item .faq-a {
+      font-size: 14px;
+      color: var(--ink-soft);
+      margin: 0;
+      line-height: 1.6;
+    }
+
     .history-header {
       display: flex;
       justify-content: space-between;
@@ -626,6 +661,34 @@
       <div id="historyList"></div>
     </div>
 
+    <div class="info-section" id="txtRankGlossarySection">
+      <h2 id="txtRankGlossaryHead">순위는 어떻게 정해지나요?</h2>
+      <div class="glossary-term">
+        <h3 id="txtRankGlossaryTerm1Head">통계적 패턴 유사도</h3>
+        <p id="txtRankGlossaryTerm1Body">국내 로또 6/45 역대 당첨번호에서 자주 나타나는 홀짝 비율, 번호 합계 구간, 고저(1~22 / 23~45) 분포, 연속번호 여부 같은 패턴을 분석해, 새로 뽑은 조합이 이 패턴들과 얼마나 비슷한지를 점수화한 것이 "순위"입니다.</p>
+      </div>
+      <div class="glossary-term">
+        <h3 id="txtRankGlossaryTerm2Head">당첨 확률과는 무관합니다</h3>
+        <p id="txtRankGlossaryTerm2Body">로또 6/45은 1~45 중 6개를 고르는 완전한 무작위 추첨이며, 어떤 번호 조합이든 실제 당첨 확률은 수학적으로 완전히 동일합니다(약 1/8,145,060). 순위는 과거 데이터와의 통계적 유사도를 보여주는 참고용 지표일 뿐, 당첨 확률을 높이지 않습니다.</p>
+      </div>
+    </div>
+
+    <div class="info-section" id="txtLottoFaqSection">
+      <h2 id="txtLottoFaqHead">자주 묻는 질문</h2>
+      <div class="faq-item">
+        <p class="faq-q" id="txtLottoFaqQ1">정말 무료인가요?</p>
+        <p class="faq-a" id="txtLottoFaqA1">네, 회원가입 없이 무료로 몇 번이든 번호를 생성할 수 있습니다.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q" id="txtLottoFaqQ2">생성 기록은 어디에 저장되나요?</p>
+        <p class="faq-a" id="txtLottoFaqA2">서버로 전송되지 않고 이 브라우저에만 저장되며, "기록 삭제" 버튼으로 언제든 지울 수 있습니다.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q" id="txtLottoFaqQ3">1순위 번호가 당첨될 확률이 더 높나요?</p>
+        <p class="faq-a" id="txtLottoFaqA3">아닙니다. 모든 번호 조합의 실제 당첨 확률은 완전히 동일합니다. 순위는 과거 당첨번호와의 통계적 유사도를 참고로 보여드리는 오락용 지표입니다.</p>
+      </div>
+    </div>
+
     <div class="ad-slot" role="complementary" aria-label="광고 영역" id="txtAdSlot2">
       광고 영역 (Advertisement)
     </div>
@@ -646,7 +709,6 @@
       <span id="txtLegal">본 서비스에서 제공하는 번호는 무작위로 생성된 참고용 정보이며 실제 로또 당첨과는 무관하고
       당첨을 보장하지 않습니다. 복권 구매는 신중히 결정하시기 바랍니다. (만 19세 미만 구매 불가)</span>
       <div class="links">
-        <!-- 실제 페이지 준비 후 아래 링크를 연결하세요 -->
         <a href="terms.html" id="txtLinkTerms">이용약관</a>·<a href="privacy.html" id="txtLinkPrivacy">개인정보처리방침</a>·<a href="contact.html" id="txtLinkContact">제휴 문의</a>
       </div>
       <div id="copyright"></div>
@@ -752,6 +814,18 @@
           '무관합니다.',
         historyHead: "최근 생성 기록",
         clearHistory: "기록 삭제",
+        rankGlossaryHead: "순위는 어떻게 정해지나요?",
+        rankGlossaryTerm1Head: "통계적 패턴 유사도",
+        rankGlossaryTerm1Body: "국내 로또 6/45 역대 당첨번호에서 자주 나타나는 홀짝 비율, 번호 합계 구간, 고저(1~22 / 23~45) 분포, 연속번호 여부 같은 패턴을 분석해, 새로 뽑은 조합이 이 패턴들과 얼마나 비슷한지를 점수화한 것이 \"순위\"입니다.",
+        rankGlossaryTerm2Head: "당첨 확률과는 무관합니다",
+        rankGlossaryTerm2Body: "로또 6/45은 1~45 중 6개를 고르는 완전한 무작위 추첨이며, 어떤 번호 조합이든 실제 당첨 확률은 수학적으로 완전히 동일합니다(약 1/8,145,060). 순위는 과거 데이터와의 통계적 유사도를 보여주는 참고용 지표일 뿐, 당첨 확률을 높이지 않습니다.",
+        lottoFaqHead: "자주 묻는 질문",
+        lottoFaqQ1: "정말 무료인가요?",
+        lottoFaqA1: "네, 회원가입 없이 무료로 몇 번이든 번호를 생성할 수 있습니다.",
+        lottoFaqQ2: "생성 기록은 어디에 저장되나요?",
+        lottoFaqA2: "서버로 전송되지 않고 이 브라우저에만 저장되며, \"기록 삭제\" 버튼으로 언제든 지울 수 있습니다.",
+        lottoFaqQ3: "1순위 번호가 당첨될 확률이 더 높나요?",
+        lottoFaqA3: "아닙니다. 모든 번호 조합의 실제 당첨 확률은 완전히 동일합니다. 순위는 과거 당첨번호와의 통계적 유사도를 참고로 보여드리는 오락용 지표입니다.",
         partnerHeadline: "로또 번호 생성기와 함께 브랜드를 알려보세요",
         partnerBody: "광고·배너 노출부터 콘텐츠·데이터 제휴, 브랜드 협업까지 편하게 제안해주세요. 내용을 검토한 뒤 빠르게 이메일로 답변드립니다.",
         partnerTags: ["광고·배너", "콘텐츠 제휴", "데이터·API", "브랜드 협업"],
@@ -795,6 +869,18 @@
           'with actual winning odds.',
         historyHead: "Recent Draws",
         clearHistory: "Clear History",
+        rankGlossaryHead: "How is the rank decided?",
+        rankGlossaryTerm1Head: "Similarity to statistical patterns",
+        rankGlossaryTerm1Body: "We analyze patterns commonly seen in past Lotto 6/45 winning numbers — odd/even ratio, sum range, low/high (1–22 / 23–45) split, and consecutive numbers — and score how closely a newly generated set matches those patterns. That score is the \"rank.\"",
+        rankGlossaryTerm2Head: "It has nothing to do with your odds of winning",
+        rankGlossaryTerm2Body: "Lotto 6/45 is a fully random draw of 6 numbers from 1–45, and every possible combination has exactly the same real odds of winning (about 1 in 8,145,060). Rank is just a reference score showing statistical similarity to past data — it does not improve your odds.",
+        lottoFaqHead: "Frequently Asked Questions",
+        lottoFaqQ1: "Is it really free?",
+        lottoFaqA1: "Yes, you can generate numbers as many times as you like, for free, with no sign-up.",
+        lottoFaqQ2: "Where is my generation history stored?",
+        lottoFaqA2: "It's never sent to a server — it's stored only in this browser, and you can clear it anytime with the \"Clear History\" button.",
+        lottoFaqQ3: "Does a Rank 1 set have a higher chance of winning?",
+        lottoFaqA3: "No. Every number combination has exactly the same real odds of winning. Rank is an entertainment-only reference showing statistical similarity to past winning numbers.",
         partnerHeadline: "Grow your brand with our Lotto number generator",
         partnerBody: "From ad placements to content, data partnerships, and brand collaborations — send us a proposal. We review every message and reply by email.",
         partnerTags: ["Ads & Banners", "Content Partnership", "Data & API", "Brand Collaboration"],
@@ -842,6 +928,18 @@
       document.getElementById("txtNotice").innerHTML = t.noticeHtml;
       document.getElementById("txtHistoryHead").textContent = t.historyHead;
       document.getElementById("txtClearHistory").textContent = t.clearHistory;
+      document.getElementById("txtRankGlossaryHead").textContent = t.rankGlossaryHead;
+      document.getElementById("txtRankGlossaryTerm1Head").textContent = t.rankGlossaryTerm1Head;
+      document.getElementById("txtRankGlossaryTerm1Body").textContent = t.rankGlossaryTerm1Body;
+      document.getElementById("txtRankGlossaryTerm2Head").textContent = t.rankGlossaryTerm2Head;
+      document.getElementById("txtRankGlossaryTerm2Body").textContent = t.rankGlossaryTerm2Body;
+      document.getElementById("txtLottoFaqHead").textContent = t.lottoFaqHead;
+      document.getElementById("txtLottoFaqQ1").textContent = t.lottoFaqQ1;
+      document.getElementById("txtLottoFaqA1").textContent = t.lottoFaqA1;
+      document.getElementById("txtLottoFaqQ2").textContent = t.lottoFaqQ2;
+      document.getElementById("txtLottoFaqA2").textContent = t.lottoFaqA2;
+      document.getElementById("txtLottoFaqQ3").textContent = t.lottoFaqQ3;
+      document.getElementById("txtLottoFaqA3").textContent = t.lottoFaqA3;
       document.getElementById("txtPartnerHeadline").textContent = t.partnerHeadline;
       document.getElementById("txtPartnerBody").textContent = t.partnerBody;
       document.getElementById("txtPartnerBtn").textContent = t.partnerBtn;
