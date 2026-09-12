@@ -60,70 +60,197 @@ footer{max-width:720px;margin:48px auto 0;padding:24px 20px 0;border-top:1px sol
 footer a{color:var(--ink-soft);text-decoration:none;margin:0 6px;}
 footer a:hover{text-decoration:underline;}
 footer .fcopy{margin-top:10px;}
+
+/* ---- language toggle ---- */
+.lang-toggle{
+  position:fixed;top:16px;right:16px;z-index:20;
+  display:flex;gap:4px;
+  border:1px solid var(--line-strong);border-radius:999px;padding:3px;
+  background:var(--paper-raised);box-shadow:var(--shadow);
+}
+.lang-toggle button{
+  font:inherit;font-size:var(--fs-caption);font-weight:700;
+  border:none;border-radius:999px;padding:6px 12px;cursor:pointer;
+  background:transparent;color:var(--ink-soft);
+}
+.lang-toggle button.active{background:var(--accent);color:var(--accent-ink,#241109);}
+@media (max-width:480px){.lang-toggle{top:10px;right:10px;}}
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1069417115729999" crossorigin="anonymous"></script>
 </head>
 <body>
+
+<div class="lang-toggle" role="group" aria-label="Language">
+  <button type="button" id="langKoBtn" class="active">한국어</button>
+  <button type="button" id="langEnBtn">EN</button>
+</div>
+
 <header class="hero">
   <div class="eyebrow">TERMS OF SERVICE</div>
-  <h1 class="title">이용약관</h1>
-  <p class="lede">사주·타로·관상 서비스 이용에 앞서 아래 약관을 확인해 주세요.</p>
-  <p class="updated">시행일자: 2026년 9월 11일</p>
-  <p class="back-link"><a href="index.html">← 홈으로 돌아가기</a></p>
+  <h1 class="title" id="txtTitle">이용약관</h1>
+  <p class="lede" id="txtLede">사주·타로·관상 서비스 이용에 앞서 아래 약관을 확인해 주세요.</p>
+  <p class="updated" id="txtUpdated">시행일자: 2026년 9월 11일</p>
+  <p class="back-link"><a href="index.html" id="txtBackLink">← 홈으로 돌아가기</a></p>
 </header>
 
 <div class="wrap">
   <div class="doc">
     <section>
-      <h2>1. 서비스의 목적과 성격</h2>
-      <p>사주·타로·관상(이하 "서비스")는 전통 명리학·타로·관상학의 해석 방식과 통계적 패턴을 참고하여 재미와 자기 이해를 돕기 위해 제공되는 오락·참고용 콘텐츠입니다. 서비스가 제공하는 모든 결과는 <strong>의학적·법률적·재정적 조언이 아니며</strong>, 어떠한 사실의 보증도 아닙니다.</p>
+      <h2 id="t1h">1. 서비스의 목적과 성격</h2>
+      <p id="t1p">사주·타로·관상(이하 "서비스")는 전통 명리학·타로·관상학의 해석 방식과 통계적 패턴을 참고하여 재미와 자기 이해를 돕기 위해 제공되는 오락·참고용 콘텐츠입니다. 서비스가 제공하는 모든 결과는 <strong>의학적·법률적·재정적 조언이 아니며</strong>, 어떠한 사실의 보증도 아닙니다.</p>
     </section>
 
     <section>
-      <h2>2. 이용자의 책임</h2>
+      <h2 id="t2h">2. 이용자의 책임</h2>
       <ul>
-        <li>서비스에 입력하는 생년월일, 이름 등 정보의 정확성에 대한 책임은 이용자에게 있습니다.</li>
-        <li>서비스가 제공하는 운세·타로·관상 결과를 실제 의사결정(진료, 투자, 소송 등)의 유일한 근거로 사용해서는 안 되며, 이를 근거로 한 결정과 그 결과에 대한 책임은 전적으로 이용자 본인에게 있습니다.</li>
+        <li id="t2li1">서비스에 입력하는 생년월일, 이름 등 정보의 정확성에 대한 책임은 이용자에게 있습니다.</li>
+        <li id="t2li2">서비스가 제공하는 운세·타로·관상 결과를 실제 의사결정(진료, 투자, 소송 등)의 유일한 근거로 사용해서는 안 되며, 이를 근거로 한 결정과 그 결과에 대한 책임은 전적으로 이용자 본인에게 있습니다.</li>
       </ul>
     </section>
 
     <section>
-      <h2>3. 광고 및 제3자 서비스</h2>
-      <p>서비스는 Google AdSense 등 제3자 광고를 게재하여 운영되며, 광고 클릭이나 광고주가 제공하는 상품·서비스와의 거래는 이용자와 해당 광고주 간의 문제로, 서비스 운영자는 이에 대해 책임지지 않습니다.</p>
+      <h2 id="t3h">3. 광고 및 제3자 서비스</h2>
+      <p id="t3p">서비스는 Google AdSense 등 제3자 광고를 게재하여 운영되며, 광고 클릭이나 광고주가 제공하는 상품·서비스와의 거래는 이용자와 해당 광고주 간의 문제로, 서비스 운영자는 이에 대해 책임지지 않습니다.</p>
     </section>
 
     <section>
-      <h2>4. 지식재산권</h2>
-      <p>서비스에 사용된 콘텐츠, 디자인, 텍스트, 코드의 저작권은 운영자에게 있으며, 사전 동의 없이 이를 복제·배포·2차적으로 이용할 수 없습니다.</p>
+      <h2 id="t4h">4. 지식재산권</h2>
+      <p id="t4p">서비스에 사용된 콘텐츠, 디자인, 텍스트, 코드의 저작권은 운영자에게 있으며, 사전 동의 없이 이를 복제·배포·2차적으로 이용할 수 없습니다.</p>
     </section>
 
     <section>
-      <h2>5. 면책조항</h2>
-      <p>운영자는 천재지변, 서비스 설비의 장애, 이용량 폭주 등 불가항력적인 사유로 서비스를 제공할 수 없는 경우 책임을 지지 않습니다. 운영자는 서비스 이용으로 발생한 이용자 간 또는 이용자와 제3자 간의 분쟁에 개입하지 않으며, 이로 인한 손해에 대해 책임을 지지 않습니다.</p>
+      <h2 id="t5h">5. 면책조항</h2>
+      <p id="t5p">운영자는 천재지변, 서비스 설비의 장애, 이용량 폭주 등 불가항력적인 사유로 서비스를 제공할 수 없는 경우 책임을 지지 않습니다. 운영자는 서비스 이용으로 발생한 이용자 간 또는 이용자와 제3자 간의 분쟁에 개입하지 않으며, 이로 인한 손해에 대해 책임을 지지 않습니다.</p>
     </section>
 
     <section>
-      <h2>6. 약관의 변경</h2>
-      <p>본 약관은 관련 법령 또는 서비스 정책에 따라 변경될 수 있으며, 변경 시 본 페이지를 통해 공지합니다.</p>
+      <h2 id="t6h">6. 약관의 변경</h2>
+      <p id="t6p">본 약관은 관련 법령 또는 서비스 정책에 따라 변경될 수 있으며, 변경 시 본 페이지를 통해 공지합니다.</p>
     </section>
 
     <section>
-      <h2>7. 준거법</h2>
-      <p>본 약관은 대한민국 법령에 따라 해석됩니다.</p>
+      <h2 id="t7h">7. 준거법</h2>
+      <p id="t7p">본 약관은 대한민국 법령에 따라 해석됩니다. 다만 이용자가 거주하는 국가의 법령에서 소비자에게 강행적으로 보장하는 보호 규정이 있는 경우, 그 보호 규정은 본 조항에도 불구하고 계속 적용됩니다.</p>
     </section>
 
     <section>
-      <h2>8. 문의처</h2>
-      <p>이용약관 관련 문의는 <a href="contact.html">제휴 문의 페이지</a>의 문의 양식을 이용해 주세요.</p>
+      <h2 id="t8h">8. 문의처</h2>
+      <p id="t8p">이용약관 관련 문의는 <a href="contact.html">제휴 문의 페이지</a>의 문의 양식을 이용해 주세요.</p>
     </section>
   </div>
 
   <footer>
     <div class="flinks">
-      <a href="index.html">사주 · 타로 · 관상</a>·<a href="privacy.html">개인정보처리방침</a>·<a href="contact.html">제휴 문의</a>
+      <a href="index.html" id="txtFooterHome">사주 · 타로 · 관상</a>·<a href="privacy.html" id="txtFooterPrivacy">개인정보처리방침</a>·<a href="contact.html" id="txtFooterContact">제휴 문의</a>
     </div>
-    <div class="fcopy">© 2026 사주·타로·관상</div>
+    <div class="fcopy" id="txtFooterCopy">© 2026 사주·타로·관상</div>
   </footer>
 </div>
+
+<script>
+(function(){
+"use strict";
+const LANG_KEY='sajuLang';
+let LANG='ko';
+try{
+  const saved=localStorage.getItem(LANG_KEY);
+  if(saved==='en'||saved==='ko') LANG=saved;
+}catch(error){ /* 무시 */ }
+
+const T={
+  ko:{
+    title:'이용약관',
+    lede:'사주·타로·관상 서비스 이용에 앞서 아래 약관을 확인해 주세요.',
+    updated:'시행일자: 2026년 9월 11일',
+    backLink:'← 홈으로 돌아가기',
+    t1h:'1. 서비스의 목적과 성격',
+    t1p:'사주·타로·관상(이하 "서비스")는 전통 명리학·타로·관상학의 해석 방식과 통계적 패턴을 참고하여 재미와 자기 이해를 돕기 위해 제공되는 오락·참고용 콘텐츠입니다. 서비스가 제공하는 모든 결과는 <strong>의학적·법률적·재정적 조언이 아니며</strong>, 어떠한 사실의 보증도 아닙니다.',
+    t2h:'2. 이용자의 책임',
+    t2li1:'서비스에 입력하는 생년월일, 이름 등 정보의 정확성에 대한 책임은 이용자에게 있습니다.',
+    t2li2:'서비스가 제공하는 운세·타로·관상 결과를 실제 의사결정(진료, 투자, 소송 등)의 유일한 근거로 사용해서는 안 되며, 이를 근거로 한 결정과 그 결과에 대한 책임은 전적으로 이용자 본인에게 있습니다.',
+    t3h:'3. 광고 및 제3자 서비스',
+    t3p:'서비스는 Google AdSense 등 제3자 광고를 게재하여 운영되며, 광고 클릭이나 광고주가 제공하는 상품·서비스와의 거래는 이용자와 해당 광고주 간의 문제로, 서비스 운영자는 이에 대해 책임지지 않습니다.',
+    t4h:'4. 지식재산권',
+    t4p:'서비스에 사용된 콘텐츠, 디자인, 텍스트, 코드의 저작권은 운영자에게 있으며, 사전 동의 없이 이를 복제·배포·2차적으로 이용할 수 없습니다.',
+    t5h:'5. 면책조항',
+    t5p:'운영자는 천재지변, 서비스 설비의 장애, 이용량 폭주 등 불가항력적인 사유로 서비스를 제공할 수 없는 경우 책임을 지지 않습니다. 운영자는 서비스 이용으로 발생한 이용자 간 또는 이용자와 제3자 간의 분쟁에 개입하지 않으며, 이로 인한 손해에 대해 책임을 지지 않습니다.',
+    t6h:'6. 약관의 변경',
+    t6p:'본 약관은 관련 법령 또는 서비스 정책에 따라 변경될 수 있으며, 변경 시 본 페이지를 통해 공지합니다.',
+    t7h:'7. 준거법',
+    t7p:'본 약관은 대한민국 법령에 따라 해석됩니다. 다만 이용자가 거주하는 국가의 법령에서 소비자에게 강행적으로 보장하는 보호 규정이 있는 경우, 그 보호 규정은 본 조항에도 불구하고 계속 적용됩니다.',
+    t8h:'8. 문의처',
+    t8pFn:function(link){ return '이용약관 관련 문의는 '+link+'의 문의 양식을 이용해 주세요.'; },
+    t8link:'제휴 문의 페이지',
+    footerHome:'사주 · 타로 · 관상',footerPrivacy:'개인정보처리방침',footerContact:'제휴 문의',
+    footerCopy:'© 2026 사주·타로·관상'
+  },
+  en:{
+    title:'Terms of Service',
+    lede:'Please review the following terms before using the Saju, Tarot, and Face Reading service.',
+    updated:'Effective date: September 11, 2026',
+    backLink:'← Back to Home',
+    t1h:'1. Purpose and Nature of the Service',
+    t1p:'Saju, Tarot, and Face Reading (the "Service") provides entertainment and reference content based on the interpretation methods and statistical patterns of traditional Four Pillars of Destiny (Saju/BaZi), Tarot, and East Asian face reading, intended for fun and self-reflection. All results provided by the Service are <strong>not medical, legal, or financial advice</strong>, and do not constitute a guarantee of any fact.',
+    t2h:'2. User Responsibilities',
+    t2li1:'You are responsible for the accuracy of any information you enter into the Service, such as your date of birth and name.',
+    t2li2:'The fortune, tarot, and face-reading results provided by the Service must not be used as the sole basis for real-world decisions (such as medical treatment, investment, or litigation). You bear full responsibility for any decisions made on that basis and their consequences.',
+    t3h:'3. Advertising and Third-Party Services',
+    t3p:'The Service is supported by third-party advertising, including Google AdSense. Any transaction arising from an ad click or from products or services offered by an advertiser is a matter between the user and that advertiser, and the Service operator bears no responsibility for it.',
+    t4h:'4. Intellectual Property',
+    t4p:'The copyright in the content, design, text, and code used in the Service belongs to the operator, and may not be reproduced, distributed, or used to create derivative works without prior consent.',
+    t5h:'5. Disclaimer',
+    t5p:'The operator is not liable for any failure to provide the Service due to force majeure events such as natural disasters, service infrastructure failures, or traffic overload. The operator does not intervene in disputes between users, or between a user and a third party, arising from use of the Service, and bears no liability for any resulting damages.',
+    t6h:'6. Changes to These Terms',
+    t6p:'These Terms may be changed in accordance with applicable law or service policy, and any changes will be announced on this page.',
+    t7h:'7. Governing Law',
+    t7p:'These Terms are governed by the laws of the Republic of Korea. This does not, however, deprive users who qualify as consumers of the protection afforded to them by any mandatory provisions of the law of the country in which they reside.',
+    t8h:'8. Contact',
+    t8pFn:function(link){ return 'For inquiries about these Terms, please use the contact form on the '+link+'.'; },
+    t8link:'Partnership Inquiries page',
+    footerHome:'Saju · Tarot · Face Reading',footerPrivacy:'Privacy Policy',footerContact:'Partnership Inquiries',
+    footerCopy:'© 2026 Saju · Tarot · Face Reading'
+  }
+};
+
+function applyLang(){
+  const s=T[LANG];
+  document.documentElement.lang=LANG;
+  document.getElementById('txtTitle').textContent=s.title;
+  document.getElementById('txtLede').textContent=s.lede;
+  document.getElementById('txtUpdated').textContent=s.updated;
+  document.getElementById('txtBackLink').textContent=s.backLink;
+  ['t1h','t2h','t3h','t4h','t5h','t6h','t7h','t8h'].forEach(function(id){
+    document.getElementById(id).textContent=s[id];
+  });
+  document.getElementById('t1p').innerHTML=s.t1p;
+  document.getElementById('t2li1').textContent=s.t2li1;
+  document.getElementById('t2li2').textContent=s.t2li2;
+  document.getElementById('t3p').textContent=s.t3p;
+  document.getElementById('t4p').textContent=s.t4p;
+  document.getElementById('t5p').textContent=s.t5p;
+  document.getElementById('t6p').textContent=s.t6p;
+  document.getElementById('t7p').textContent=s.t7p;
+  const link='<a href="contact.html">'+s.t8link+'</a>';
+  document.getElementById('t8p').innerHTML=s.t8pFn(link);
+  document.getElementById('txtFooterHome').textContent=s.footerHome;
+  document.getElementById('txtFooterPrivacy').textContent=s.footerPrivacy;
+  document.getElementById('txtFooterContact').textContent=s.footerContact;
+  document.getElementById('txtFooterCopy').textContent=s.footerCopy;
+  document.getElementById('langKoBtn').classList.toggle('active',LANG==='ko');
+  document.getElementById('langEnBtn').classList.toggle('active',LANG==='en');
+}
+
+function setLang(lang){
+  LANG=lang;
+  try{ localStorage.setItem(LANG_KEY,lang); }catch(error){ /* 무시 */ }
+  applyLang();
+}
+
+document.getElementById('langKoBtn').addEventListener('click',function(){ setLang('ko'); });
+document.getElementById('langEnBtn').addEventListener('click',function(){ setLang('en'); });
+
+applyLang();
+})();
+</script>
 </body>
 </html>

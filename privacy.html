@@ -53,6 +53,7 @@ p.lede{max-width:480px;margin:16px auto 0;color:var(--ink-soft);font-size:var(--
 .doc section:last-child{margin-bottom:0;}
 .doc h2{font-size:var(--fs-h2);font-weight:700;margin-bottom:10px;color:var(--ink);}
 .doc p, .doc li{font-size:var(--fs-body);color:var(--ink-soft);}
+.doc p+p{margin-top:10px;}
 .doc ul{margin:8px 0;padding-left:20px;}
 .doc li{margin-bottom:6px;}
 .doc table{width:100%;border-collapse:collapse;margin-top:10px;font-size:var(--fs-caption);}
@@ -63,80 +64,255 @@ footer{max-width:720px;margin:48px auto 0;padding:24px 20px 0;border-top:1px sol
 footer a{color:var(--ink-soft);text-decoration:none;margin:0 6px;}
 footer a:hover{text-decoration:underline;}
 footer .fcopy{margin-top:10px;}
+
+/* ---- language toggle ---- */
+.lang-toggle{
+  position:fixed;top:16px;right:16px;z-index:20;
+  display:flex;gap:4px;
+  border:1px solid var(--line-strong);border-radius:999px;padding:3px;
+  background:var(--paper-raised);box-shadow:var(--shadow);
+}
+.lang-toggle button{
+  font:inherit;font-size:var(--fs-caption);font-weight:700;
+  border:none;border-radius:999px;padding:6px 12px;cursor:pointer;
+  background:transparent;color:var(--ink-soft);
+}
+.lang-toggle button.active{background:var(--accent);color:var(--accent-ink,#241109);}
+@media (max-width:480px){.lang-toggle{top:10px;right:10px;}}
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1069417115729999" crossorigin="anonymous"></script>
 </head>
 <body>
+
+<div class="lang-toggle" role="group" aria-label="Language">
+  <button type="button" id="langKoBtn" class="active">한국어</button>
+  <button type="button" id="langEnBtn">EN</button>
+</div>
+
 <header class="hero">
   <div class="eyebrow">PRIVACY POLICY</div>
-  <h1 class="title">개인정보처리방침</h1>
-  <p class="lede">사주·타로·관상은 이용자의 개인정보를 소중히 다룹니다. 어떤 정보를 어떻게 다루는지 아래에서 확인하세요.</p>
-  <p class="updated">시행일자: 2026년 9월 11일</p>
-  <p class="back-link"><a href="index.html">← 홈으로 돌아가기</a></p>
+  <h1 class="title" id="txtTitle">개인정보처리방침</h1>
+  <p class="lede" id="txtLede">사주·타로·관상은 이용자의 개인정보를 소중히 다룹니다. 어떤 정보를 어떻게 다루는지 아래에서 확인하세요.</p>
+  <p class="updated" id="txtUpdated">시행일자: 2026년 9월 11일</p>
+  <p class="back-link"><a href="index.html" id="txtBackLink">← 홈으로 돌아가기</a></p>
 </header>
 
 <div class="wrap">
   <div class="doc">
     <section>
-      <h2>1. 수집하는 개인정보 항목</h2>
-      <p>본 서비스는 회원가입 없이 이용할 수 있으며, 아래 항목 외에는 개인정보를 수집하지 않습니다.</p>
+      <h2 id="p1h">1. 수집하는 개인정보 항목</h2>
+      <p id="p1intro">본 서비스는 회원가입 없이 이용할 수 있으며, 아래 항목 외에는 개인정보를 수집하지 않습니다.</p>
       <ul>
-        <li><strong>사주·타로 입력 정보(이름, 생년월일시, 성별)</strong> — 결과 계산을 위해 이용자의 브라우저에서만 처리되며, 서버로 전송되거나 저장되지 않습니다. 재방문 편의를 위해 이용자의 브라우저(로컬 저장소)에만 저장되며, 각 화면의 "저장된 정보 지우기" 버튼 또는 브라우저 설정에서 언제든 삭제할 수 있습니다.</li>
-        <li><strong>오늘의 관상 사진</strong> — 촬영하거나 업로드한 사진은 이용자의 브라우저 안에서만 분석되며, 어떤 서버로도 전송·저장되지 않습니다. 사진과 결과는 재방문 편의를 위해 이용자의 브라우저(로컬 저장소)에만 남으며, "저장된 정보 지우기" 버튼으로 즉시 삭제할 수 있습니다.</li>
-        <li><strong>제휴 문의 정보(이름, 이메일, 회사명, 문의 내용)</strong> — 제휴 문의 페이지에서 자발적으로 입력한 경우에만 수집되며, 문의 처리를 위해 제3자 폼 서비스(Formspree)를 통해 전달·저장됩니다.</li>
-        <li><strong>방문 통계</strong> — 개인을 식별하지 않는 누적 방문자 수(카운터)와 Cloudflare 웹 애널리틱스를 통한 쿠키 없는 익명 트래픽 통계를 집계합니다.</li>
+        <li id="p1li1"><strong>사주·타로 입력 정보(이름, 생년월일시, 성별)</strong> — 결과 계산을 위해 이용자의 브라우저에서만 처리되며, 서버로 전송되거나 저장되지 않습니다. 재방문 편의를 위해 이용자의 브라우저(로컬 저장소)에만 저장되며, 각 화면의 "저장된 정보 지우기" 버튼 또는 브라우저 설정에서 언제든 삭제할 수 있습니다.</li>
+        <li id="p1li2"><strong>오늘의 관상 사진</strong> — 촬영하거나 업로드한 사진은 이용자의 브라우저 안에서만 분석되며, 어떤 서버로도 전송·저장되지 않습니다. 사진과 결과는 재방문 편의를 위해 이용자의 브라우저(로컬 저장소)에만 남으며, "저장된 정보 지우기" 버튼으로 즉시 삭제할 수 있습니다.</li>
+        <li id="p1li3"><strong>제휴 문의 정보(이름, 이메일, 회사명, 문의 내용)</strong> — 제휴 문의 페이지에서 자발적으로 입력한 경우에만 수집되며, 문의 처리를 위해 제3자 폼 서비스(Formspree)를 통해 전달·저장됩니다.</li>
+        <li id="p1li4"><strong>방문 통계</strong> — 개인을 식별하지 않는 누적 방문자 수(카운터)와 Cloudflare 웹 애널리틱스를 통한 쿠키 없는 익명 트래픽 통계를 집계합니다.</li>
       </ul>
     </section>
 
     <section>
-      <h2>2. 쿠키와 광고(Google AdSense)</h2>
-      <p>본 사이트는 Google AdSense를 통해 광고를 게재하며, Google 및 광고 협력사는 맞춤형 광고 제공을 위해 쿠키(예: DoubleClick DART 쿠키)를 사용할 수 있습니다. 이 쿠키는 이용자가 본 사이트 및 다른 사이트를 방문한 기록을 기반으로 관심사에 맞는 광고를 보여주는 데 사용됩니다.</p>
-      <p>이용자는 <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google 광고 설정</a>에서 맞춤형 광고를 거부할 수 있으며, <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener">aboutads.info</a>에서 제3자 맞춤 광고 쿠키를 관리할 수 있습니다.</p>
+      <h2 id="p2h">2. 쿠키와 광고(Google AdSense)</h2>
+      <p id="p2p1">본 사이트는 Google AdSense를 통해 광고를 게재하며, Google 및 광고 협력사는 맞춤형 광고 제공을 위해 쿠키(예: DoubleClick DART 쿠키)를 사용할 수 있습니다. 이 쿠키는 이용자가 본 사이트 및 다른 사이트를 방문한 기록을 기반으로 관심사에 맞는 광고를 보여주는 데 사용됩니다.</p>
+      <p id="p2p2">이용자는 <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google 광고 설정</a>에서 맞춤형 광고를 거부할 수 있으며, <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener">aboutads.info</a>에서 제3자 맞춤 광고 쿠키를 관리할 수 있습니다. 유럽경제지역(EEA)이나 영국에 거주하시는 경우 <a href="https://www.youronlinechoices.eu/" target="_blank" rel="noopener">youronlinechoices.eu</a>에서도 쿠키 선택을 관리하실 수 있습니다.</p>
     </section>
 
     <section>
-      <h2>3. 개인정보의 보유 및 이용 기간</h2>
-      <p>브라우저에 저장되는 정보(사주 입력값, 관상 사진·결과, 언어·테마 설정)는 이용자가 직접 삭제하거나 브라우저 데이터를 초기화하기 전까지 이용자의 기기에만 보관되며, 운영자는 이에 접근할 수 없습니다. 제휴 문의로 제출된 정보는 문의 응대 목적이 달성된 후 합리적인 기간 내에 파기합니다.</p>
+      <h2 id="p3h">3. 개인정보의 보유 및 이용 기간</h2>
+      <p id="p3p">브라우저에 저장되는 정보(사주 입력값, 관상 사진·결과, 언어·테마 설정)는 이용자가 직접 삭제하거나 브라우저 데이터를 초기화하기 전까지 이용자의 기기에만 보관되며, 운영자는 이에 접근할 수 없습니다. 제휴 문의로 제출된 정보는 문의 응대 목적이 달성된 후 합리적인 기간 내에 파기합니다.</p>
     </section>
 
     <section>
-      <h2>4. 개인정보의 제3자 제공 및 처리위탁</h2>
+      <h2 id="p4h">4. 개인정보의 제3자 제공 및 처리위탁</h2>
       <table>
-        <tr><th>수탁업체</th><th>위탁 업무</th></tr>
-        <tr><td>Google AdSense</td><td>광고 게재 및 맞춤 광고</td></tr>
-        <tr><td>Cloudflare</td><td>웹사이트 호스팅, 쿠키 없는 방문 통계(웹 애널리틱스)</td></tr>
-        <tr><td>Formspree</td><td>제휴 문의 폼 데이터 전달</td></tr>
+        <tr><th id="p4th1">수탁업체</th><th id="p4th2">위탁 업무</th></tr>
+        <tr><td>Google AdSense</td><td id="p4td1">광고 게재 및 맞춤 광고</td></tr>
+        <tr><td>Cloudflare</td><td id="p4td2">웹사이트 호스팅, 쿠키 없는 방문 통계(웹 애널리틱스)</td></tr>
+        <tr><td>Formspree</td><td id="p4td3">제휴 문의 폼 데이터 전달</td></tr>
       </table>
-      <p>위 업체 외에는 법령에 특별한 규정이 있는 경우를 제외하고 개인정보를 제3자에게 제공하지 않습니다.</p>
+      <p id="p4p">위 업체 외에는 법령에 특별한 규정이 있는 경우를 제외하고 개인정보를 제3자에게 제공하지 않습니다.</p>
     </section>
 
     <section>
-      <h2>5. 이용자의 권리</h2>
-      <p>이용자는 언제든지 각 화면의 "저장된 정보 지우기" 기능이나 브라우저 설정을 통해 브라우저에 저장된 정보를 삭제할 수 있습니다. 제휴 문의를 통해 제공한 정보의 열람·정정·삭제를 요청하려면 <a href="contact.html">제휴 문의 페이지</a>를 통해 연락해 주세요.</p>
+      <h2 id="p5h">5. 이용자의 권리</h2>
+      <p id="p5p1">이용자는 언제든지 각 화면의 "저장된 정보 지우기" 기능이나 브라우저 설정을 통해 브라우저에 저장된 정보를 삭제할 수 있습니다. 제휴 문의를 통해 제공한 정보의 열람·정정·삭제를 요청하려면 <a href="contact.html">제휴 문의 페이지</a>를 통해 연락해 주세요.</p>
+      <p id="p5p2">이용자가 유럽경제지역(EEA)·영국 또는 미국 캘리포니아주에 거주하시는 경우, GDPR(일반개인정보보호법)이나 CCPA(캘리포니아 소비자 개인정보보호법) 등 관련 법령에 따라 개인정보에 대한 접근·정정·삭제·처리 제한 요청권, 데이터 이동권 등 추가적인 권리를 가질 수 있습니다. 이러한 권리는 <a href="contact.html">제휴 문의 페이지</a>를 통해 언제든 행사하실 수 있습니다.</p>
     </section>
 
     <section>
-      <h2>6. 아동의 개인정보 보호</h2>
-      <p>본 서비스는 만 14세 미만 아동을 대상으로 하지 않으며, 아동으로부터 고의로 개인정보를 수집하지 않습니다.</p>
+      <h2 id="p6h">6. 아동의 개인정보 보호</h2>
+      <p id="p6p">본 서비스는 만 14세 미만 아동(또는 거주 국가의 관련 법령이 이보다 높은 연령 기준을 정하는 경우 그 연령 미만의 아동)을 대상으로 하지 않으며, 아동으로부터 고의로 개인정보를 수집하지 않습니다.</p>
     </section>
 
     <section>
-      <h2>7. 개인정보처리방침의 변경</h2>
-      <p>본 방침은 법령, 정책 또는 서비스 변경에 따라 수정될 수 있으며, 변경 시 본 페이지를 통해 공지합니다.</p>
+      <h2 id="p7h">7. 개인정보처리방침의 변경</h2>
+      <p id="p7p">본 방침은 법령, 정책 또는 서비스 변경에 따라 수정될 수 있으며, 변경 시 본 페이지를 통해 공지합니다.</p>
     </section>
 
     <section>
-      <h2>8. 문의처</h2>
-      <p>개인정보 관련 문의는 <a href="contact.html">제휴 문의 페이지</a>의 문의 양식을 이용해 주세요.</p>
+      <h2 id="p8h">8. 문의처</h2>
+      <p id="p8p">개인정보 관련 문의는 <a href="contact.html">제휴 문의 페이지</a>의 문의 양식을 이용해 주세요.</p>
     </section>
   </div>
 
   <footer>
     <div class="flinks">
-      <a href="index.html">사주 · 타로 · 관상</a>·<a href="terms.html">이용약관</a>·<a href="contact.html">제휴 문의</a>
+      <a href="index.html" id="txtFooterHome">사주 · 타로 · 관상</a>·<a href="terms.html" id="txtFooterTerms">이용약관</a>·<a href="contact.html" id="txtFooterContact">제휴 문의</a>
     </div>
-    <div class="fcopy">© 2026 사주·타로·관상</div>
+    <div class="fcopy" id="txtFooterCopy">© 2026 사주·타로·관상</div>
   </footer>
 </div>
+
+<script>
+(function(){
+"use strict";
+const LANG_KEY='sajuLang';
+let LANG='ko';
+try{
+  const saved=localStorage.getItem(LANG_KEY);
+  if(saved==='en'||saved==='ko') LANG=saved;
+}catch(error){ /* 무시 */ }
+
+const T={
+  ko:{
+    title:'개인정보처리방침',
+    lede:'사주·타로·관상은 이용자의 개인정보를 소중히 다룹니다. 어떤 정보를 어떻게 다루는지 아래에서 확인하세요.',
+    updated:'시행일자: 2026년 9월 11일',
+    backLink:'← 홈으로 돌아가기',
+    p1h:'1. 수집하는 개인정보 항목',
+    p1intro:'본 서비스는 회원가입 없이 이용할 수 있으며, 아래 항목 외에는 개인정보를 수집하지 않습니다.',
+    p1li1:'<strong>사주·타로 입력 정보(이름, 생년월일시, 성별)</strong> — 결과 계산을 위해 이용자의 브라우저에서만 처리되며, 서버로 전송되거나 저장되지 않습니다. 재방문 편의를 위해 이용자의 브라우저(로컬 저장소)에만 저장되며, 각 화면의 "저장된 정보 지우기" 버튼 또는 브라우저 설정에서 언제든 삭제할 수 있습니다.',
+    p1li2:'<strong>오늘의 관상 사진</strong> — 촬영하거나 업로드한 사진은 이용자의 브라우저 안에서만 분석되며, 어떤 서버로도 전송·저장되지 않습니다. 사진과 결과는 재방문 편의를 위해 이용자의 브라우저(로컬 저장소)에만 남으며, "저장된 정보 지우기" 버튼으로 즉시 삭제할 수 있습니다.',
+    p1li3:'<strong>제휴 문의 정보(이름, 이메일, 회사명, 문의 내용)</strong> — 제휴 문의 페이지에서 자발적으로 입력한 경우에만 수집되며, 문의 처리를 위해 제3자 폼 서비스(Formspree)를 통해 전달·저장됩니다.',
+    p1li4:'<strong>방문 통계</strong> — 개인을 식별하지 않는 누적 방문자 수(카운터)와 Cloudflare 웹 애널리틱스를 통한 쿠키 없는 익명 트래픽 통계를 집계합니다.',
+    p2h:'2. 쿠키와 광고(Google AdSense)',
+    p2p1:'본 사이트는 Google AdSense를 통해 광고를 게재하며, Google 및 광고 협력사는 맞춤형 광고 제공을 위해 쿠키(예: DoubleClick DART 쿠키)를 사용할 수 있습니다. 이 쿠키는 이용자가 본 사이트 및 다른 사이트를 방문한 기록을 기반으로 관심사에 맞는 광고를 보여주는 데 사용됩니다.',
+    p2p2Fn:function(l1,l2,l3){ return '이용자는 '+l1+'에서 맞춤형 광고를 거부할 수 있으며, '+l2+'에서 제3자 맞춤 광고 쿠키를 관리할 수 있습니다. 유럽경제지역(EEA)이나 영국에 거주하시는 경우 '+l3+'에서도 쿠키 선택을 관리하실 수 있습니다.'; },
+    p2l1:'Google 광고 설정',p2l2:'aboutads.info',p2l3:'youronlinechoices.eu',
+    p3h:'3. 개인정보의 보유 및 이용 기간',
+    p3p:'브라우저에 저장되는 정보(사주 입력값, 관상 사진·결과, 언어·테마 설정)는 이용자가 직접 삭제하거나 브라우저 데이터를 초기화하기 전까지 이용자의 기기에만 보관되며, 운영자는 이에 접근할 수 없습니다. 제휴 문의로 제출된 정보는 문의 응대 목적이 달성된 후 합리적인 기간 내에 파기합니다.',
+    p4h:'4. 개인정보의 제3자 제공 및 처리위탁',
+    p4th1:'수탁업체',p4th2:'위탁 업무',
+    p4td1:'광고 게재 및 맞춤 광고',p4td2:'웹사이트 호스팅, 쿠키 없는 방문 통계(웹 애널리틱스)',p4td3:'제휴 문의 폼 데이터 전달',
+    p4p:'위 업체 외에는 법령에 특별한 규정이 있는 경우를 제외하고 개인정보를 제3자에게 제공하지 않습니다.',
+    p5h:'5. 이용자의 권리',
+    p5p1Fn:function(link){ return '이용자는 언제든지 각 화면의 "저장된 정보 지우기" 기능이나 브라우저 설정을 통해 브라우저에 저장된 정보를 삭제할 수 있습니다. 제휴 문의를 통해 제공한 정보의 열람·정정·삭제를 요청하려면 '+link+'를 통해 연락해 주세요.'; },
+    p5p2Fn:function(link){ return '이용자가 유럽경제지역(EEA)·영국 또는 미국 캘리포니아주에 거주하시는 경우, GDPR(일반개인정보보호법)이나 CCPA(캘리포니아 소비자 개인정보보호법) 등 관련 법령에 따라 개인정보에 대한 접근·정정·삭제·처리 제한 요청권, 데이터 이동권 등 추가적인 권리를 가질 수 있습니다. 이러한 권리는 '+link+'를 통해 언제든 행사하실 수 있습니다.'; },
+    p5link:'제휴 문의 페이지',
+    p6h:'6. 아동의 개인정보 보호',
+    p6p:'본 서비스는 만 14세 미만 아동(또는 거주 국가의 관련 법령이 이보다 높은 연령 기준을 정하는 경우 그 연령 미만의 아동)을 대상으로 하지 않으며, 아동으로부터 고의로 개인정보를 수집하지 않습니다.',
+    p7h:'7. 개인정보처리방침의 변경',
+    p7p:'본 방침은 법령, 정책 또는 서비스 변경에 따라 수정될 수 있으며, 변경 시 본 페이지를 통해 공지합니다.',
+    p8h:'8. 문의처',
+    p8pFn:function(link){ return '개인정보 관련 문의는 '+link+'의 문의 양식을 이용해 주세요.'; },
+    p8link:'제휴 문의 페이지',
+    footerHome:'사주 · 타로 · 관상',footerTerms:'이용약관',footerContact:'제휴 문의',
+    footerCopy:'© 2026 사주·타로·관상'
+  },
+  en:{
+    title:'Privacy Policy',
+    lede:'Saju, Tarot, and Face Reading takes your personal information seriously. Learn what information we handle, and how, below.',
+    updated:'Effective date: September 11, 2026',
+    backLink:'← Back to Home',
+    p1h:'1. Personal Information We Collect',
+    p1intro:'This Service can be used without creating an account, and we do not collect personal information beyond the items listed below.',
+    p1li1:'<strong>Saju/Tarot input information (name, date and time of birth, gender)</strong> — Processed only in your browser to calculate your results; it is never transmitted to or stored on our servers. For convenience on return visits, it is stored only in your browser\'s local storage, and you can delete it at any time using the "Clear saved info" button on each screen or through your browser settings.',
+    p1li2:'<strong>Today\'s Face Reading photo</strong> — Any photo you capture or upload is analyzed entirely within your browser and is never transmitted to or stored on any server. The photo and result remain only in your browser\'s local storage for convenience on return visits, and can be deleted immediately with the "Clear saved info" button.',
+    p1li3:'<strong>Partnership inquiry information (name, email, company name, message)</strong> — Collected only when you voluntarily submit it on the Partnership Inquiries page, and is transmitted and stored via a third-party form service (Formspree) in order to process your inquiry.',
+    p1li4:'<strong>Visit statistics</strong> — We tally a cumulative visitor count that does not identify individuals, along with cookie-free anonymous traffic statistics via Cloudflare Web Analytics.',
+    p2h:'2. Cookies and Advertising (Google AdSense)',
+    p2p1:'This site displays ads through Google AdSense, and Google and its advertising partners may use cookies (such as the DoubleClick DART cookie) to serve personalized ads. These cookies are used to show ads relevant to your interests based on your visits to this site and other sites.',
+    p2p2Fn:function(l1,l2,l3){ return 'You can opt out of personalized advertising at '+l1+', and manage third-party personalized-advertising cookies at '+l2+'. If you are located in the European Economic Area (EEA) or the UK, you can also manage your cookie choices at '+l3+'.'; },
+    p2l1:'Google Ads Settings',p2l2:'aboutads.info',p2l3:'youronlinechoices.eu',
+    p3h:'3. Retention and Use of Personal Information',
+    p3p:'Information stored in your browser (saju input values, face-reading photos and results, language and theme settings) remains only on your device until you delete it yourself or reset your browser data, and the operator cannot access it. Information submitted through a partnership inquiry is deleted within a reasonable period after the purpose of responding to it has been fulfilled.',
+    p4h:'4. Third-Party Disclosure and Processing',
+    p4th1:'Recipient',p4th2:'Purpose',
+    p4td1:'Ad serving and personalized advertising',p4td2:'Website hosting, cookie-free visit statistics (Web Analytics)',p4td3:'Delivery of partnership inquiry form data',
+    p4p:'Other than the companies listed above, we do not disclose personal information to third parties, except where required by law.',
+    p5h:'5. Your Rights',
+    p5p1Fn:function(link){ return 'You may delete information stored in your browser at any time using the "Clear saved info" feature on each screen, or through your browser settings. To request access to, correction of, or deletion of information you provided through a partnership inquiry, please contact us via the '+link+'.'; },
+    p5p2Fn:function(link){ return 'If you are located in the European Economic Area (EEA), the UK, or the U.S. state of California, applicable laws such as the GDPR or the CCPA may grant you additional rights — including the right to access, correct, delete, or restrict the processing of your personal information, and the right to data portability. You can exercise these rights at any time by contacting us through the '+link+'.'; },
+    p5link:'Partnership Inquiries page',
+    p6h:'6. Children\'s Privacy',
+    p6p:'This Service is not directed at children under the age of 14 (or a higher minimum age where required by the laws of your country of residence), and we do not knowingly collect personal information from children.',
+    p7h:'7. Changes to This Privacy Policy',
+    p7p:'This Policy may be revised in accordance with applicable law, policy, or service changes, and any changes will be announced on this page.',
+    p8h:'8. Contact',
+    p8pFn:function(link){ return 'For privacy-related inquiries, please use the contact form on the '+link+'.'; },
+    p8link:'Partnership Inquiries page',
+    footerHome:'Saju · Tarot · Face Reading',footerTerms:'Terms of Service',footerContact:'Partnership Inquiries',
+    footerCopy:'© 2026 Saju · Tarot · Face Reading'
+  }
+};
+
+function applyLang(){
+  const s=T[LANG];
+  document.documentElement.lang=LANG;
+  document.getElementById('txtTitle').textContent=s.title;
+  document.getElementById('txtLede').textContent=s.lede;
+  document.getElementById('txtUpdated').textContent=s.updated;
+  document.getElementById('txtBackLink').textContent=s.backLink;
+
+  document.getElementById('p1h').textContent=s.p1h;
+  document.getElementById('p1intro').textContent=s.p1intro;
+  document.getElementById('p1li1').innerHTML=s.p1li1;
+  document.getElementById('p1li2').innerHTML=s.p1li2;
+  document.getElementById('p1li3').innerHTML=s.p1li3;
+  document.getElementById('p1li4').innerHTML=s.p1li4;
+
+  document.getElementById('p2h').textContent=s.p2h;
+  document.getElementById('p2p1').textContent=s.p2p1;
+  const p2l1='<a href="https://adssettings.google.com" target="_blank" rel="noopener">'+s.p2l1+'</a>';
+  const p2l2='<a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener">'+s.p2l2+'</a>';
+  const p2l3='<a href="https://www.youronlinechoices.eu/" target="_blank" rel="noopener">'+s.p2l3+'</a>';
+  document.getElementById('p2p2').innerHTML=s.p2p2Fn(p2l1,p2l2,p2l3);
+
+  document.getElementById('p3h').textContent=s.p3h;
+  document.getElementById('p3p').textContent=s.p3p;
+
+  document.getElementById('p4h').textContent=s.p4h;
+  document.getElementById('p4th1').textContent=s.p4th1;
+  document.getElementById('p4th2').textContent=s.p4th2;
+  document.getElementById('p4td1').textContent=s.p4td1;
+  document.getElementById('p4td2').textContent=s.p4td2;
+  document.getElementById('p4td3').textContent=s.p4td3;
+  document.getElementById('p4p').textContent=s.p4p;
+
+  document.getElementById('p5h').textContent=s.p5h;
+  const p5link='<a href="contact.html">'+s.p5link+'</a>';
+  document.getElementById('p5p1').innerHTML=s.p5p1Fn(p5link);
+  document.getElementById('p5p2').innerHTML=s.p5p2Fn(p5link);
+
+  document.getElementById('p6h').textContent=s.p6h;
+  document.getElementById('p6p').textContent=s.p6p;
+
+  document.getElementById('p7h').textContent=s.p7h;
+  document.getElementById('p7p').textContent=s.p7p;
+
+  document.getElementById('p8h').textContent=s.p8h;
+  const p8link='<a href="contact.html">'+s.p8link+'</a>';
+  document.getElementById('p8p').innerHTML=s.p8pFn(p8link);
+
+  document.getElementById('txtFooterHome').textContent=s.footerHome;
+  document.getElementById('txtFooterTerms').textContent=s.footerTerms;
+  document.getElementById('txtFooterContact').textContent=s.footerContact;
+  document.getElementById('txtFooterCopy').textContent=s.footerCopy;
+
+  document.getElementById('langKoBtn').classList.toggle('active',LANG==='ko');
+  document.getElementById('langEnBtn').classList.toggle('active',LANG==='en');
+}
+
+function setLang(lang){
+  LANG=lang;
+  try{ localStorage.setItem(LANG_KEY,lang); }catch(error){ /* 무시 */ }
+  applyLang();
+}
+
+document.getElementById('langKoBtn').addEventListener('click',function(){ setLang('ko'); });
+document.getElementById('langEnBtn').addEventListener('click',function(){ setLang('en'); });
+
+applyLang();
+})();
+</script>
 </body>
 </html>

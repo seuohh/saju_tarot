@@ -109,15 +109,36 @@ footer .flinks a:hover{text-decoration:underline;}
 footer .fcopy{margin-top:10px;}
 footer .visitor-counter{margin-top:6px;font-size:var(--fs-tiny);color:var(--ink-soft);opacity:0.8;}
 footer .visitor-counter b{font-weight:700;color:var(--accent);}
+
+/* ---- language toggle ---- */
+.lang-toggle{
+  position:fixed;top:16px;right:16px;z-index:20;
+  display:flex;gap:4px;
+  border:1px solid var(--line-strong);border-radius:999px;padding:3px;
+  background:var(--paper-raised);box-shadow:var(--shadow);
+}
+.lang-toggle button{
+  font:inherit;font-size:var(--fs-caption);font-weight:700;
+  border:none;border-radius:999px;padding:6px 12px;cursor:pointer;
+  background:transparent;color:var(--ink-soft);
+}
+.lang-toggle button.active{background:var(--accent);color:var(--accent-ink);}
+@media (max-width:480px){.lang-toggle{top:10px;right:10px;}}
 </style>
 </head>
 <body>
+
+<div class="lang-toggle" role="group" aria-label="Language">
+  <button type="button" id="langKoBtn" class="active">한국어</button>
+  <button type="button" id="langEnBtn">EN</button>
+</div>
+
 <div class="bg-wash">
 <header class="hero">
-  <div class="eyebrow">제휴 · 문의</div>
-  <h1 class="title">제휴 문의</h1>
-  <p class="lede">사주·타로·관상과의 광고·콘텐츠·데이터 제휴, 언론 및 기타 문의를 남겨주시면 확인 후 이메일로 회신드립니다.</p>
-  <p class="back-link"><a href="index.html">← 홈으로 돌아가기</a></p>
+  <div class="eyebrow">PARTNERSHIP · CONTACT</div>
+  <h1 class="title" id="txtTitle">제휴 문의</h1>
+  <p class="lede" id="txtLede">사주·타로·관상과의 광고·콘텐츠·데이터 제휴, 언론 및 기타 문의를 남겨주시면 확인 후 이메일로 회신드립니다.</p>
+  <p class="back-link"><a href="index.html" id="txtBackLink">← 홈으로 돌아가기</a></p>
 </header>
 </div>
 
@@ -125,28 +146,28 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 
   <form class="ledger" id="contactForm" action="https://formspree.io/f/myeylopr" method="POST">
     <div class="field">
-      <label for="fName">이름 <span class="req">*</span></label>
+      <label for="fName" id="txtLabelName">이름 <span class="req">*</span></label>
       <input type="text" id="fName" name="name" placeholder="예: 홍길동" maxlength="40" required>
     </div>
     <div class="field">
-      <label for="fEmail">이메일 <span class="req">*</span></label>
+      <label for="fEmail" id="txtLabelEmail">이메일 <span class="req">*</span></label>
       <input type="email" id="fEmail" name="email" placeholder="you@example.com" required>
     </div>
     <div class="field">
-      <label for="fCompany">회사 · 브랜드명 (선택)</label>
+      <label for="fCompany" id="txtLabelCompany">회사 · 브랜드명 (선택)</label>
       <input type="text" id="fCompany" name="company" placeholder="예: (주)홍길동컴퍼니" maxlength="60">
     </div>
     <div class="field">
-      <label for="fType">문의 유형</label>
+      <label for="fType" id="txtLabelType">문의 유형</label>
       <select id="fType" name="inquiry_type">
-        <option value="광고/배너 제휴">광고 · 배너 제휴</option>
-        <option value="콘텐츠/데이터 제휴">콘텐츠 · 데이터 제휴</option>
-        <option value="언론/미디어 문의">언론 · 미디어 문의</option>
-        <option value="기타">기타</option>
+        <option value="광고/배너 제휴" id="optAd">광고 · 배너 제휴</option>
+        <option value="콘텐츠/데이터 제휴" id="optContent">콘텐츠 · 데이터 제휴</option>
+        <option value="언론/미디어 문의" id="optPress">언론 · 미디어 문의</option>
+        <option value="기타" id="optOther">기타</option>
       </select>
     </div>
     <div class="field">
-      <label for="fMessage">문의 내용 <span class="req">*</span></label>
+      <label for="fMessage" id="txtLabelMessage">문의 내용 <span class="req">*</span></label>
       <textarea id="fMessage" name="message" placeholder="제안 내용을 자유롭게 작성해주세요." required></textarea>
     </div>
 
@@ -157,19 +178,19 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
     <div class="submit-row">
       <button type="submit" class="primary" id="submitBtn">문의 보내기</button>
     </div>
-    <p class="form-note">보내주신 이메일로만 회신드리며, 입력하신 정보는 문의 응대 외 다른 목적으로 사용하지 않습니다.</p>
+    <p class="form-note" id="txtFormNote">보내주신 이메일로만 회신드리며, 입력하신 정보는 문의 응대 외 다른 목적으로 사용하지 않습니다.</p>
     <p class="form-error" id="formError" hidden>전송에 실패했습니다. 잠시 후 다시 시도하시거나 이메일로 직접 연락해주세요.</p>
   </form>
 
   <div class="success" id="successCard" hidden>
     <div class="glyph">✅</div>
-    <h2>문의가 접수되었습니다</h2>
-    <p>보내주신 내용을 확인한 뒤 입력하신 이메일로 회신드리겠습니다.</p>
+    <h2 id="txtSuccessHead">문의가 접수되었습니다</h2>
+    <p id="txtSuccessBody">보내주신 내용을 확인한 뒤 입력하신 이메일로 회신드리겠습니다.</p>
   </div>
 
   <footer>
     <div class="flinks">
-      <a href="index.html">사주 · 타로 · 관상</a>·<a href="terms.html">이용약관</a>·<a href="privacy.html">개인정보처리방침</a>
+      <a href="index.html" id="txtFooterHome">사주 · 타로 · 관상</a>·<a href="terms.html" id="txtFooterTerms">이용약관</a>·<a href="privacy.html" id="txtFooterPrivacy">개인정보처리방침</a>
     </div>
     <div class="fcopy" id="copyright"></div>
     <div class="visitor-counter" id="visitorCounter" hidden></div>
@@ -179,7 +200,93 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 <script>
 (function(){
 "use strict";
-document.getElementById('copyright').textContent='© '+new Date().getFullYear()+' 사주·타로·관상';
+const LANG_KEY='sajuLang';
+let LANG='ko';
+try{
+  const saved=localStorage.getItem(LANG_KEY);
+  if(saved==='en'||saved==='ko') LANG=saved;
+}catch(error){ /* 무시 */ }
+
+const T={
+  ko:{
+    title:'제휴 문의',
+    lede:'사주·타로·관상과의 광고·콘텐츠·데이터 제휴, 언론 및 기타 문의를 남겨주시면 확인 후 이메일로 회신드립니다.',
+    backLink:'← 홈으로 돌아가기',
+    labelName:'이름',labelEmail:'이메일',labelCompany:'회사 · 브랜드명 (선택)',labelType:'문의 유형',labelMessage:'문의 내용',
+    namePlaceholder:'예: 홍길동',emailPlaceholder:'you@example.com',companyPlaceholder:'예: (주)홍길동컴퍼니',
+    messagePlaceholder:'제안 내용을 자유롭게 작성해주세요.',
+    optAd:'광고 · 배너 제휴',optContent:'콘텐츠 · 데이터 제휴',optPress:'언론 · 미디어 문의',optOther:'기타',
+    submitBtn:'문의 보내기',sendingBtn:'보내는 중...',
+    formNote:'보내주신 이메일로만 회신드리며, 입력하신 정보는 문의 응대 외 다른 목적으로 사용하지 않습니다.',
+    formError:'전송에 실패했습니다. 잠시 후 다시 시도하시거나 이메일로 직접 연락해주세요.',
+    successHead:'문의가 접수되었습니다',successBody:'보내주신 내용을 확인한 뒤 입력하신 이메일로 회신드리겠습니다.',
+    footerHome:'사주 · 타로 · 관상',footerTerms:'이용약관',footerPrivacy:'개인정보처리방침',
+    copyright:'© '+new Date().getFullYear()+' 사주·타로·관상',
+    visitorFn:function(n){ return '지금까지 <b>'+n.toLocaleString('ko-KR')+'</b>명이 다녀갔어요'; }
+  },
+  en:{
+    title:'Partnership Inquiries',
+    lede:'Leave us a message about advertising, content, or data partnerships, press inquiries, or anything else involving Saju, Tarot, and Face Reading — we\'ll review it and reply by email.',
+    backLink:'← Back to Home',
+    labelName:'Name',labelEmail:'Email',labelCompany:'Company / Brand (optional)',labelType:'Inquiry Type',labelMessage:'Message',
+    namePlaceholder:'e.g. Jane Doe',emailPlaceholder:'you@example.com',companyPlaceholder:'e.g. Acme Inc.',
+    messagePlaceholder:'Feel free to describe your proposal.',
+    optAd:'Advertising / Banner Partnership',optContent:'Content / Data Partnership',optPress:'Press / Media Inquiry',optOther:'Other',
+    submitBtn:'Send Inquiry',sendingBtn:'Sending...',
+    formNote:'We will only reply to the email address you provide, and will not use your information for any purpose other than responding to your inquiry.',
+    formError:'Something went wrong. Please try again in a moment, or reach out to us directly by email.',
+    successHead:'Your inquiry has been received',successBody:'We\'ll review your message and reply to the email address you provided.',
+    footerHome:'Saju · Tarot · Face Reading',footerTerms:'Terms of Service',footerPrivacy:'Privacy Policy',
+    copyright:'© '+new Date().getFullYear()+' Saju · Tarot · Face Reading',
+    visitorFn:function(n){ return '<b>'+n.toLocaleString('en-US')+'</b> visitors and counting'; }
+  }
+};
+
+let lastVisitorCount=null;
+
+function applyLang(){
+  const s=T[LANG];
+  document.documentElement.lang=LANG;
+  document.getElementById('txtTitle').textContent=s.title;
+  document.getElementById('txtLede').textContent=s.lede;
+  document.getElementById('txtBackLink').textContent=s.backLink;
+  document.getElementById('txtLabelName').innerHTML=s.labelName+' <span class="req">*</span>';
+  document.getElementById('txtLabelEmail').innerHTML=s.labelEmail+' <span class="req">*</span>';
+  document.getElementById('txtLabelCompany').textContent=s.labelCompany;
+  document.getElementById('txtLabelType').textContent=s.labelType;
+  document.getElementById('txtLabelMessage').innerHTML=s.labelMessage+' <span class="req">*</span>';
+  document.getElementById('fName').placeholder=s.namePlaceholder;
+  document.getElementById('fEmail').placeholder=s.emailPlaceholder;
+  document.getElementById('fCompany').placeholder=s.companyPlaceholder;
+  document.getElementById('fMessage').placeholder=s.messagePlaceholder;
+  document.getElementById('optAd').textContent=s.optAd;
+  document.getElementById('optContent').textContent=s.optContent;
+  document.getElementById('optPress').textContent=s.optPress;
+  document.getElementById('optOther').textContent=s.optOther;
+  if(!submitBtn.disabled) submitBtn.textContent=s.submitBtn;
+  document.getElementById('txtFormNote').textContent=s.formNote;
+  document.getElementById('formError').textContent=s.formError;
+  document.getElementById('txtSuccessHead').textContent=s.successHead;
+  document.getElementById('txtSuccessBody').textContent=s.successBody;
+  document.getElementById('txtFooterHome').textContent=s.footerHome;
+  document.getElementById('txtFooterTerms').textContent=s.footerTerms;
+  document.getElementById('txtFooterPrivacy').textContent=s.footerPrivacy;
+  document.getElementById('copyright').textContent=s.copyright;
+  if(lastVisitorCount!==null){
+    document.getElementById('visitorCounter').innerHTML=s.visitorFn(lastVisitorCount);
+  }
+  document.getElementById('langKoBtn').classList.toggle('active',LANG==='ko');
+  document.getElementById('langEnBtn').classList.toggle('active',LANG==='en');
+}
+
+function setLang(lang){
+  LANG=lang;
+  try{ localStorage.setItem(LANG_KEY,lang); }catch(error){ /* 무시 */ }
+  applyLang();
+}
+
+document.getElementById('langKoBtn').addEventListener('click',function(){ setLang('ko'); });
+document.getElementById('langEnBtn').addEventListener('click',function(){ setLang('en'); });
 
 /* 사주 페이지와 동일한 /api/visitor-count(Cloudflare Pages
    Functions + KV)를 사용해 사이트 전체 누적 방문 수를 센다. */
@@ -197,7 +304,8 @@ document.getElementById('copyright').textContent='© '+new Date().getFullYear()+
     }
     const el=document.getElementById('visitorCounter');
     if(!el) return;
-    el.innerHTML='지금까지 <b>'+data.count.toLocaleString('ko-KR')+'</b>명이 다녀갔어요';
+    lastVisitorCount=data.count;
+    el.innerHTML=T[LANG].visitorFn(data.count);
     el.hidden=false;
   }catch(error){
     // API를 사용할 수 없는 환경(로컬 테스트 등)에서는 카운터를 조용히 숨긴 채로 둔다
@@ -212,7 +320,7 @@ form.addEventListener('submit',async function(e){
   e.preventDefault();
   errorEl.hidden=true;
   submitBtn.disabled=true;
-  submitBtn.textContent='보내는 중...';
+  submitBtn.textContent=T[LANG].sendingBtn;
   try{
     const res=await fetch(form.action,{
       method:'POST',
@@ -228,9 +336,11 @@ form.addEventListener('submit',async function(e){
   }catch(error){
     errorEl.hidden=false;
     submitBtn.disabled=false;
-    submitBtn.textContent='문의 보내기';
+    submitBtn.textContent=T[LANG].submitBtn;
   }
 });
+
+applyLang();
 })();
 </script>
 </body>
