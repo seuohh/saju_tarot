@@ -1807,7 +1807,7 @@ const STRINGS={
     lottoLedeFn:(h,hj,elLabel,strong,yongshinName,huishinNames)=>'일간은 '+h+'('+hj+')·'+elLabel+' 기운이고, '+(strong?'힘이 넘치는 신강(身強)':'힘이 부족한 신약(身弱)')+' 사주라 '+(strong?'기운을 덜어주는':'기운을 보태주는')+' 용신 '+yongshinName+(huishinNames.length?' 기운과 희신 '+huishinNames.join('·')+' 기운':' 기운')+'에 해당하는 번호(하도 오행수 기준)에 가중치를 더 두어 로또·파워볼 일반 번호 5개를 뽑고, 일간에 해당하는 사주 행운번호 1개를 더해 유사도 점수 순으로 정렬했어요.',
     lottoFavNoteFn:(favNames)=>'★ 표시는 용신·희신('+favNames.join('·')+') 기운에 해당하는 번호, 굵은 테두리는 사주 행운번호예요 (하도 오행수 기준: 1·6=水, 2·7=火, 3·8=木, 4·9=金, 5·10=土). 각 게임의 번호는 이 오행 가중치가 높은 순서로 나열했습니다. 모든 조합의 실제 당첨 확률은 동일하며, 점수와 나열 순서는 오행 유사도와 번호 균형을 반영한 참고용 지표입니다.',
     luckyBadgeTitle:'사주 행운번호',
-    luckyBadgeNoteFn:(stemName,stemHj,type,typeHj,number)=>'일간 '+stemName+'('+stemHj+')은 하도(河圖) 오행수 이론의 '+type+'('+typeHj+') '+number+'에 해당해요. 아래 5개 조합 모두 이 번호를 포함합니다.',
+    luckyBadgeNoteFn:(stemName,stemHj,type,typeHj,number)=>'일간 '+stemName+'('+stemHj+')은 하도(河圖) 오행수 이론의 '+type+'('+typeHj+') '+number+'에 해당해요. 아래 조합에 이 번호를 포함합니다.',
     hadoBirth:'생수',hadoBirthHj:'生數',hadoComplete:'성수',hadoCompleteHj:'成數',
     toastCopied:'결과가 복사되었습니다.',
     toastCopyFail:'복사에 실패했습니다. 직접 선택해 복사해주세요.',
@@ -2073,7 +2073,7 @@ const STRINGS={
     lottoLedeFn:(h,hj,elLabel,strong,yongshinName,huishinNames)=>'Your day master is '+h+' ('+hj+') · '+elLabel+' energy, and since your chart runs '+(strong?'strong (身強)':'weak (身弱)')+', numbers matching your Yongshin ('+yongshinName+(strong?', which drains the excess':', which reinforces you')+')'+(huishinNames.length?' and Huishin ('+huishinNames.join(', ')+')':'')+' energy — based on the He Tu element-numbers — get extra weight when picking five Lotto/Powerball regular numbers, plus one saju lucky number tied to your day master, ranked by match score.',
     lottoFavNoteFn:(favNames)=>'★ marks regular numbers carrying Yongshin/Huishin ('+favNames.join(', ')+') energy; the bold-ringed ball is your saju lucky number (He Tu element-number rule: 1,6=Water, 2,7=Fire, 3,8=Wood, 4,9=Metal, 5,10=Earth). Within each game, numbers are listed in order of this element weighting, highest first. Every combination has identical real winning odds; the score and ordering are only a reference reflecting element match and number balance.',
     luckyBadgeTitle:'Your Saju Lucky Number',
-    luckyBadgeNoteFn:(stemName,stemHj,type,typeHj,number)=>'Your day master '+stemName+' ('+stemHj+') corresponds to the '+type+' ('+typeHj+') '+number+' in He Tu five-element number theory. All five sets below include this number.',
+    luckyBadgeNoteFn:(stemName,stemHj,type,typeHj,number)=>'Your day master '+stemName+' ('+stemHj+') corresponds to the '+type+' ('+typeHj+') '+number+' in He Tu five-element number theory. The set below includes this number.',
     hadoBirth:'Creation Number',hadoBirthHj:'生數',hadoComplete:'Completion Number',hadoCompleteHj:'成數',
     toastCopied:'Copied to clipboard.',
     toastCopyFail:'Copy failed. Please select and copy manually.',
@@ -2808,9 +2808,9 @@ function renderCelebrity(profile){
    주의: 로또 6/45은 완전 무작위 추첨이므로 모든 번호 조합의 실제 당첨
    확률은 동일하다(1/8,145,060). 아래 로직은 당첨 확률을 계산하는 것이
    아니라, 전통 오행 이론(하도 생성수)과 사주의 일간·신강신약을 엮어
-   "오락용 참고 지표"인 유사도 점수를 매기고, 그 점수가 높은 순서대로
-   게임 5개(각 5개 번호 + 행운번호 1개)를 순위별로 보여주는 것뿐이다.
-   각 게임 안에서 번호 5개의 나열 순서 또한 실제 확률이 아니라, 이 앱이
+   "오락용 참고 지표"인 유사도 점수를 매기고, 여러 후보 중 점수가 가장
+   높은 1게임(5개 번호 + 행운번호 1개)만 골라 보여주는 것뿐이다.
+   게임 안에서 번호 5개의 나열 순서 또한 실제 확률이 아니라, 이 앱이
    추첨 시 부여한 오행 가중치(용신·희신 오행=3배, 그 외=1배)가 높은
    번호부터 보여주는 참고용 순서다. */
 
@@ -2914,7 +2914,7 @@ function orderByProbability(numbers,favSet){
   );
 }
 
-const LOTTO_GAME_COUNT=5; // 노출할 게임 수
+const LOTTO_GAME_COUNT=1; // 노출할 게임 수(1순위 1게임만 노출)
 const LOTTO_CANDIDATE_TARGET=30; // 순위 변별력 확보를 위해 확보할 서로 다른 후보 조합 수
 const LOTTO_CANDIDATE_MAX_ATTEMPTS=200; // 후보 추첨 시도 상한(무한 루프 방지용 안전장치)
 
