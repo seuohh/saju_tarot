@@ -231,6 +231,12 @@ p.lede{max-width:560px;margin:20px auto 0;color:var(--ink-soft);font-size:var(--
 .hour-unknown{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
 .hour-unknown input{accent-color:var(--accent);}
 .submit-row{display:flex;justify-content:flex-end;margin-top:24px;}
+.compat-person-box{
+  border:1px solid var(--line);border-radius:14px;padding:18px;
+  margin-bottom:18px;background:var(--paper-sunken);
+}
+.compat-person-box:last-of-type{margin-bottom:0;}
+.compat-person-head{font-size:var(--fs-h4);font-weight:700;margin-bottom:14px;color:var(--accent);}
 button.primary{
   font:inherit;font-weight:700;font-size:15px;color:var(--accent-ink);
   background:var(--accent);border:none;border-radius:11px;
@@ -479,6 +485,16 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 }
 .app-tab.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
 
+/* ---- 오늘의 운세: 개인편/궁합편 서브탭 ---- */
+.subtabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;}
+.subtab{
+  font:inherit;font-size:var(--fs-body);font-weight:700;
+  display:flex;align-items:center;gap:6px;
+  border:1px solid var(--line-strong);border-radius:999px;
+  padding:9px 20px;cursor:pointer;background:var(--paper);color:var(--ink-soft);
+}
+.subtab.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+
 /* ---- top-bar right-side control group ---- */
 .top-bar-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 
@@ -555,6 +571,20 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 .lucky-badge .lball{width:48px;height:48px;font-size:16px;flex:none;}
 .lucky-badge-title{font-size:var(--fs-caption);font-weight:700;color:var(--accent);letter-spacing:0.04em;}
 .lucky-badge-note{margin:2px 0 0;font-size:var(--fs-caption);color:var(--ink-soft);}
+
+/* ---- 궁합편(宮合) ---- */
+.compat-duo{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin:8px 0 20px;}
+.compat-person{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
+.compat-stamp{width:64px;height:64px;font-size:24px;}
+.compat-person .cp-name{font-size:var(--fs-caption);font-weight:700;}
+.compat-person .cp-sub{font-size:var(--fs-tiny);color:var(--ink-soft);}
+.compat-arrow{font-size:26px;color:var(--accent);flex:none;font-weight:700;}
+.compat-headline{
+  background:var(--paper-raised);border:1px solid var(--accent);border-radius:16px;
+  padding:18px 20px;margin:0 0 26px;box-shadow:var(--shadow);
+}
+.compat-headline h3{font-size:var(--fs-h3);font-weight:700;margin:0 0 10px;color:var(--accent);}
+.compat-headline p{margin:0;font-size:var(--fs-body);color:var(--ink-soft);}
 
 /* ---- tarot ---- */
 .tarot-draw-card{
@@ -665,6 +695,13 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 
 <div class="wrap">
 
+  <div class="subtabs" role="tablist" aria-label="오늘의 운세 모드">
+    <button type="button" id="subtabPersonalBtn" class="subtab active" role="tab" aria-selected="true">👤 <span id="txtSubtabPersonal">개인편</span></button>
+    <button type="button" id="subtabCompatBtn" class="subtab" role="tab" aria-selected="false">💞 <span id="txtSubtabCompat">궁합편</span></button>
+  </div>
+
+  <div id="personalPanel">
+
   <div class="ad-slot" role="complementary" aria-label="광고 영역" id="txtAdSlot1">광고 영역 (Advertisement)</div>
   <p class="ad-slot-cta" id="adCta1"></p>
 
@@ -691,7 +728,7 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
       </div>
       <div class="field span2">
         <label for="fTimezone" id="txtLabelTimezone">출생 국가·시간대 (기준시)</label>
-        <select id="fTimezone"></select>
+        <select id="fTimezone" class="tz-select"></select>
       </div>
       <div class="field span2">
         <label id="txtLabelGender">성별 (대운 방향 계산에 사용)</label>
@@ -795,6 +832,91 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
       <p id="txtGlossaryTerm4Body">대운은 태어난 시점을 기준으로 약 10년 단위로 바뀌는 큰 흐름을 뜻하며, 인생의 시기별 경향을 가늠하는 데 참고합니다. 용신은 사주의 오행 균형을 잡아주는 데 필요한 오행을 가리키며, 신강신약(身強身弱, 일간의 힘이 센지 약한지)을 함께 살펴 판단합니다.</p>
     </div>
   </section>
+
+  </div>
+
+  <div id="compatPanel" hidden>
+
+  <div class="ad-slot" role="complementary" aria-label="광고 영역" id="txtAdSlot7">광고 영역 (Advertisement)</div>
+  <p class="ad-slot-cta" id="adCta7"></p>
+
+  <form class="ledger" id="compatForm">
+    <div class="ledger-head">
+      <h2 id="txtCompatFormHead">두 사람 생년월일 입력</h2>
+      <span class="han">宮合</span>
+    </div>
+    <p class="lotto-lede" id="txtCompatFormLede" style="margin:-10px 0 22px;">두 사람의 생년월일(시)을 각각 입력하면, 두 일간(日干) 사이의 오행 관계를 바탕으로 궁합을 풀어드립니다.</p>
+
+    <div class="compat-person-box">
+      <div class="compat-person-head" id="txtCompatPersonAHead">사람 A</div>
+      <div class="form-grid">
+        <div class="field span2">
+          <label for="fNameA" id="txtCompatLabelNameA">이름 (선택)</label>
+          <input type="text" id="fNameA" placeholder="예: 홍길동" maxlength="20">
+        </div>
+        <div class="field">
+          <label for="fDateA" id="txtCompatLabelDateA">생년월일 (양력)</label>
+          <input type="date" id="fDateA" required min="1900-01-01" max="2100-12-31">
+        </div>
+        <div class="field">
+          <label for="fTimeA" id="txtCompatLabelTimeA">태어난 시간</label>
+          <input type="time" id="fTimeA">
+        </div>
+        <div class="field span2">
+          <label class="hour-unknown"><input type="checkbox" id="fHourUnknownA"> <span id="txtCompatHourUnknownA">태어난 시간을 몰라요</span></label>
+        </div>
+        <div class="field span2">
+          <label for="fTimezoneA" id="txtCompatLabelTimezoneA">출생 국가·시간대 (기준시)</label>
+          <select id="fTimezoneA" class="tz-select"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="compat-person-box">
+      <div class="compat-person-head" id="txtCompatPersonBHead">사람 B</div>
+      <div class="form-grid">
+        <div class="field span2">
+          <label for="fNameB" id="txtCompatLabelNameB">이름 (선택)</label>
+          <input type="text" id="fNameB" placeholder="예: 김철수" maxlength="20">
+        </div>
+        <div class="field">
+          <label for="fDateB" id="txtCompatLabelDateB">생년월일 (양력)</label>
+          <input type="date" id="fDateB" required min="1900-01-01" max="2100-12-31">
+        </div>
+        <div class="field">
+          <label for="fTimeB" id="txtCompatLabelTimeB">태어난 시간</label>
+          <input type="time" id="fTimeB">
+        </div>
+        <div class="field span2">
+          <label class="hour-unknown"><input type="checkbox" id="fHourUnknownB"> <span id="txtCompatHourUnknownB">태어난 시간을 몰라요</span></label>
+        </div>
+        <div class="field span2">
+          <label for="fTimezoneB" id="txtCompatLabelTimezoneB">출생 국가·시간대 (기준시)</label>
+          <select id="fTimezoneB" class="tz-select"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button type="submit" class="primary" id="txtCompatSubmitBtn">궁합 풀어보기</button>
+    </div>
+  </form>
+
+  <section class="result" id="compatResult" hidden>
+    <div class="result-head">
+      <h2 id="txtCompatResultHead">궁합 풀이</h2>
+    </div>
+
+    <div class="compat-duo" id="compatDuo"></div>
+    <div class="compat-headline" id="compatHeadline"></div>
+
+    <h3 id="txtCompatDomainsHead" class="celeb-head">상황별 궁합 풀이</h3>
+    <div class="domains" id="compatDomains"></div>
+
+    <div class="disclaimer" id="txtCompatDisclaimer" style="max-width:none;margin-top:18px;">❗ 궁합 풀이는 두 사람의 일간(日干) 오행 관계를 바탕으로 한 전통 명리학적 해석이며, 관계의 좋고 나쁨을 단정하거나 미래를 예측하지 않습니다. 실제 관계는 서로의 노력과 이해로 만들어간다는 점을 기억해주세요.</div>
+  </section>
+
+  </div>
 
 </div>
 </div>
@@ -1202,149 +1324,149 @@ const DAYMASTER_TEXT_EN={
 };
 
 const TENGOD_TEXT={
-  비견:{trait:'나와 같은 기운이 곁에 있는 형상으로, 독립심과 자존심이 강하고 스스로 결정하고 밀어붙이는 힘이 있습니다.',
-    career:'혼자 힘으로 개척하는 일이나 전문직, 독립적인 업무 방식이 잘 맞고 동업보다는 자기 이름을 건 일에서 성과가 납니다.',
-    love:'주도권을 쥐려는 경향이 있어 상대와 기 싸움이 생기기 쉬우니, 서로의 영역을 존중하는 관계일 때 오래갑니다.',
-    wealth:'남과 나누기보다 스스로 벌어들이는 힘은 강하지만, 형제·동료·경쟁자로 인한 지출이나 분산이 생기기 쉽습니다.',
-    family:'가족 안에서도 자기 몫과 역할을 분명히 하려 하며, 형제자매나 동년배와의 관계가 인생에 큰 영향을 줍니다.',
-    friends:'의리를 중시하는 친구가 많고 어려울 때 힘을 보태주지만, 자존심 대결로 소원해지는 경우도 있습니다.',
-    health:'체력과 활동성은 좋은 편이나 무리해서 밀어붙이다 탈이 나기 쉬우니 과로를 조심해야 합니다.'},
-  겁재:{trait:'나와 비슷하지만 결이 다른 기운으로, 승부욕과 추진력이 강하고 상황을 뒤집는 순발력이 뛰어납니다.',
-    career:'경쟁이 치열한 분야, 영업·투자·독립 사업처럼 승부를 걸어야 하는 자리에서 오히려 두각을 나타냅니다.',
-    love:'매력적이지만 소유욕과 질투가 강해질 수 있어, 신뢰를 쌓는 데 시간이 걸리는 관계를 만나면 안정됩니다.',
-    wealth:'큰돈을 만지는 배포는 있지만 동업·보증·투자로 인한 재물 손실 위험이 함께 따르니 계약은 신중히 해야 합니다.',
-    family:'가족 중 한 사람과 유독 경쟁하거나 비교당하는 구도가 생기기 쉬우니 거리 조절이 관계의 열쇠입니다.',
-    friends:'사람을 모으는 힘이 있어 주변이 북적이지만, 이해관계가 얽히면 관계가 급격히 틀어지기도 합니다.',
-    health:'긴장과 승부욕으로 인한 스트레스가 몸에 쌓이기 쉬우니 의식적으로 쉬는 시간을 확보해야 합니다.'},
-  식신:{trait:'내가 낳아 기르는 기운으로, 표현력과 창의력이 풍부하고 느긋하게 자기 것을 즐길 줄 압니다.',
-    career:'기획·창작·요리·교육처럼 자신의 아이디어를 구체적인 결과물로 풀어내는 일에서 즐겁게 성과를 냅니다.',
-    love:'다정하고 여유 있는 태도로 상대를 편안하게 해주며, 함께 있을 때 즐거움을 나누는 관계에서 만족을 느낍니다.',
-    wealth:'꾸준히 만들어내는 결과물이 자연스럽게 돈으로 이어지는 흐름이라, 서두르지 않아도 실속이 쌓입니다.',
-    family:'가족에게 정성을 쏟고 챙기는 역할을 자처하며, 특히 자녀나 손아랫사람과의 관계에서 기쁨을 얻습니다.',
-    friends:'함께 있으면 편안한 사람으로 통해 자연스럽게 사람이 모이고, 취미나 관심사를 나누는 인맥이 넓습니다.',
-    health:'전반적으로 무난하지만 여유를 즐기다 과식·나태로 이어지기 쉬우니 몸을 움직이는 습관이 필요합니다.'},
-  상관:{trait:'내가 낳은 기운이 원래의 틀을 깨는 형상으로, 재기 넘치고 표현력이 뛰어나며 기존 방식에 얽매이지 않습니다.',
-    career:'예술·미디어·기획처럼 개성과 비판적 안목을 드러낼 수 있는 분야, 혹은 자기 사업에서 재능이 빛납니다.',
-    love:'솔직하고 거침없는 매력이 있지만 할 말은 하는 성격이라, 다름을 인정해주는 상대를 만나야 관계가 편안합니다.',
-    wealth:'아이디어와 순발력으로 기회를 만들어내는 재주가 있지만, 즉흥적인 지출이나 구설로 새는 돈을 조심해야 합니다.',
-    family:'윗사람의 권위나 기존 질서에 반발하기 쉬워 특히 부모·상사와의 관계에서 마찰이 생길 수 있습니다.',
-    friends:'말재주와 재치로 자리를 즐겁게 만들지만, 직설적인 말이 오해를 살 때도 있어 표현의 완급 조절이 필요합니다.',
-    health:'신경이 예민해지기 쉬운 기운이라 화기가 오르거나 구설로 인한 스트레스에 특히 취약합니다.'},
-  편재:{trait:'내가 다스리는 기운이 널리 퍼진 형상으로, 활동 범위가 넓고 돈과 기회를 붙잡는 감각이 뛰어납니다.',
-    career:'영업·유통·투자처럼 사람과 돈이 오가는 현장, 또는 여러 일을 동시에 벌이는 사업 구조에서 성과가 큽니다.',
-    love:'매력적이고 씀씀이가 시원해 이성에게 인기가 많은 편이라, 오히려 한 사람에게 집중하는 연습이 관계를 오래가게 합니다.',
-    wealth:'큰돈이 들어오고 나가는 흐름 자체를 즐기는 기운이라, 버는 만큼 관리하는 습관을 들여야 실속이 남습니다.',
-    family:'아버지나 배우자 쪽 인연이 재물운과 얽히는 경우가 많고, 가족보다 바깥일에 시간을 더 쏟기 쉽습니다.',
-    friends:'발이 넓고 사람을 통해 기회를 만드는 재주가 있어 인맥 관리가 곧 자산이 되는 유형입니다.',
-    health:'활동량이 많은 만큼 불규칙한 생활로 체력이 소모되기 쉬우니 규칙적인 식사와 수면이 중요합니다.'},
-  정재:{trait:'내가 바르게 다스리는 기운으로, 성실하고 계획적이며 착실하게 쌓아가는 것을 편안해합니다.',
-    career:'회계·관리·행정처럼 꼼꼼함과 신뢰가 필요한 분야, 안정적인 조직 안에서 차근차근 인정받는 유형입니다.',
-    love:'한 사람에게 성실한 유형으로, 겉치레보다 신뢰와 안정감을 쌓아가는 만남에서 깊은 관계로 이어집니다.',
-    wealth:'저축과 계획적인 소비에 강해 큰 부침 없이 재산을 착실히 불려가는 흐름을 만듭니다.',
-    family:'가정을 안정적으로 꾸리는 것을 중요하게 여기고, 배우자·재물과 관련된 책임감이 강합니다.',
-    friends:'믿음직한 친구로 통해 오래가는 관계가 많지만, 새로운 사람을 사귀는 데는 다소 신중한 편입니다.',
-    health:'규칙적인 생활 덕분에 크게 흔들리지 않지만, 지나친 절약과 긴장이 몸을 굳게 만들 수 있습니다.'},
-  편관:{trait:'나를 강하게 억제하는 기운으로, 위기 대응력과 승부 근성이 뛰어나며 압박 속에서 오히려 힘을 냅니다.',
-    career:'군·경·의료·법조처럼 규율과 책임이 무거운 분야, 혹은 치열한 경쟁 구도 안에서 실력을 발휘합니다.',
-    love:'강렬하게 끌리는 상대에게 빠지기 쉬운 편이라, 감정 기복이 큰 관계보다 서로를 다잡아주는 관계가 안정적입니다.',
-    wealth:'큰 부담을 감수하고 큰 결과를 얻으려는 경향이 있어, 무리한 투자나 사업 확장은 신중히 접근해야 합니다.',
-    family:'부모나 윗사람으로부터 엄격한 기준을 받고 자랐을 가능성이 높고, 그 영향이 스스로에 대한 기준으로 이어집니다.',
-    friends:'위기 상황에서 의지가 되는 친구가 있지만, 평소엔 관계에서도 긴장감이 도는 편입니다.',
-    health:'스트레스와 긴장이 몸에 바로 나타나는 유형이라 근골격계나 소화기 쪽 관리가 필요합니다.'},
-  정관:{trait:'나를 바르게 다스리는 기운으로, 책임감과 원칙을 중시하고 사회적 평판을 소중히 여깁니다.',
-    career:'공직·대기업·전문 관리직처럼 체계와 명분이 뚜렷한 조직에서 신뢰를 쌓으며 성장하는 유형입니다.',
-    love:'예의 바르고 진지한 만남을 선호하며, 명확한 관계와 책임 있는 태도를 보여주는 상대에게 신뢰를 느낍니다.',
-    wealth:'무리한 확장보다 안정적인 소득 구조를 선호해, 크지 않아도 꾸준한 흐름으로 재물을 지켜갑니다.',
-    family:'가족과 사회 안에서 맡은 역할과 체면을 중요하게 여기며, 책임감 있는 가장·자녀의 모습을 보입니다.',
-    friends:'신뢰를 바탕으로 한 인간관계를 오래 유지하며, 공적인 자리에서 만난 인연이 좋은 관계로 이어집니다.',
-    health:'과도한 책임감과 자기 관리 강박이 긴장성 피로로 이어지지 않도록 여유를 두는 것이 좋습니다.'},
-  편인:{trait:'나를 독특한 방식으로 길러내는 기운으로, 직관이 예리하고 남들과 다른 시각으로 사물을 바라봅니다.',
-    career:'연구·기획·상담·역술처럼 깊이 파고드는 전문 분야, 혹은 남들이 잘 가지 않는 틈새 영역에서 두각을 나타냅니다.',
-    love:'쉽게 곁을 내주지 않지만 마음을 연 뒤에는 깊이 몰입하는 편이라, 정신적으로 통하는 상대에게 강하게 끌립니다.',
-    wealth:'정해진 월급보다 아이디어나 전문성으로 벌어들이는 비정기적 수입 구조가 더 잘 맞습니다.',
-    family:'부모, 특히 어머니 쪽과의 관계가 인생관에 깊은 영향을 주고, 애증이 함께 얽히는 경우가 많습니다.',
-    friends:'넓은 인맥보다 소수와 깊게 통하는 관계를 선호하며, 혼자만의 시간을 존중해주는 친구를 편하게 여깁니다.',
-    health:'생각이 많아 잠들기 어렵거나 신경계가 예민해지기 쉬우니 생각을 비우는 루틴이 도움이 됩니다.'},
-  정인:{trait:'나를 바르게 길러내는 기운으로, 배움을 좋아하고 사려 깊으며 안정적인 울타리 안에서 실력을 쌓습니다.',
-    career:'교육·연구·의료처럼 전문 지식을 축적해 인정받는 분야, 또는 오래 몸담을 수 있는 안정적인 조직이 잘 맞습니다.',
-    love:'천천히 신뢰를 쌓아가는 스타일로, 정서적으로 기댈 수 있는 편안한 상대와 안정적인 관계를 만듭니다.',
-    wealth:'화려한 수익보다 명예나 자격, 자산의 안정적인 축적을 통해 재물이 따라오는 흐름입니다.',
-    family:'부모의 보살핌이나 가르침을 깊이 받고 자랐을 가능성이 높고, 그 영향으로 가정을 중시하는 성향이 강합니다.',
-    friends:'오래된 인연을 소중히 여기고, 조언과 지지를 아끼지 않는 든든한 친구로 자리 잡습니다.',
-    health:'전반적으로 안정적이나 지나치게 생각에 잠기거나 안주하려는 경향이 활동량 부족으로 이어질 수 있습니다.'}
+  비견:{trait:'나와 같은 오행·같은 음양의 기운이 바로 곁에 있는 형상으로, 독립심과 자존심이 남달리 강하고 무엇이든 스스로 결정하고 밀어붙이는 힘이 있습니다. 남에게 기대기보다 내 힘으로 증명해 보이려는 마음이 강해서, 어릴 때부터 또래 사이에서도 주도적인 위치에 서는 경우가 많습니다.',
+    career:'혼자 힘으로 개척하는 일이나 전문직, 프리랜서처럼 독립적인 업무 방식이 잘 맞고, 동업보다는 자기 이름을 걸고 책임지는 일에서 뚜렷한 성과가 납니다. 조직 안에서도 지시를 그대로 따르기보다 자기만의 방식을 찾으려 하므로, 어느 정도 재량권이 주어지는 자리일수록 능력을 더 잘 발휘합니다.',
+    love:'주도권을 쥐려는 경향이 있어 상대와 은근한 기 싸움이 생기기 쉬우니, 서로의 영역과 결정을 존중해주는 관계일 때 오래갑니다. 먼저 다가가기보다 지켜보는 편이라 관계 초반은 느리게 진행되지만, 한번 마음을 정하면 의리 있게 곁을 지키는 유형입니다.',
+    wealth:'남과 나누기보다 스스로 벌어들이는 힘은 강하지만, 형제·동료·경쟁자와 얽혀 지출이나 자산이 분산되는 흐름이 반복되기 쉽습니다. 동업이나 보증처럼 남과 재물을 함께 묶는 일은 신중히 따져보고, 자기 명의의 자산을 먼저 단단히 쌓아가는 편이 유리합니다.',
+    family:'가족 안에서도 자기 몫과 역할을 분명히 하려 하며, 형제자매나 또래 친척과의 관계가 인생 전반에 큰 영향을 줍니다. 집안일에서도 남이 대신 정해주기보다 스스로 판단해 행동하고 싶어 해서, 때로는 고집스럽게 비칠 수 있지만 그만큼 책임감도 뚜렷합니다.',
+    friends:'의리를 중시하는 친구가 많고 어려울 때 발 벗고 나서서 힘을 보태주지만, 자존심 대결로 번지면 오히려 크게 소원해지는 경우도 있습니다. 먼저 사과하거나 숙이는 것을 어려워하는 편이라, 사소한 오해일수록 빨리 풀어야 관계가 오래갑니다.',
+    health:'체력과 활동성은 좋은 편이라 웬만한 피로는 잘 견디지만, 그만큼 몸의 신호를 무시하고 무리해서 밀어붙이다 한 번에 탈이 나기 쉽습니다. 평소 괜찮다고 넘기기보다 정기적으로 건강을 점검하고, 쉬어야 할 때를 스스로 정해두는 습관이 필요합니다.'},
+  겁재:{trait:'나와 같은 오행이지만 음양이 다른 기운으로, 승부욕과 추진력이 남달리 강하고 상황을 순식간에 뒤집는 순발력이 뛰어납니다. 겉으로는 대범해 보이지만 속으로는 지는 것을 몹시 싫어해서, 한번 경쟁에 불이 붙으면 물러서지 않고 끝까지 밀어붙이는 뚝심을 보입니다.',
+    career:'경쟁이 치열한 분야, 영업·투자·독립 사업처럼 승부를 걸어야 하는 자리에서 오히려 두각을 나타내며, 위기 상황일수록 평소보다 더 강한 집중력을 발휘합니다. 다만 성과를 혼자 독차지하려는 마음이 지나치면 동료와의 신뢰에 금이 갈 수 있어, 공을 나누는 태도가 장기적으로 더 큰 기회를 만듭니다.',
+    love:'매력적이지만 소유욕과 질투가 강해질 수 있어, 신뢰를 쌓는 데 시간이 걸리는 진중한 관계를 만나야 비로소 안정됩니다. 상대를 자기 뜻대로 이끌고 싶어 하는 마음이 강한 편이라, 의견 차이가 생겼을 때 힘으로 누르기보다 대화로 풀어가는 연습이 필요합니다.',
+    wealth:'큰돈을 만지는 배포는 있지만 동업·보증·투자로 인한 재물 손실 위험이 함께 따르니 계약이나 지분 관계는 특히 신중히 따져야 합니다. 한 번에 크게 벌고 싶은 마음이 앞서 무리한 결정을 내리기 쉬우므로, 결정을 하루 정도 미뤄보는 습관만으로도 손실을 크게 줄일 수 있습니다.',
+    family:'가족 중 한 사람과 유독 경쟁하거나 비교당하는 구도가 생기기 쉬우니, 서로 다른 길을 인정해주는 거리 조절이 관계의 열쇠입니다. 어릴 적 형제자매와의 비교가 마음에 남아 있을 수 있어, 그 감정을 인지하는 것만으로도 가족 관계가 한결 편안해집니다.',
+    friends:'사람을 모으는 힘이 있어 주변이 늘 북적이지만, 이해관계가 얽히면 관계가 급격히 틀어지기도 합니다. 돈이나 이익이 걸린 약속은 특히 명확히 정리해두어야 오래가는 우정을 지킬 수 있습니다.',
+    health:'긴장과 승부욕으로 인한 스트레스가 몸에 쌓이기 쉬우니 의식적으로 쉬는 시간을 확보해야 합니다. 특히 경쟁 상황이 끝난 직후 급격히 피로가 몰려오는 편이라, 큰일을 치른 뒤에는 하루 이틀 여유를 두고 회복하는 루틴을 만들어두는 것이 좋습니다.'},
+  식신:{trait:'내가 낳아 기르는 기운으로, 표현력과 창의력이 풍부하고 서두르지 않으면서도 자기 것을 여유롭게 즐길 줄 압니다. 무언가를 만들어내는 과정 자체를 즐기는 편이라, 결과에 쫓기지 않고 꾸준히 이어갈 때 오히려 더 좋은 성과를 냅니다.',
+    career:'기획·창작·요리·교육처럼 자신의 아이디어를 구체적인 결과물로 풀어내는 일에서 즐겁게 성과를 내며, 남을 가르치거나 돌보는 역할에서도 만족감을 느낍니다. 조급하게 몰아붙이는 환경보다 자기 속도로 일할 수 있는 분위기에서 훨씬 좋은 결과물을 만들어냅니다.',
+    love:'다정하고 여유 있는 태도로 상대를 편안하게 해주며, 함께 있을 때 소소한 즐거움을 나누는 관계에서 깊은 만족을 느낍니다. 표현이 솔직하고 다정해 상대가 사랑받는다는 느낌을 받기 쉽지만, 갈등 상황을 피하려고만 하면 문제가 곪을 수 있으니 필요한 말은 제때 하는 것이 좋습니다.',
+    wealth:'꾸준히 만들어내는 결과물이 자연스럽게 돈으로 이어지는 흐름이라, 서두르지 않아도 시간이 지나면 실속이 차곡차곡 쌓입니다. 다만 여유로운 성향 탓에 지출 관리에는 다소 느슨해질 수 있어, 간단한 가계부 습관만 들여도 재물이 새는 것을 크게 줄일 수 있습니다.',
+    family:'가족에게 정성을 쏟고 챙기는 역할을 자처하며, 특히 자녀나 손아랫사람과의 관계에서 큰 기쁨을 얻습니다. 잔소리보다 따뜻한 말로 다독이는 편이라 아랫사람들이 편하게 다가오는 어른·형제가 되어줍니다.',
+    friends:'함께 있으면 편안한 사람으로 통해 자연스럽게 사람이 모이고, 취미나 관심사를 나누는 인맥이 넓게 형성됩니다. 굳이 애쓰지 않아도 주변에 사람이 끊이지 않는 편이라, 정작 깊이 있는 소수와의 관계에도 신경 쓰면 관계의 만족도가 더 높아집니다.',
+    health:'전반적으로 무난하지만 여유를 즐기다 과식·나태로 이어지기 쉬우니 몸을 움직이는 습관이 꼭 필요합니다. 맛있는 것을 즐기는 편이라 소화기 건강에 특히 신경 쓰고, 규칙적인 운동을 하나쯤 루틴으로 만들어두면 좋습니다.'},
+  상관:{trait:'내가 낳은 기운이 원래의 틀을 깨는 형상으로, 재기 넘치고 표현력이 뛰어나며 기존 방식에 얽매이지 않는 자유로운 발상을 합니다. 남들이 당연하게 여기는 것에 의문을 품는 편이라, 스스로 규칙을 새로 만들어낼 때 진가를 발휘합니다.',
+    career:'예술·미디어·기획처럼 개성과 비판적 안목을 드러낼 수 있는 분야, 혹은 자기 사업에서 재능이 빛나며, 틀에 박힌 업무보다 새로운 시도가 허용되는 환경에서 성과가 큽니다. 다만 권위적인 상사나 경직된 조직 문화와는 부딪히기 쉬우므로, 자율성이 보장되는 자리를 찾는 것이 커리어에 유리합니다.',
+    love:'솔직하고 거침없는 매력이 있지만 할 말은 하는 성격이라, 다름을 인정해주는 상대를 만나야 관계가 편안해집니다. 애정 표현이 직설적이라 상대에게 신선한 매력으로 다가가지만, 감정이 격해졌을 때 나온 말이 오래 남을 수 있으니 표현의 완급 조절이 필요합니다.',
+    wealth:'아이디어와 순발력으로 기회를 만들어내는 재주가 있지만, 즉흥적인 지출이나 구설로 새는 돈을 조심해야 합니다. 새로운 것에 대한 호기심이 곧 소비로 이어지기 쉬운 편이라, 큰 지출 전에는 하루 정도 생각할 시간을 두는 것이 도움이 됩니다.',
+    family:'윗사람의 권위나 기존 질서에 반발하기 쉬워 특히 부모·상사와의 관계에서 마찰이 생길 수 있습니다. 본인만의 방식을 인정받고 싶어 하는 마음이 큰 만큼, 가족에게 자신의 생각을 차분히 설명하는 대화가 오해를 줄여줍니다.',
+    friends:'말재주와 재치로 자리를 즐겁게 만들지만, 직설적인 말이 오해를 살 때도 있어 표현의 완급 조절이 필요합니다. 재미있고 톡톡 튀는 사람으로 인기를 얻는 편이지만, 가까운 사이일수록 상대의 감정을 한 번 더 살피는 배려가 관계를 오래가게 합니다.',
+    health:'신경이 예민해지기 쉬운 기운이라 화기가 오르거나 구설로 인한 스트레스에 특히 취약합니다. 머릿속 생각이 많아 목이나 어깨가 잘 뭉치는 편이니, 생각을 비우는 명상이나 가벼운 스트레칭을 습관화하면 좋습니다.'},
+  편재:{trait:'내가 다스리는 기운이 널리 퍼진 형상으로, 활동 범위가 넓고 돈과 기회를 붙잡는 감각이 남달리 뛰어납니다. 한곳에 머물기보다 여러 판을 동시에 벌이는 것을 즐기는 편이라, 스케일이 큰 일일수록 오히려 편안하게 느낍니다.',
+    career:'영업·유통·투자처럼 사람과 돈이 오가는 현장, 또는 여러 일을 동시에 벌이는 사업 구조에서 성과가 크며, 발 빠르게 기회를 알아보는 감각이 큰 무기가 됩니다. 다만 한 번에 너무 많은 일을 벌이면 관리가 안 되어 흐지부지될 수 있으니, 우선순위를 정하는 습관이 필요합니다.',
+    love:'매력적이고 씀씀이가 시원해 이성에게 인기가 많은 편이라, 오히려 한 사람에게 집중하는 연습이 관계를 오래가게 합니다. 즐거운 이벤트와 화끈한 표현으로 연애 초반의 설렘을 잘 만들어내지만, 꾸준함을 보여주어야 신뢰가 쌓이는 관계로 이어집니다.',
+    wealth:'큰돈이 들어오고 나가는 흐름 자체를 즐기는 기운이라, 버는 만큼 관리하는 습관을 들여야 실속이 남습니다. 기회를 알아보는 눈은 탁월하지만 씀씀이도 그만큼 커서, 일정 비율을 무조건 떼어 저축하는 규칙을 만들어두는 것이 좋습니다.',
+    family:'아버지나 배우자 쪽 인연이 재물운과 얽히는 경우가 많고, 가족보다 바깥일에 시간을 더 쏟기 쉽습니다. 바쁜 만큼 가족과 함께하는 시간이 부족해지기 쉬우니, 짧더라도 정기적으로 온전히 집중하는 시간을 따로 마련하는 것이 관계에 도움이 됩니다.',
+    friends:'발이 넓고 사람을 통해 기회를 만드는 재주가 있어 인맥 관리가 곧 자산이 되는 유형입니다. 다양한 사람과 두루 어울리는 편이라 정보와 기회가 자연스럽게 모이지만, 이해관계를 떠난 순수한 친분도 함께 챙기는 균형이 필요합니다.',
+    health:'활동량이 많은 만큼 불규칙한 생활로 체력이 소모되기 쉬우니 규칙적인 식사와 수면이 중요합니다. 밖에서 보내는 시간이 길어 자기 몸을 살필 여유가 부족해지기 쉬우므로, 정기 검진을 챙기는 습관을 들이는 것이 좋습니다.'},
+  정재:{trait:'내가 바르게 다스리는 기운으로, 성실하고 계획적이며 착실하게 쌓아가는 과정 자체를 편안하게 여깁니다. 눈앞의 화려함보다 시간이 걸려도 확실한 것을 선택하는 편이라, 주변에서 믿음직스럽다는 평가를 자주 받습니다.',
+    career:'회계·관리·행정처럼 꼼꼼함과 신뢰가 필요한 분야, 안정적인 조직 안에서 차근차근 인정받는 유형입니다. 화려한 성과보다 꾸준한 실적으로 평가받는 것을 편하게 여겨서, 오래 몸담을수록 조직 안에서 입지가 단단해집니다.',
+    love:'한 사람에게 성실한 유형으로, 겉치레보다 신뢰와 안정감을 쌓아가는 만남에서 깊은 관계로 이어집니다. 표현이 화려하지는 않아도 꾸준한 행동으로 마음을 보여주는 편이라, 시간이 지날수록 상대에게 더 큰 믿음을 줍니다.',
+    wealth:'저축과 계획적인 소비에 강해 큰 부침 없이 재산을 착실히 불려가는 흐름을 만듭니다. 위험한 투자보다 안전한 자산을 선호하는 편이라 속도는 느려도 꾸준히 우상향하는 재물 그래프를 그리게 됩니다.',
+    family:'가정을 안정적으로 꾸리는 것을 중요하게 여기고, 배우자·재물과 관련된 책임감이 강합니다. 가족의 생계와 안정을 스스로의 몫으로 여기는 경향이 강해서, 때로는 그 부담을 혼자 짊어지지 않도록 주변과 나누는 노력도 필요합니다.',
+    friends:'믿음직한 친구로 통해 오래가는 관계가 많지만, 새로운 사람을 사귀는 데는 다소 신중한 편입니다. 한번 맺은 인연은 웬만해서는 끊지 않고 꾸준히 이어가는 의리 있는 모습을 보입니다.',
+    health:'규칙적인 생활 덕분에 크게 흔들리지 않지만, 지나친 절약과 긴장이 몸을 굳게 만들 수 있습니다. 계획대로 되지 않는 상황에서 스트레스를 받기 쉬우니, 가끔은 계획 없이 몸을 풀어주는 여유도 건강에 도움이 됩니다.'},
+  편관:{trait:'나를 강하게 억제하는 기운으로, 위기 대응력과 승부 근성이 뛰어나며 압박 속에서 오히려 진짜 힘을 발휘합니다. 평온한 상황보다 긴장된 상황에서 더 또렷해지는 편이라, 위기가 곧 기회가 되는 삶의 굴곡을 자주 경험합니다.',
+    career:'군·경·의료·법조처럼 규율과 책임이 무거운 분야, 혹은 치열한 경쟁 구도 안에서 실력을 발휘합니다. 압박감이 클수록 집중력이 오르는 편이라, 안정적이지만 자극이 없는 환경에서는 오히려 무기력해지기 쉽습니다.',
+    love:'강렬하게 끌리는 상대에게 빠지기 쉬운 편이라, 감정 기복이 큰 관계보다 서로를 다잡아주는 관계가 안정적입니다. 처음의 강렬한 끌림이 식은 뒤에도 관계를 지속하려면, 서로에게 안정감을 주는 노력을 의식적으로 기울여야 합니다.',
+    wealth:'큰 부담을 감수하고 큰 결과를 얻으려는 경향이 있어, 무리한 투자나 사업 확장은 신중히 접근해야 합니다. 승부수를 던지고 싶은 마음이 강할수록, 결정 전에 믿을 수 있는 사람과 상의하는 절차를 거치는 것이 좋습니다.',
+    family:'부모나 윗사람으로부터 엄격한 기준을 받고 자랐을 가능성이 높고, 그 영향이 스스로에 대한 기준으로 이어집니다. 스스로에게도 엄격한 잣대를 들이대는 편이라, 가족에게도 같은 기준을 강요하지 않도록 의식적으로 힘을 빼는 노력이 필요합니다.',
+    friends:'위기 상황에서 의지가 되는 친구가 있지만, 평소엔 관계에서도 긴장감이 도는 편입니다. 가벼운 관계보다 서로 진심을 나눌 수 있는 소수의 깊은 인연을 소중히 여기는 편입니다.',
+    health:'스트레스와 긴장이 몸에 바로 나타나는 유형이라 근골격계나 소화기 쪽 관리가 필요합니다. 늘 긴장 상태를 유지하려는 경향이 있어, 의도적으로 몸에 힘을 빼는 이완 시간을 정기적으로 가지는 것이 좋습니다.'},
+  정관:{trait:'나를 바르게 다스리는 기운으로, 책임감과 원칙을 중시하고 사회적 평판을 소중히 여깁니다. 정해진 규범과 절차 안에서 안정을 느끼는 편이라, 원칙을 지키는 사람이라는 평가를 받는 것을 중요하게 생각합니다.',
+    career:'공직·대기업·전문 관리직처럼 체계와 명분이 뚜렷한 조직에서 신뢰를 쌓으며 성장하는 유형입니다. 규정과 절차를 존중하는 태도 덕분에 조직 안에서 믿고 맡길 수 있는 사람으로 자리 잡습니다.',
+    love:'예의 바르고 진지한 만남을 선호하며, 명확한 관계와 책임 있는 태도를 보여주는 상대에게 신뢰를 느낍니다. 애매한 관계보다 분명한 약속과 호칭이 있는 관계에서 비로소 마음을 놓는 편입니다.',
+    wealth:'무리한 확장보다 안정적인 소득 구조를 선호해, 크지 않아도 꾸준한 흐름으로 재물을 지켜갑니다. 모험적인 투자보다 검증된 방법을 택하는 편이라, 큰 손실 없이 재산을 오래 지켜가는 강점이 있습니다.',
+    family:'가족과 사회 안에서 맡은 역할과 체면을 중요하게 여기며, 책임감 있는 가장·자녀의 모습을 보입니다. 맡은 바 도리를 다하는 것을 삶의 중요한 기준으로 삼아서, 가족들에게 든든한 버팀목이 되어줍니다.',
+    friends:'신뢰를 바탕으로 한 인간관계를 오래 유지하며, 공적인 자리에서 만난 인연이 좋은 관계로 이어집니다. 약속을 잘 지키고 예의를 갖추는 태도 덕분에 자연스럽게 좋은 평판이 쌓입니다.',
+    health:'과도한 책임감과 자기 관리 강박이 긴장성 피로로 이어지지 않도록 여유를 두는 것이 좋습니다. 맡은 역할에 최선을 다하려는 마음이 강한 만큼, 가끔은 완벽하지 않아도 괜찮다고 스스로를 다독이는 것이 건강에 도움이 됩니다.'},
+  편인:{trait:'나를 독특한 방식으로 길러내는 기운으로, 직관이 예리하고 남들과 다른 시각으로 사물을 바라봅니다. 겉으로 드러나는 것보다 본질을 꿰뚫어 보는 힘이 있어, 남들이 놓치는 부분을 알아채는 경우가 많습니다.',
+    career:'연구·기획·상담·역술처럼 깊이 파고드는 전문 분야, 혹은 남들이 잘 가지 않는 틈새 영역에서 두각을 나타냅니다. 정해진 매뉴얼보다 스스로 답을 찾아가는 과정에서 실력이 쌓이는 편이라, 자율적인 연구·탐구 환경이 잘 맞습니다.',
+    love:'쉽게 곁을 내주지 않지만 마음을 연 뒤에는 깊이 몰입하는 편이라, 정신적으로 통하는 상대에게 강하게 끌립니다. 표현이 서툴러 보여도 속마음은 깊은 편이라, 조급하게 다가오지 않고 기다려주는 상대와 오래갑니다.',
+    wealth:'정해진 월급보다 아이디어나 전문성으로 벌어들이는 비정기적 수입 구조가 더 잘 맞습니다. 눈에 보이지 않는 지식과 통찰을 자산으로 바꾸는 재주가 있어, 전문성을 갖출수록 수입도 함께 늘어나는 경향이 있습니다.',
+    family:'부모, 특히 어머니 쪽과의 관계가 인생관에 깊은 영향을 주고, 애증이 함께 얽히는 경우가 많습니다. 가족에게 받은 영향을 스스로 소화해 자기만의 가치관으로 재해석하는 힘이 있는 편입니다.',
+    friends:'넓은 인맥보다 소수와 깊게 통하는 관계를 선호하며, 혼자만의 시간을 존중해주는 친구를 편하게 여깁니다. 겉핥기식 인간관계보다 서로의 생각을 나눌 수 있는 관계에서 진짜 편안함을 느낍니다.',
+    health:'생각이 많아 잠들기 어렵거나 신경계가 예민해지기 쉬우니 생각을 비우는 루틴이 도움이 됩니다. 머릿속으로 너무 많은 것을 곱씹는 편이라, 잠자리에 들기 전 생각을 정리하는 짧은 습관만으로도 수면의 질이 좋아집니다.'},
+  정인:{trait:'나를 바르게 길러내는 기운으로, 배움을 좋아하고 사려 깊으며 안정적인 울타리 안에서 실력을 쌓아갑니다. 급하게 서두르기보다 차근차근 기초를 다지는 것을 선호해서, 시간이 지날수록 단단한 내공을 갖추게 됩니다.',
+    career:'교육·연구·의료처럼 전문 지식을 축적해 인정받는 분야, 또는 오래 몸담을 수 있는 안정적인 조직이 잘 맞습니다. 꾸준한 학습과 자기 계발을 즐기는 편이라, 연차가 쌓일수록 전문성으로 인정받는 위치에 오르게 됩니다.',
+    love:'천천히 신뢰를 쌓아가는 스타일로, 정서적으로 기댈 수 있는 편안한 상대와 안정적인 관계를 만듭니다. 화려한 이벤트보다 잔잔하고 다정한 소통을 더 편하게 느끼는 편이라, 비슷한 결의 상대를 만나면 오래도록 안정적인 관계를 이어갑니다.',
+    wealth:'화려한 수익보다 명예나 자격, 자산의 안정적인 축적을 통해 재물이 따라오는 흐름입니다. 배움과 자격에 투자한 것이 시간이 지나 재물로 돌아오는 경우가 많아, 장기적인 안목으로 자기 계발에 투자하는 것이 유리합니다.',
+    family:'부모의 보살핌이나 가르침을 깊이 받고 자랐을 가능성이 높고, 그 영향으로 가정을 중시하는 성향이 강합니다. 받은 사랑을 다시 베푸는 것을 자연스럽게 여겨서, 가족들에게 정서적 안정감을 주는 존재가 되어줍니다.',
+    friends:'오래된 인연을 소중히 여기고, 조언과 지지를 아끼지 않는 든든한 친구로 자리 잡습니다. 화려하게 나서기보다 묵묵히 곁을 지키는 편이라, 오랜 시간이 지나도 관계가 쉽게 흔들리지 않습니다.',
+    health:'전반적으로 안정적이나 지나치게 생각에 잠기거나 안주하려는 경향이 활동량 부족으로 이어질 수 있습니다. 몸을 쓰는 활동을 의식적으로 늘리지 않으면 정적인 생활 패턴에 머물기 쉬우니, 가벼운 산책이라도 습관화하는 것이 좋습니다.'}
 };
 
 const TENGOD_TEXT_EN={
-  비견:{trait:'The image of an energy just like your own standing beside you: strong independence and pride, with the drive to decide things yourself and push them through.',
-    career:'Work you build alone, a licensed profession, or an independent way of working suits you well; results come more from ventures under your own name than from partnerships.',
-    love:'A tendency to want the lead can create power struggles with a partner, so relationships that respect each other space tend to last longest.',
-    wealth:'Strong at earning through your own effort rather than sharing, though spending or dispersal caused by siblings, colleagues, or rivals can be a recurring pattern.',
-    family:'You tend to define your own role and share within the family clearly; relationships with siblings or peers of similar age have a large influence on your life.',
-    friends:'Loyal friends who help in hard times are common, though rivalries over pride can also cause distance.',
-    health:'Stamina and activity level are generally good, but pushing too hard can lead to breakdowns, so guard against overwork.'},
-  겁재:{trait:'An energy similar to yours but with a different edge: strong competitive drive and quick instincts for turning a situation around.',
-    career:'Fiercely competitive fields such as sales, investing, or running your own business are where this energy actually shines.',
-    love:'Attractive but prone to possessiveness and jealousy; stability comes with a relationship where trust is built slowly over time.',
-    wealth:'A bold appetite for large sums, but partnerships, guarantees, or investments carry real risk of loss, so contracts deserve extra caution.',
-    family:'A pattern of rivalry or comparison with one particular family member tends to appear; managing distance is the key to the relationship.',
-    friends:'A gift for gathering people keeps things lively, but relationships can turn sharply once interests get tangled up.',
-    health:'Stress from tension and competitiveness builds up in the body, so make a conscious effort to build in rest.'},
-  식신:{trait:'The energy you nurture and bring into being: expressive and creative, with a relaxed capacity to enjoy what is yours.',
-    career:'Planning, creative work, cooking, or teaching, where your own ideas become concrete results, brings enjoyable success.',
-    love:'A warm, unhurried manner puts a partner at ease; satisfaction comes from relationships built around shared enjoyment.',
-    wealth:'Steady output naturally turns into income over time, so substance accumulates even without rushing.',
-    family:'You take on the role of caring for the family, finding particular joy in relationships with children or younger relatives.',
-    friends:'People naturally gather around someone this comfortable to be with, and your circle is wide through shared hobbies and interests.',
-    health:'Generally fine, but comfort can slide into overeating or laziness, so a habit of staying active matters.'},
-  상관:{trait:'The energy you produce breaking out of its original mold: brilliant and expressive, unwilling to be bound by convention.',
-    career:'Fields like art, media, and planning that reward individuality and a critical eye, or running your own venture, let this talent shine.',
-    love:'A frank, unrestrained charm comes with speaking your mind, so the relationship stays comfortable only with a partner who accepts difference.',
-    wealth:'A knack for turning ideas and quick wit into opportunity, but watch for money that leaks out through impulsive spending or careless talk.',
-    family:'A tendency to push back against authority or established order can create friction, especially with parents or superiors.',
-    friends:'Wit and humor make gatherings fun, but blunt words can be misread, so tact in how you say things matters.',
-    health:'A nervous, easily excitable energy makes you especially prone to stress from rising temper or from gossip and rumor.'},
-  편재:{trait:'The energy you govern spread out widely: a broad range of activity and a sharp instinct for seizing money and opportunity.',
-    career:'Fields where people and money constantly move, like sales, distribution, or investing, or running several ventures at once, bring the biggest results.',
-    love:'Charm and generous spending make you popular, so practicing focus on one person is what makes a relationship last.',
-    wealth:'You enjoy the flow of large sums moving in and out; substance only remains if you build a habit of managing it as carefully as you earn it.',
-    family:'Ties through your father or spouse often become entangled with financial matters, and time tends to go to outside affairs more than family.',
-    friends:'A wide network and a talent for turning people into opportunity make relationship management itself an asset.',
-    health:'A busy, active pace can wear down the body through irregular living, so regular meals and sleep matter.'},
-  정재:{trait:'The energy you govern properly: sincere and methodical, comfortable building things up steadily.',
-    career:'Fields that need care and trust, like accounting, administration, or management, suit you, earning recognition step by step inside a stable organization.',
-    love:'Faithful to one person, you build deep relationships through trust and stability rather than show.',
-    wealth:'Strong at saving and planned spending, building wealth steadily without major swings.',
-    family:'Building a stable household matters to you, and you carry real responsibility toward a spouse and shared finances.',
-    friends:'Many relationships last because you are seen as dependable, though you tend to be cautious about meeting new people.',
-    health:'A regular routine keeps you fairly steady, but excessive frugality and tension can leave the body stiff.'},
-  편관:{trait:'An energy that strongly restrains you: strong in crisis response and fighting spirit, drawing out real strength under pressure.',
-    career:'Demanding, disciplined fields like the military, law enforcement, medicine, or law, or fiercely competitive settings, are where your ability shows.',
-    love:'Easily drawn into intense attraction, so a relationship that steadies each other is more stable than one full of emotional swings.',
-    wealth:'A tendency to take on heavy risk for a big result means aggressive investment or expansion deserves real caution.',
-    family:'Likely raised under strict standards from parents or elders, an influence that becomes the standard you hold for yourself.',
-    friends:'Friends who stand by you in a crisis are valuable, though everyday relationships tend to carry an undercurrent of tension.',
-    health:'Stress and tension show up directly in the body, so watch your musculoskeletal system and digestion.'},
-  정관:{trait:'The energy that governs you properly: values responsibility and principle, and cares deeply about social standing.',
-    career:'Organizations with clear structure and legitimacy, like public service, large companies, or licensed management roles, are where trust and growth come together.',
-    love:'You prefer courteous, serious relationships, trusting a partner who shows a clear commitment and a responsible attitude.',
-    wealth:'You favor a stable income structure over aggressive expansion, protecting wealth through a steady, if modest, flow.',
-    family:'You take your role and reputation within family and society seriously, showing up as a responsible parent or child.',
-    friends:'You maintain trust-based relationships over the long term, and connections made in formal settings tend to grow into good ones.',
-    health:'Guard against tension-driven fatigue from excessive responsibility and self-discipline by building in real rest.'},
-  편인:{trait:'An energy that raises you in an unconventional way: sharp intuition and a way of seeing things differently from others.',
-    career:'Deep, focused fields like research, planning, counseling, or divination, or niche areas others rarely enter, are where you stand out.',
-    love:'Slow to open up, but once your heart is open you go deep, drawn strongly to a partner you connect with on a mental level.',
-    wealth:'An irregular income built on ideas or expertise suits you better than a fixed salary.',
-    family:'Your relationship with a parent, especially your mother, shapes your outlook on life deeply, often with mixed feelings attached.',
-    friends:'You prefer a few deep connections over a wide network, and feel most at ease with friends who respect your need for solitude.',
-    health:'A mind that runs on overtime can make it hard to fall asleep or leave the nervous system on edge, so a routine that clears your head helps.'},
-  정인:{trait:'The energy that raises you properly: a love of learning and a thoughtful nature, building real skill inside a stable framework.',
-    career:'Fields where expertise accumulates into recognition, like education, research, or medicine, or a stable organization you can stay with long term, suit you well.',
-    love:'You build trust slowly, forming stable relationships with a partner you can lean on emotionally.',
-    wealth:'Wealth follows through honor, qualifications, and steady accumulation rather than flashy income.',
-    family:'Likely raised with deep parental care and guidance, an influence that leaves you valuing family strongly.',
-    friends:'You treasure long-standing relationships, becoming the dependable friend who offers advice and support freely.',
-    health:'Generally stable, though a tendency to overthink or stay too settled can lead to too little physical activity.'}
+  비견:{trait:"The image of an energy just like your own standing right beside you: strong independence and pride, with the drive to decide things yourself and push them through. You would rather prove yourself through your own effort than lean on others, which often puts you in a leading position among peers from an early age.",
+    career:"Work you build alone, a licensed profession, or an independent way of working suits you well; results come more from ventures under your own name than from partnerships. Even inside an organization you tend to look for your own way of doing things rather than simply following orders, so a role with real room for discretion brings out your best.",
+    love:"A tendency to want the lead can create power struggles with a partner, so relationships that respect each other's space tend to last longest. You are more likely to watch and wait than to approach first, so things start slowly, but once your mind is made up you stay loyally by your partner's side.",
+    wealth:"Strong at earning through your own effort rather than sharing, though spending or dispersal caused by siblings, colleagues, or rivals can be a recurring pattern. Weigh partnerships or guarantees that tie your money to someone else carefully, and focus first on building solid assets in your own name.",
+    family:"You tend to define your own role and share within the family clearly; relationships with siblings or peers of similar age have a large influence on your life. You would rather judge and act for yourself than have family decisions made for you, which can look stubborn at times but comes with an equally strong sense of responsibility.",
+    friends:"Loyal friends who help in hard times are common, though rivalries over pride can also cause real distance. Apologizing first does not come easily to you, so resolving small misunderstandings quickly is what keeps these friendships alive.",
+    health:"Stamina and activity level are generally good, so you tolerate ordinary fatigue well, but that same toughness means you can ignore warning signs and push until something finally breaks. Rather than assuming you are fine, build in regular check-ups and decide in advance when it is time to rest."},
+  겁재:{trait:"An energy similar to yours but with a different edge: strong competitive drive and quick instincts for turning a situation around. You look bold on the surface but deeply dislike losing underneath, and once a competition catches fire you tend to push all the way through rather than back down.",
+    career:"Fiercely competitive fields such as sales, investing, or running your own business are where this energy actually shines, and you often focus harder than usual right when the pressure is on. If the urge to take all the credit goes too far it can crack a colleague's trust, so sharing credit tends to open bigger opportunities in the long run.",
+    love:"Attractive but prone to possessiveness and jealousy; stability comes with a relationship where trust is built slowly over time. A strong urge to steer your partner your way means it helps to practice talking things through instead of pushing your position when opinions differ.",
+    wealth:"A bold appetite for large sums, but partnerships, guarantees, or investments carry real risk of loss, so contracts and shared stakes deserve extra caution. The wish to make it big in one move can lead to rushed decisions, so simply sitting on a choice for a day can save you from a costly mistake.",
+    family:"A pattern of rivalry or comparison with one particular family member tends to appear; managing distance is the key to the relationship. Old comparisons with a sibling from childhood can linger, and simply recognizing that feeling for what it is often eases the relationship considerably.",
+    friends:"A gift for gathering people keeps things lively, but relationships can turn sharply once interests get tangled up. Money or interests attached to a promise are worth spelling out clearly if you want the friendship to last.",
+    health:"Stress from tension and competitiveness builds up in the body, so make a conscious effort to build in rest. Fatigue tends to hit hard right after a competitive push ends, so plan a day or two of real recovery once a big challenge is over."},
+  식신:{trait:"The energy you nurture and bring into being: expressive and creative, with a relaxed capacity to enjoy what is yours. You genuinely enjoy the process of making something, and results actually improve when you are allowed to keep at it steadily instead of racing toward a deadline.",
+    career:"Planning, creative work, cooking, or teaching, where your own ideas become concrete results, brings enjoyable success, and roles that involve guiding or caring for others bring real satisfaction too. You produce far better work in an atmosphere that lets you set your own pace than one that constantly rushes you.",
+    love:"A warm, unhurried manner puts a partner at ease, and satisfaction comes from relationships built around shared, everyday enjoyment. Your affection tends to come across as sincere and warm, but avoiding conflict for too long can let problems fester, so it helps to say what needs saying while it is still small.",
+    wealth:"Steady output naturally turns into income over time, so substance accumulates even without rushing. Your easygoing nature can make spending a little loose, though, so even a simple habit of tracking expenses meaningfully cuts down on money quietly slipping away.",
+    family:"You take on the role of caring for the family, finding particular joy in relationships with children or younger relatives. You tend to soothe with warm words rather than nagging, which makes you the kind of elder or sibling that younger family members feel safe approaching.",
+    friends:"People naturally gather around someone this comfortable to be with, and your circle grows wide through shared hobbies and interests. Company rarely runs short for you, so it is worth also investing deliberately in a few deeper relationships alongside the wide circle.",
+    health:"Generally fine, but comfort can slide into overeating or laziness, so a habit of staying active really matters. You enjoy good food more than most, so pay particular attention to digestive health and keep at least one regular exercise routine going."},
+  상관:{trait:"The energy you produce breaking out of its original mold: brilliant and expressive, unwilling to be bound by convention. You tend to question what others take for granted, and your real talent shows when you are free to write your own rules rather than follow existing ones.",
+    career:"Fields like art, media, and planning that reward individuality and a critical eye, or running your own venture, let this talent shine, and results grow largest wherever new attempts are actually welcomed. You tend to clash with authoritarian bosses or rigid company cultures, so seeking out roles with real autonomy serves your career well.",
+    love:"A frank, unrestrained charm comes with speaking your mind, so the relationship stays comfortable only with a partner who accepts difference. Direct affection gives you a fresh kind of appeal, but words said in a heated moment can linger, so it pays to soften how you say things.",
+    wealth:"A knack for turning ideas and quick wit into opportunity, but watch for money that leaks out through impulsive spending or careless talk. Curiosity about something new tends to turn straight into spending, so giving yourself a day to think before a big purchase genuinely helps.",
+    family:"A tendency to push back against authority or established order can create friction, especially with parents or superiors. Because you want your own way of doing things to be recognized, calmly explaining your thinking to family reduces a lot of misunderstanding.",
+    friends:"Wit and humor make gatherings fun, but blunt words can be misread, so tact in how you say things matters. You tend to become popular as the sharp, entertaining one in the group, but checking in on a close friend's feelings a little more carefully keeps the relationship strong.",
+    health:"A nervous, easily excitable energy makes you especially prone to stress from rising temper or from gossip and rumor. A mind that runs on overtime tends to tighten up the neck and shoulders, so a habit of meditation or light stretching to clear your head is worthwhile."},
+  편재:{trait:"The energy you govern spread out widely: a broad range of activity and a sharp instinct for seizing money and opportunity. You would rather run several things at once than stay in one place, and the bigger the undertaking, the more at ease you actually feel.",
+    career:"Fields where people and money constantly move, like sales, distribution, or investing, or running several ventures at once, bring the biggest results, and a sharp eye for spotting opportunity early becomes a real weapon. Taking on too much at once can leave things unmanaged, though, so building a habit of setting priorities matters.",
+    love:"Charm and generous spending make you popular, so practicing focus on one person is what makes a relationship last. You are good at creating the early spark of romance with fun events and bold gestures, but showing consistency over time is what actually builds lasting trust.",
+    wealth:"You enjoy the flow of large sums moving in and out; substance only remains if you build a habit of managing it as carefully as you earn it. Your eye for opportunity is excellent, but spending tends to grow just as fast, so setting aside a fixed share of income automatically is worth doing.",
+    family:"Ties through your father or spouse often become entangled with financial matters, and time tends to go to outside affairs more than family. Being busy makes family time easy to shortchange, so setting aside even brief, fully present time on a regular basis helps the relationship.",
+    friends:"A wide network and a talent for turning people into opportunity make relationship management itself an asset. You mix easily with all kinds of people, so information and opportunity tend to find you, but it helps to also nurture a few friendships that have nothing to do with mutual benefit.",
+    health:"A busy, active pace can wear down the body through irregular living, so regular meals and sleep matter. So much time spent out and about can leave little room to check in on your own body, so make a habit of keeping up with regular medical check-ups."},
+  정재:{trait:"The energy you govern properly: sincere and methodical, comfortable building things up steadily. You would rather choose something solid that takes time than something flashy right now, which is why people so often describe you as dependable.",
+    career:"Fields that need care and trust, like accounting, administration, or management, suit you, earning recognition step by step inside a stable organization. You are comfortable being judged on steady output rather than flashy wins, so your standing inside an organization only grows stronger the longer you stay.",
+    love:"Faithful to one person, you build deep relationships through trust and stability rather than show. Your affection may not be showy, but it comes through in consistent actions, earning your partner deeper trust the longer you are together.",
+    wealth:"Strong at saving and planned spending, you build wealth steadily without major swings. You favor safe assets over risky bets, so your finances grow slowly but reliably rather than in dramatic leaps.",
+    family:"Building a stable household matters to you, and you carry real responsibility toward a spouse and shared finances. You tend to treat your family's stability and livelihood as squarely your own responsibility, so it is worth making an effort not to carry that weight entirely alone.",
+    friends:"Many relationships last because you are seen as dependable, though you tend to be cautious about meeting new people. Once a bond is formed you rarely let it go, keeping up a loyal, steady connection over the years.",
+    health:"A regular routine keeps you fairly steady, but excessive frugality and tension can leave the body stiff. Things not going according to plan tends to stress you out, so occasionally letting your body move without any plan at all is genuinely good for your health."},
+  편관:{trait:"An energy that strongly restrains you: strong in crisis response and fighting spirit, drawing out real strength under pressure. You tend to sharpen under tension rather than in calm conditions, so your life often turns crisis into opportunity at key moments.",
+    career:"Demanding, disciplined fields like the military, law enforcement, medicine, or law, or fiercely competitive settings, are where your ability shows. The greater the pressure, the sharper your focus tends to get, which can leave you feeling oddly listless in a stable but understimulating environment.",
+    love:"Easily drawn into intense attraction, so a relationship that steadies each other is more stable than one full of emotional swings. Once the initial intensity fades, keeping the relationship going takes a conscious effort from both sides to build real steadiness together.",
+    wealth:"A tendency to take on heavy risk for a big result means aggressive investment or expansion deserves real caution. The stronger the urge to make one bold move, the more it helps to talk it over with someone you trust before deciding.",
+    family:"Likely raised under strict standards from parents or elders, an influence that becomes the standard you hold for yourself. You tend to judge yourself by an equally strict standard, so it is worth consciously easing up rather than holding family to that same bar.",
+    friends:"Friends who stand by you in a crisis are valuable, though everyday relationships tend to carry an undercurrent of tension. You place more value on a few deep, honest bonds than on many lighter ones.",
+    health:"Stress and tension show up directly in the body, so watch your musculoskeletal system and digestion. You tend to stay in a state of readiness by default, so deliberately scheduling time to let your body fully relax is worth the effort."},
+  정관:{trait:"The energy that governs you properly: values responsibility and principle, and cares deeply about social standing. You feel settled inside clear rules and procedures, and being seen as someone who keeps to principle matters a great deal to you.",
+    career:"Organizations with clear structure and legitimacy, like public service, large companies, or licensed management roles, are where trust and growth come together. Your respect for rules and process makes you the kind of person an organization learns it can safely rely on.",
+    love:"You prefer courteous, serious relationships, trusting a partner who shows a clear commitment and a responsible attitude. An ambiguous relationship rarely puts you at ease; a clear commitment and a defined role for each other is what finally lets you relax into it.",
+    wealth:"You favor a stable income structure over aggressive expansion, protecting wealth through a steady, if modest, flow. Choosing proven methods over risky bets means you tend to preserve wealth over the long run without major losses.",
+    family:"You take your role and reputation within family and society seriously, showing up as a responsible parent or child. Doing your duty fully is an important personal standard for you, which makes you a pillar the rest of the family can lean on.",
+    friends:"You maintain trust-based relationships over the long term, and connections made in formal settings tend to grow into good ones. Keeping your word and staying courteous naturally earns you a good reputation over time.",
+    health:"Guard against tension-driven fatigue from excessive responsibility and self-discipline by building in real rest. Because you try so hard to do your part well, reminding yourself it is fine not to be perfect can genuinely protect your health."},
+  편인:{trait:"An energy that raises you in an unconventional way: sharp intuition and a way of seeing things differently from others. You are better at seeing through to the essence of a thing than at reading its surface, which often means noticing what others miss entirely.",
+    career:"Deep, focused fields like research, planning, counseling, or divination, or niche areas others rarely enter, are where you stand out. Your skill grows more from finding your own answers than from following a set manual, so an environment that allows independent study suits you well.",
+    love:"Slow to open up, but once your heart is open you go deep, drawn strongly to a partner you connect with on a mental level. Your feelings may look understated on the surface, but they run deep underneath, so a partner who waits rather than rushing you tends to stay by your side longest.",
+    wealth:"An irregular income built on ideas or expertise suits you better than a fixed salary. You have a knack for turning invisible knowledge and insight into an asset, so income tends to rise right along with your growing expertise.",
+    family:"Your relationship with a parent, especially your mother, shapes your outlook on life deeply, often with mixed feelings attached. You tend to process what you absorbed from family and reinterpret it into a set of values that is genuinely your own.",
+    friends:"You prefer a few deep connections over a wide network, and feel most at ease with friends who respect your need for solitude. Surface-level relationships hold little appeal next to ones where you can genuinely exchange ideas.",
+    health:"A mind that runs on overtime can make it hard to fall asleep or leave the nervous system on edge, so a routine that clears your head helps. You tend to turn things over in your mind far too much, so even a short habit of clearing your thoughts before bed can noticeably improve your sleep."},
+  정인:{trait:"The energy that raises you properly: a love of learning and a thoughtful nature, building real skill inside a stable framework. You prefer laying a careful foundation over rushing ahead, which is exactly why your abilities only get sturdier with time.",
+    career:"Fields where expertise accumulates into recognition, like education, research, or medicine, or a stable organization you can stay with long term, suit you well. You genuinely enjoy steady learning and self-improvement, so the years you put in eventually earn you real recognition as an expert.",
+    love:"You build trust slowly, forming stable relationships with a partner you can lean on emotionally. Quiet, warm communication feels far more comfortable to you than grand gestures, so meeting someone with a similar temperament tends to lead to a long, stable relationship.",
+    wealth:"Wealth follows through honor, qualifications, and steady accumulation rather than flashy income. What you invest in learning and credentials has a way of returning as wealth later on, so investing in yourself with a long view tends to pay off.",
+    family:"Likely raised with deep parental care and guidance, an influence that leaves you valuing family strongly. Passing on the care you received comes naturally to you, making you a source of real emotional stability for your family.",
+    friends:"You treasure long-standing relationships, becoming the dependable friend who offers advice and support freely. You would rather quietly stand by someone than seek the spotlight, which is exactly why these relationships rarely waver even after many years.",
+    health:"Generally stable, though a tendency to overthink or stay too settled can lead to too little physical activity. Without a deliberate push to move more, it is easy to settle into a sedentary pattern, so even a habit as simple as a daily walk is worth keeping."}
 };
 
 const ELEMENT_NOTE={
@@ -1362,6 +1484,89 @@ const ELEMENT_NOTE_EN={
   metal:{many:'Metal energy is strong, giving you clear decisiveness and principle, but watch that it does not turn overly sharp.',few:'Metal energy is weak, so consciously building up your ability to decide and follow through can help.'},
   water:{many:'Water energy is strong, giving you wisdom and flexibility, but watch that too much thinking does not delay your decisions.',few:'Water energy is weak, so deliberately setting aside time to slow down and organize your thoughts can help.'}
 };
+
+/* ================= 궁합편(宮合) 해설 =================
+   두 사람의 일간(日干) 오행을 비교해 오행상생상극(五行相生相剋)의
+   다섯 가지 관계 중 하나로 분류한다: 같은 오행(비화), 한쪽이 다른
+   쪽을 생(生)하는 관계, 한쪽이 다른 쪽을 극(剋)하는 관계. 어느 쪽이
+   생/극의 주체인지는 매번 다르므로, 생(gen)·극(ctrl) 문구는 GIVER/
+   RECEIVER, DOM/SUB 같은 역할 placeholder로 한 번만 작성해두고
+   render 시점에 실제 두 사람 중 누가 그 역할인지를 채워 넣는다. */
+const COMPAT_TEXT={
+  same:{label:'비화(比和) 궁합 · 닮은 기운의 동반자',
+    trait:'{A}님과 {B}님은 나란히 같은 {EL} 기운의 일간을 타고났습니다. 거울을 보듯 서로의 생각과 습관을 빠르게 이해하고, 말하지 않아도 통하는 부분이 많아 편안함을 느끼는 관계입니다. 다만 같은 기운이 두 배로 겹치는 만큼 장점도 단점도 함께 커지기 쉬워, 서로 다른 점을 일부러 찾아 존중하려는 노력이 필요합니다.',
+    career:'업무 스타일과 판단 기준이 비슷해 손발이 척척 맞는 팀워크를 보여줍니다. 같은 분야에서 협업하면 시너지가 크지만, 같은 자리를 두고 경쟁하는 구도가 되면 자존심 다툼으로 번지기 쉬우니 역할을 분명히 나누는 것이 좋습니다.',
+    love:'취향과 생활 리듬이 비슷해 데이트나 일상 공유가 편안하고 안정적인 관계로 이어집니다. 다만 둘 다 자기주장이 강한 편이라 의견이 갈릴 때 누구도 먼저 물러서지 않으면 냉전이 길어질 수 있어, 한쪽이 먼저 손을 내미는 습관을 들이면 좋습니다.',
+    wealth:'돈을 대하는 태도와 씀씀이의 기준이 비슷해 큰 마찰 없이 공동 지출을 관리할 수 있습니다. 다만 같은 곳에 동시에 지갑을 열기 쉬워 저축이 더뎌질 수 있으니, 각자 관리할 통장과 함께 모을 통장을 나누는 것이 실속을 지키는 방법입니다.',
+    family:'두 집안 모두에게 비슷한 태도로 자기 몫을 챙기려는 경향이 있어, 명절이나 대소사에서 역할 분담을 미리 정해두면 마찰을 줄일 수 있습니다. 서로의 가족 문화를 있는 그대로 존중해 주는 태도가 관계를 오래 지속시키는 열쇠입니다.',
+    friends:'함께 있으면 친구처럼 편안하고, 같은 취미나 모임을 공유하며 어울리는 폭이 넓어집니다. 다만 서로의 친구 관계에도 은근히 경쟁심을 느낄 수 있어, 각자의 친구 관계를 있는 그대로 인정해 주는 여유가 필요합니다.',
+    health:'생활 리듬과 체력 소모 패턴이 비슷해 함께 운동하거나 건강을 관리하기 좋은 조합입니다. 다만 둘 다 무리해서 밀어붙이는 성향이 겹치면 함께 지치기 쉬우니, 한 사람이라도 먼저 쉬자고 말하는 역할을 맡는 것이 좋습니다.'},
+  gen:{label:'상생(相生) 궁합 · {GIVER}님이 힘을 보태는 관계',
+    trait:'{GIVER}님의 {EL_GIVER} 기운이 {RECEIVER}님의 {EL_RECEIVER} 기운을 낳아 길러주는 형상으로, {GIVER}님이 자연스럽게 챙기고 이끌어주는 역할을, {RECEIVER}님은 그 도움을 받아 성장하는 역할을 맡게 되는 궁합입니다. {GIVER}님 입장에서는 아낌없이 내어주는 만큼 보람을 느끼고, {RECEIVER}님 입장에서는 든든한 지원군을 얻은 듯한 안정감을 느낍니다. 다만 도움이 한쪽으로만 쏠리지 않도록 이따금 역할을 바꿔보는 것도 관계의 균형에 도움이 됩니다.',
+    career:'{GIVER}님이 조언자나 멘토처럼 {RECEIVER}님의 성장을 이끌어주는 구도가 자연스럽게 만들어집니다. 함께 일하면 {RECEIVER}님의 능력이 눈에 띄게 빨리 느는 것을 서로 확인할 수 있지만, {RECEIVER}님이 지나치게 의존하지 않고 스스로 판단하는 힘을 기르는 것이 장기적으로 더 좋은 결과를 만듭니다.',
+    love:'{GIVER}님의 배려와 챙김이 {RECEIVER}님에게 큰 정서적 안정감을 주는 관계로, 처음 만났을 때부터 편안하고 따뜻한 느낌을 주고받기 쉽습니다. 다만 시간이 지날수록 {GIVER}님만 맞추고 베푸는 구도로 굳어지지 않도록, {RECEIVER}님도 표현과 배려를 적극적으로 되돌려주는 노력이 필요합니다.',
+    wealth:'{GIVER}님이 재정 관리나 큰 결정에서 먼저 방향을 잡아주고, {RECEIVER}님은 그 흐름을 따라가며 안정적으로 자산을 불려가는 그림이 자연스럽습니다. 다만 {RECEIVER}님이 재정 감각을 스스로 키우지 않으면 {GIVER}님에게만 의존하는 구조가 오래갈 수 있으니, 함께 계획을 세우는 습관이 중요합니다.',
+    family:'{GIVER}님이 두 집안 사이에서 중재자나 든든한 어른 역할을 자연스럽게 맡게 되는 경우가 많아, 가족 행사나 갈등 상황에서 관계를 부드럽게 풀어가는 데 유리합니다. {RECEIVER}님이 그 노력을 알아주고 고마움을 표현하면 두 집안 모두와의 관계가 한결 편안해집니다.',
+    friends:'{GIVER}님의 인맥과 경험이 {RECEIVER}님에게 새로운 사람과 기회를 연결해주는 다리가 되어주는 경우가 많습니다. {RECEIVER}님도 자신만의 색깔이 담긴 친구 관계를 유지하려는 노력을 병행하면, 서로의 세계가 더 풍성해지는 궁합입니다.',
+    health:'{GIVER}님이 {RECEIVER}님의 컨디션을 먼저 챙기고 살펴주는 역할을 자처하게 되어, {RECEIVER}님은 정서적으로 안정된 상태를 유지하기 쉽습니다. 다만 {GIVER}님 스스로의 휴식과 회복도 못지않게 중요하니, {RECEIVER}님이 먼저 {GIVER}님의 건강을 챙겨주는 날을 정해보는 것도 좋습니다.'},
+  ctrl:{label:'상극(相剋) 궁합 · {DOM}님이 이끄는 관계',
+    trait:'{DOM}님의 {EL_DOM} 기운이 {SUB}님의 {EL_SUB} 기운을 다스리는 형상으로, {DOM}님이 방향을 정하고 이끄는 역할을, {SUB}님은 그 안에서 자신의 힘을 다듬어가는 역할을 맡게 되는 궁합입니다. 서로 자극이 되어 발전하는 관계이지만, {DOM}님의 뜻이 지나치게 앞서면 {SUB}님이 억눌린다고 느낄 수 있어 균형이 중요합니다.',
+    career:'{DOM}님이 방향을 제시하고 {SUB}님이 그것을 현실로 만들어내는 역할 분담이 자연스럽게 이루어져, 함께 일하면 추진력 있는 성과를 만들어냅니다. 다만 {DOM}님이 결정을 독점하면 {SUB}님의 의욕이 꺾일 수 있으니, 의견을 먼저 물어보는 배려가 팀워크를 오래가게 합니다.',
+    love:'{DOM}님에게 끌리듯 이끌려가는 흐름이 자연스럽게 만들어지는 강렬한 관계로, 초반의 긴장감이 오히려 매력으로 작용합니다. 다만 한쪽으로 힘이 쏠린 관계가 오래되면 {SUB}님이 지치기 쉬우므로, {DOM}님이 의식적으로 낮추고 맞춰주는 순간을 만들어야 관계가 오래갑니다.',
+    wealth:'{DOM}님이 재정의 큰 방향을 정하고 {SUB}님이 실행을 맡는 구도가 자연스러워, 과감한 결정이 필요한 투자에서 좋은 궁합을 보입니다. 다만 {SUB}님의 의견이 반영되지 않으면 불만이 쌓일 수 있어, 중요한 결정은 반드시 함께 상의하는 절차를 두는 것이 좋습니다.',
+    family:'{DOM}님이 집안의 중요한 결정을 이끄는 역할을 자연스럽게 맡게 되어 대소사가 효율적으로 정리되지만, {SUB}님의 의견도 충분히 존중받고 있다는 느낌을 받아야 관계가 편안해집니다. 두 집안 사이에서는 서로의 방식을 강요하지 않는 태도가 특히 중요합니다.',
+    friends:'{DOM}님이 자연스럽게 주도하고 {SUB}님이 따라가는 모임의 구도가 만들어지기 쉬워, 함께 있으면 활기차고 추진력 있는 시간을 보내게 됩니다. 다만 {SUB}님도 자기 의견을 편하게 낼 수 있는 분위기를 만들어야 관계가 일방적으로 흐르지 않습니다.',
+    health:'{DOM}님의 강한 에너지가 {SUB}님에게 자극이 되어 함께 있을 때 활동적으로 지내게 되지만, {SUB}님이 그 속도를 따라가다 지칠 수 있으니 서로의 컨디션을 확인하는 습관이 필요합니다. {DOM}님이 먼저 속도를 늦추고 {SUB}님의 컨디션을 물어봐주는 배려가 건강한 관계를 만듭니다.'}
+};
+
+const COMPAT_TEXT_EN={
+  same:{label:'Harmony Match (比和) · Companions of a Matching Energy',
+    trait:"{A} and {B} share the same {EL} energy as their day master. Like looking in a mirror, you tend to understand each other's thoughts and habits quickly, and much goes unsaid yet still gets understood. But because the same energy doubles up, both the strengths and the weaknesses of that energy tend to grow too, so make a deliberate effort to notice and respect each other's differences.",
+    career:"Similar working styles and standards of judgment make for smooth, well-coordinated teamwork. Collaborating in the same field can create real synergy, but competing for the same position can easily turn into a clash of pride, so clearly dividing roles helps.",
+    love:"Similar tastes and daily rhythms make dating and everyday life together comfortable and stable. Since you are both fairly strong-willed, though, a disagreement can turn into a long standoff if neither of you backs down first, so it helps if one of you builds the habit of reaching out first.",
+    wealth:"Similar attitudes toward money and spending make it easy to manage shared expenses without much friction. But you can also be tempted to spend on the same things at the same time, which slows down savings, so keeping separate accounts alongside a shared one is the practical way to protect your finances.",
+    family:"Both of you tend to want your own role and share clearly recognized within each family, so agreeing on roles ahead of holidays or major events reduces friction. Respecting each other's family culture exactly as it is turns out to be the key to a lasting relationship.",
+    friends:"Being together feels as comfortable as being with a friend, and sharing hobbies or gatherings broadens your social circle. You might still feel a quiet rivalry over each other's friendships, though, so give each other room to keep those friendships as they are.",
+    health:"Similar daily rhythms and similar ways of using up energy make you a good match for exercising or managing health together. But if you both tend to push yourselves too hard, you can end up exhausted together, so it helps if one of you takes on the role of suggesting rest first."},
+  gen:{label:'Generating Match (相生) · {GIVER} Lends Strength',
+    trait:"{GIVER}'s {EL_GIVER} energy generates {RECEIVER}'s {EL_RECEIVER} energy, so {GIVER} naturally takes on the role of caring for and guiding, while {RECEIVER} grows through receiving that support. {GIVER} tends to find real fulfillment in giving generously, while {RECEIVER} feels the security of having a solid ally close by. Just be sure to occasionally swap roles so the support doesn't flow only one way.",
+    career:"{GIVER} naturally becomes something like an advisor or mentor guiding {RECEIVER}'s growth. Working together, you can both watch {RECEIVER}'s abilities improve noticeably fast, but {RECEIVER} building the ability to judge things independently, rather than relying too heavily on {GIVER}, leads to better results long term.",
+    love:"{GIVER}'s thoughtfulness and care give {RECEIVER} a strong sense of emotional security, so the relationship tends to feel warm and comfortable from very early on. Over time, though, make sure it doesn't settle into a pattern where only {GIVER} adjusts and gives — {RECEIVER} should also make an effort to actively return that expression and care.",
+    wealth:"It comes naturally for {GIVER} to set the direction on financial management or big decisions while {RECEIVER} follows that lead and steadily builds up assets. But if {RECEIVER} never develops independent financial judgment, the relationship can settle into permanent dependence on {GIVER}, so building the habit of planning together matters.",
+    family:"{GIVER} often naturally ends up as the mediator or steady elder figure between the two families, which helps smooth things over during family events or conflicts. When {RECEIVER} notices that effort and expresses genuine appreciation for it, the relationship with both families grows considerably more comfortable.",
+    friends:"{GIVER}'s connections and experience often become a bridge that introduces {RECEIVER} to new people and opportunities. If {RECEIVER} also makes an effort to keep up friendships that reflect their own distinct personality, both of your worlds grow richer as a result.",
+    health:"{GIVER} naturally takes on the role of looking out for {RECEIVER}'s condition first, which helps {RECEIVER} stay in an emotionally stable state. But {GIVER}'s own rest and recovery matter just as much, so it is worth having {RECEIVER} set aside a day to look after {GIVER}'s health in return."},
+  ctrl:{label:'Controlling Match (相剋) · {DOM} Takes the Lead',
+    trait:"{DOM}'s {EL_DOM} energy governs {SUB}'s {EL_SUB} energy, so {DOM} naturally sets the direction while {SUB} refines their own strength within it. It is a relationship that pushes both of you to grow through mutual friction, but if {DOM} pushes too hard, {SUB} can end up feeling suppressed, so balance really matters.",
+    career:"A natural division of labor forms where {DOM} sets the direction and {SUB} turns it into reality, producing driven, effective results when you work together. If {DOM} monopolizes every decision, though, {SUB}'s motivation can suffer, so making a habit of asking for {SUB}'s opinion first keeps the teamwork strong over time.",
+    love:"An intense relationship forms naturally, almost as if {SUB} is drawn toward {DOM}, and the tension of the early stage can actually work as part of the attraction. If the balance of power stays lopsided for too long, though, {SUB} can grow exhausted, so {DOM} needs to consciously ease off and meet {SUB} halfway for the relationship to last.",
+    wealth:"It comes naturally for {DOM} to set the big financial direction while {SUB} handles execution, which makes for a good match on investments that call for bold decisions. If {SUB}'s opinions never factor in, though, resentment can build, so make it a rule to discuss major decisions together.",
+    family:"{DOM} naturally takes the lead on important family decisions, which keeps major events running efficiently, but the relationship only stays comfortable if {SUB} genuinely feels their opinion is respected too. Between the two families, it especially matters that neither side forces its own way of doing things on the other.",
+    friends:"A group dynamic tends to form naturally where {DOM} leads and {SUB} follows, making time together lively and full of momentum. {SUB} still needs an atmosphere where voicing their own opinion feels comfortable, or the relationship can start to feel one-sided.",
+    health:"{DOM}'s strong energy pushes {SUB} to stay active whenever you're together, but {SUB} can end up exhausted trying to keep pace, so get in the habit of checking in on each other's condition. It helps the relationship stay healthy when {DOM} is the one who slows down first and asks how {SUB} is really doing."}
+};
+
+function elementRelationContext(profileA,profileB,nameA,nameB){
+  const elA=profileA.day.stem.el, elB=profileB.day.stem.el;
+  const A=nameA||(LANG==='en'?'Person A':'A'), B=nameB||(LANG==='en'?'Person B':'B');
+  if(elA===elB){
+    return{type:'same',ctx:{A,B,EL:elName(elA)}};
+  }
+  if(GENERATES[elA]===elB){
+    return{type:'gen',ctx:{GIVER:A,RECEIVER:B,EL_GIVER:elName(elA),EL_RECEIVER:elName(elB)}};
+  }
+  if(GENERATES[elB]===elA){
+    return{type:'gen',ctx:{GIVER:B,RECEIVER:A,EL_GIVER:elName(elB),EL_RECEIVER:elName(elA)}};
+  }
+  if(CONTROLS[elA]===elB){
+    return{type:'ctrl',ctx:{DOM:A,SUB:B,EL_DOM:elName(elA),EL_SUB:elName(elB)}};
+  }
+  return{type:'ctrl',ctx:{DOM:B,SUB:A,EL_DOM:elName(elB),EL_SUB:elName(elA)}};
+}
+
+function fillCompatText(str,ctx){
+  return str.replace(/\{(\w+)\}/g,function(_,key){ return ctx[key]!==undefined?ctx[key]:''; });
+}
 
 /* ================= 오늘의 운세(日運) 전용 해설 =================
    상황별 풀이(TENGOD_TEXT)는 사주에 새겨진 평소 성향을 설명하는 글이라
@@ -1730,6 +1935,10 @@ const STRINGS={
   ko:{
     txtEyebrow:'사주 명식 계산',
     txtTitle:'오늘의 운세',
+    txtTitlePersonal:'오늘의 운세 - 개인편',
+    txtTitleCompat:'오늘의 운세 - 궁합편',
+    txtSubtabPersonal:'개인편',
+    txtSubtabCompat:'궁합편',
     txtLede:'태어난 날짜와 시간으로 사주 여덟 글자를 뽑아, 성격과 오행 균형, 직업·연애·재물·가족·친구·건강, 대운의 큰 흐름과 올해의 운세, 그리고 나와 같은 일간의 유명인과 사주 행운번호까지 함께 풀어드립니다.',
     txtHeroDisclaimer:'양력 생년월일 기준으로 절기(24절기)를 계산해 연주·월주를 정합니다. 음력 입력과 진태양시 보정은 지원하지 않으며, 시간을 모르면 시주 없이 세 기둥만으로 풀이합니다. 결과는 전통 명리학의 해석 방식을 참고한 것으로, 재미와 자기 이해를 위한 참고 자료입니다.',
     txtAdSlot1:'광고 영역 (Advertisement)',
@@ -1751,6 +1960,26 @@ const STRINGS={
     txtGenderMale:'남자',
     txtGenderFemale:'여자',
     txtSubmitBtn:'내 사주 풀어보기',
+    txtCompatFormHead:'두 사람 생년월일 입력',
+    txtCompatFormLede:'두 사람의 생년월일(시)을 각각 입력하면, 두 일간(日干) 사이의 오행 관계를 바탕으로 궁합을 풀어드립니다.',
+    txtCompatPersonAHead:'사람 A',
+    txtCompatPersonBHead:'사람 B',
+    txtCompatLabelNameA:'이름 (선택)',
+    txtCompatLabelDateA:'생년월일 (양력)',
+    txtCompatLabelTimeA:'태어난 시간',
+    txtCompatHourUnknownA:'태어난 시간을 몰라요',
+    txtCompatLabelTimezoneA:'출생 국가·시간대 (기준시)',
+    txtCompatLabelNameB:'이름 (선택)',
+    txtCompatLabelDateB:'생년월일 (양력)',
+    txtCompatLabelTimeB:'태어난 시간',
+    txtCompatHourUnknownB:'태어난 시간을 몰라요',
+    txtCompatLabelTimezoneB:'출생 국가·시간대 (기준시)',
+    txtCompatSubmitBtn:'궁합 풀어보기',
+    txtCompatResultHead:'궁합 풀이',
+    txtCompatDomainsHead:'상황별 궁합 풀이',
+    txtCompatDisclaimer:'❗ 궁합 풀이는 두 사람의 일간(日干) 오행 관계를 바탕으로 한 전통 명리학적 해석이며, 관계의 좋고 나쁨을 단정하거나 미래를 예측하지 않습니다. 실제 관계는 서로의 노력과 이해로 만들어간다는 점을 기억해주세요.',
+    compatDefaultNameA:'A',
+    compatDefaultNameB:'B',
     txtSavedNote:'입력하신 정보는 서버로 전송되지 않고 이 브라우저에만 저장되며, 다음 방문 때 자동으로 불러와요.',
     txtClearSaved:'저장된 정보 지우기',
     txtDomainsHead:'상황별 풀이',
@@ -1997,6 +2226,10 @@ const STRINGS={
   en:{
     txtEyebrow:'Four Pillars Calculation',
     txtTitle:"Today's Fortune",
+    txtTitlePersonal:"Today's Fortune - Personal",
+    txtTitleCompat:"Today's Fortune - Compatibility",
+    txtSubtabPersonal:'Personal',
+    txtSubtabCompat:'Compatibility',
     txtLede:'From your birth date and time, we cast the eight characters of your Saju and walk through personality, elemental balance, career, love, wealth, family, friends, health, the long arcs of your Daeun (10-year fortune cycles), this year, famous people who share your day master, and your saju lucky number.',
     txtHeroDisclaimer:'Year and month pillars are set using the 24 solar terms based on your solar (Gregorian) birth date. Lunar calendar input and true solar time correction are not supported; if the birth hour is unknown, the reading uses three pillars without an hour pillar. Results follow traditional Four Pillars (BaZi) interpretation and are provided for entertainment and self-reflection only.',
     txtAdSlot1:'Advertisement',
@@ -2018,6 +2251,26 @@ const STRINGS={
     txtGenderMale:'Male',
     txtGenderFemale:'Female',
     txtSubmitBtn:'Read My Saju',
+    txtCompatFormHead:"Enter Both People's Birth Info",
+    txtCompatFormLede:"Enter each person's birth date (and time) to see a compatibility reading based on the Five Element relationship between their day masters.",
+    txtCompatPersonAHead:'Person A',
+    txtCompatPersonBHead:'Person B',
+    txtCompatLabelNameA:'Name (optional)',
+    txtCompatLabelDateA:'Birth date (solar calendar)',
+    txtCompatLabelTimeA:'Birth time',
+    txtCompatHourUnknownA:"I don't know the birth time",
+    txtCompatLabelTimezoneA:'Birth country / time zone',
+    txtCompatLabelNameB:'Name (optional)',
+    txtCompatLabelDateB:'Birth date (solar calendar)',
+    txtCompatLabelTimeB:'Birth time',
+    txtCompatHourUnknownB:"I don't know the birth time",
+    txtCompatLabelTimezoneB:'Birth country / time zone',
+    txtCompatSubmitBtn:'See Our Compatibility',
+    txtCompatResultHead:'Compatibility Reading',
+    txtCompatDomainsHead:'Compatibility by Life Area',
+    txtCompatDisclaimer:"❗ This compatibility reading is a traditional interpretation based on the Five Element relationship between two day masters. It does not declare a relationship good or bad, nor predict the future — real relationships are built through mutual effort and understanding.",
+    compatDefaultNameA:'Person A',
+    compatDefaultNameB:'Person B',
     txtSavedNote:'Your input is never sent to a server. It is stored only in this browser and loaded automatically on your next visit.',
     txtClearSaved:'Clear saved info',
     txtDomainsHead:'Life Areas',
@@ -2266,10 +2519,15 @@ function S(key){ return STRINGS[LANG][key]; }
 function applyStaticI18n(){
   const s=STRINGS[LANG];
   document.documentElement.lang=LANG;
-  ['txtEyebrow','txtTitle','txtHeroDisclaimer','txtAdSlot1','txtAdSlot2','txtFormHead','txtLabelName',
+  ['txtEyebrow','txtHeroDisclaimer','txtAdSlot1','txtAdSlot2','txtFormHead','txtLabelName',
    'txtLabelDate','txtLabelTime','txtLabelTimezone','txtHourUnknown','txtLabelGender','txtGenderMale','txtGenderFemale',
    'txtSubmitBtn','txtSavedNote','txtDomainsHead','txtFortuneHead','txtFortuneNote','txtYearFortuneHead','txtYearFortuneNote',
    'txtCelebHead','txtLottoHead','txtFooterMain',
+   'txtSubtabPersonal','txtSubtabCompat','txtCompatFormHead','txtCompatFormLede',
+   'txtCompatPersonAHead','txtCompatPersonBHead','txtCompatLabelNameA','txtCompatLabelDateA','txtCompatLabelTimeA',
+   'txtCompatHourUnknownA','txtCompatLabelTimezoneA','txtCompatLabelNameB','txtCompatLabelDateB','txtCompatLabelTimeB',
+   'txtCompatHourUnknownB','txtCompatLabelTimezoneB','txtCompatSubmitBtn','txtCompatResultHead','txtCompatDomainsHead',
+   'txtCompatDisclaimer',
    'txtGlossaryHead','txtGlossaryTerm1Head','txtGlossaryTerm1Body','txtGlossaryTerm2Head','txtGlossaryTerm2Body',
    'txtGlossaryTerm3Head','txtGlossaryTerm3Body','txtGlossaryTerm4Head','txtGlossaryTerm4Body',
    'tabSajuLabel','tabTarotLabel','tabGwansangLabel','txtThemeDark','txtThemeLight',
@@ -2329,6 +2587,12 @@ function applyStaticI18n(){
   document.getElementById('txtFooterContact').textContent=s.txtFooterContact;
   document.getElementById('txtFooterLotto').textContent=s.txtFooterLotto;
   document.getElementById('fName').placeholder=(LANG==='en'?'e.g. Jane Doe':'예: 홍길동');
+  document.getElementById('txtAdSlot7').textContent=s.txtAdSlot1;
+  document.getElementById('adCta7').innerHTML=s.adSlotCta;
+  document.getElementById('fNameA').placeholder=(LANG==='en'?'e.g. Jane Doe':'예: 홍길동');
+  document.getElementById('fNameB').placeholder=(LANG==='en'?'e.g. John Smith':'예: 김철수');
+  updateSajuTitle();
+  if(currentCompat) renderCompat(currentCompat.profileA,currentCompat.profileB,currentCompat.nameA,currentCompat.nameB);
 
   document.getElementById('langKoBtn').classList.toggle('active',LANG==='ko');
   document.getElementById('langEnBtn').classList.toggle('active',LANG==='en');
@@ -2341,6 +2605,64 @@ function applyStaticI18n(){
 
 /* ================= 계산 상태 & 렌더링 ================= */
 let currentProfile=null;
+let currentCompat=null;
+let sajuSubtab='personal';
+
+function updateSajuTitle(){
+  const s=STRINGS[LANG];
+  const el=document.getElementById('txtTitle');
+  if(el) el.textContent=sajuSubtab==='personal'?s.txtTitlePersonal:s.txtTitleCompat;
+}
+
+function setSajuSubtab(mode){
+  sajuSubtab=mode;
+  const isPersonal=mode==='personal';
+  document.getElementById('personalPanel').hidden=!isPersonal;
+  document.getElementById('compatPanel').hidden=isPersonal;
+  document.getElementById('subtabPersonalBtn').classList.toggle('active',isPersonal);
+  document.getElementById('subtabCompatBtn').classList.toggle('active',!isPersonal);
+  document.getElementById('subtabPersonalBtn').setAttribute('aria-selected',String(isPersonal));
+  document.getElementById('subtabCompatBtn').setAttribute('aria-selected',String(!isPersonal));
+  updateSajuTitle();
+}
+
+function renderCompat(profileA,profileB,nameA,nameB){
+  const s=STRINGS[LANG];
+  const{type,ctx}=elementRelationContext(profileA,profileB,nameA,nameB);
+  const CT=(LANG==='en'?COMPAT_TEXT_EN:COMPAT_TEXT)[type];
+  const defaultA=s.compatDefaultNameA,defaultB=s.compatDefaultNameB;
+  const echoA=nameA||defaultA,echoB=nameB||defaultB;
+  const dayA=profileA.day.stem,dayB=profileB.day.stem;
+
+  document.getElementById('compatDuo').innerHTML=
+    '<div class="compat-person">'+
+      '<div class="lball compat-stamp '+dayA.el+'">'+dayA.hj+'</div>'+
+      '<div class="cp-name">'+echoA+'</div>'+
+      '<div class="cp-sub">'+(LANG==='en'?dayA.en:dayA.h)+' · '+elName(dayA.el)+'</div>'+
+    '</div>'+
+    '<div class="compat-arrow">'+(type==='same'?'≈':'→')+'</div>'+
+    '<div class="compat-person">'+
+      '<div class="lball compat-stamp '+dayB.el+'">'+dayB.hj+'</div>'+
+      '<div class="cp-name">'+echoB+'</div>'+
+      '<div class="cp-sub">'+(LANG==='en'?dayB.en:dayB.h)+' · '+elName(dayB.el)+'</div>'+
+    '</div>';
+
+  document.getElementById('compatHeadline').innerHTML=
+    '<h3>'+fillCompatText(CT.label,ctx)+'</h3>'+
+    '<p>'+fillCompatText(CT.trait,ctx)+'</p>';
+
+  let dh='';
+  DOMAIN_META.forEach(function(dm){
+    dh+='<div class="domain-card">'+
+      '<div class="dhan">'+dm.glyph+'</div>'+
+      '<h4>'+(LANG==='en'?dm.titleEn:dm.title)+'</h4>'+
+      '<p>'+fillCompatText(CT[dm.key],ctx)+'</p>'+
+    '</div>';
+  });
+  document.getElementById('compatDomains').innerHTML=dh;
+
+  document.getElementById('compatResult').hidden=false;
+}
 
 function dominantTenGod(profile){
   const day=profile.day.stem;
@@ -3135,14 +3457,14 @@ const TIMEZONE_OPTIONS=[
 ];
 
 function populateTimezoneSelect(){
-  const sel=document.getElementById('fTimezone');
-  if(!sel) return;
-  const prevValue=sel.value;
-  sel.innerHTML=TIMEZONE_OPTIONS.map(function(t){
-    return '<option value="'+t.offset+'">'+(LANG==='en'?t.en:t.ko)+'</option>';
-  }).join('');
-  sel.value=prevValue||String(DEFAULT_TZ_OFFSET);
-  if(sel.selectedIndex<0) sel.value=String(DEFAULT_TZ_OFFSET);
+  document.querySelectorAll('.tz-select').forEach(function(sel){
+    const prevValue=sel.value;
+    sel.innerHTML=TIMEZONE_OPTIONS.map(function(t){
+      return '<option value="'+t.offset+'">'+(LANG==='en'?t.en:t.ko)+'</option>';
+    }).join('');
+    sel.value=prevValue||String(DEFAULT_TZ_OFFSET);
+    if(sel.selectedIndex<0) sel.value=String(DEFAULT_TZ_OFFSET);
+  });
 }
 
 function saveLastInput(name,dateVal,hourUnknown,timeVal,gender,tzOffset){
@@ -4735,6 +5057,42 @@ document.getElementById('sajuForm').addEventListener('submit',function(e){
   saveLastInput(name,dateVal,hourUnknown,timeVal,gender,tzOffset);
   render(profile,name,false,gender);
   document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+/* ================= 오늘의 운세: 개인편 / 궁합편 서브탭 ================= */
+document.getElementById('subtabPersonalBtn').addEventListener('click',function(){ setSajuSubtab('personal'); });
+document.getElementById('subtabCompatBtn').addEventListener('click',function(){ setSajuSubtab('compat'); });
+
+document.getElementById('fHourUnknownA').addEventListener('change',function(){
+  document.getElementById('fTimeA').disabled=this.checked;
+});
+document.getElementById('fHourUnknownB').addEventListener('change',function(){
+  document.getElementById('fTimeB').disabled=this.checked;
+});
+
+document.getElementById('compatForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const nameA=document.getElementById('fNameA').value.trim();
+  const nameB=document.getElementById('fNameB').value.trim();
+  const dateAVal=document.getElementById('fDateA').value;
+  const dateBVal=document.getElementById('fDateB').value;
+  if(!dateAVal||!dateBVal){return;}
+  const hourUnknownA=document.getElementById('fHourUnknownA').checked;
+  const hourUnknownB=document.getElementById('fHourUnknownB').checked;
+  const timeAVal=document.getElementById('fTimeA').value;
+  const timeBVal=document.getElementById('fTimeB').value;
+  const tzA=parseFloat(document.getElementById('fTimezoneA').value);
+  const tzB=parseFloat(document.getElementById('fTimezoneB').value);
+  const[ya,ma,da]=dateAVal.split('-').map(Number);
+  const[yb,mb,db]=dateBVal.split('-').map(Number);
+  let hhA=0,mmA=0,hhB=0,mmB=0;
+  if(!hourUnknownA&&timeAVal){const[a,b]=timeAVal.split(':').map(Number);hhA=a;mmA=b;}
+  if(!hourUnknownB&&timeBVal){const[a,b]=timeBVal.split(':').map(Number);hhB=a;mmB=b;}
+  const profileA=computeFourPillars(ya,ma,da,hhA,mmA,hourUnknownA||!timeAVal,tzA);
+  const profileB=computeFourPillars(yb,mb,db,hhB,mmB,hourUnknownB||!timeBVal,tzB);
+  currentCompat={profileA,profileB,nameA,nameB};
+  renderCompat(profileA,profileB,nameA,nameB);
+  document.getElementById('compatResult').scrollIntoView({behavior:'smooth',block:'start'});
 });
 
 document.getElementById('lottoBtn').addEventListener('click',function(){
