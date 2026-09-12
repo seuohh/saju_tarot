@@ -166,6 +166,7 @@ header.hero{padding:64px 20px 40px;text-align:center;position:relative;}
 }
 .eyebrow::before,.eyebrow::after{content:"";width:20px;height:1px;background:var(--accent);opacity:0.5;}
 h1.title{font-size:var(--fs-hero);font-weight:900;letter-spacing:-0.01em;}
+.title-date{font-size:var(--fs-body);font-weight:600;color:var(--ink-soft);margin-top:8px;}
 .hanja-strip{font-size:var(--fs-caption);color:var(--ink-soft);margin-top:10px;letter-spacing:0.02em;}
 p.lede{max-width:560px;margin:20px auto 0;color:var(--ink-soft);font-size:var(--fs-body);}
 .disclaimer{
@@ -849,6 +850,7 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 <header class="hero">
   <div class="eyebrow" id="txtTarotEyebrow">오늘의 타로카드</div>
   <h1 class="title" id="txtTarotTitle">오늘의 타로</h1>
+  <div class="title-date" id="txtTarotDate"></div>
   <div class="hanja-strip">Major Arcana · Minor Arcana · 78 Cards</div>
   <p class="lede" id="txtTarotLede">정통 라이더-웨이트(Rider–Waite) 78장 덱으로 오늘의 카드 한 장을 뽑아, 지금 흐름과 마음 써야 할 부분을 짚어드립니다.</p>
   <div class="disclaimer" id="txtTarotHeroDisclaimer">이름을 입력하면 그 이름과 오늘 날짜를 기준으로 하루에 한 장의 카드가 정해지고, 같은 날 다시 뽑아도 동일한 카드가 나옵니다. 결과는 재미와 자기 성찰을 위한 참고 자료이며, 의학적·법률적·재정적 조언을 대신하지 않습니다.</div>
@@ -926,6 +928,7 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 <header class="hero">
   <div class="eyebrow" id="txtGwansangEyebrow">오늘의 관상</div>
   <h1 class="title" id="txtGwansangTitle">오늘의 관상</h1>
+  <div class="title-date" id="txtGwansangDate"></div>
   <div class="hanja-strip">觀相 · 面相</div>
   <p class="lede" id="txtGwansangLede">사진을 올리거나 카메라로 얼굴을 비추면, 이목구비의 특징을 살펴 오늘의 관상 풀이를 보여드립니다.</p>
   <div class="disclaimer" id="txtGwansangHeroDisclaimer">촬영하거나 업로드한 사진은 서버로 전송되지 않고 이 브라우저(기기) 안에서만 분석되며, 어디에도 저장되지 않습니다. 결과는 전통 관상학의 해석 방식을 참고한 것으로, 재미와 자기 이해를 위한 참고 자료이며 의학적·법률적·재정적 조언을 대신하지 않습니다.</div>
@@ -2774,14 +2777,16 @@ function todayDateLabel(y,m,d){
 
 function updateTarotTitleDate(){
   const el=document.getElementById('txtTarotTitle');
-  if(!el) return;
-  el.textContent=(LANG==='en'?"Today's Tarot":'오늘의 타로')+' ('+todayDateLabel()+')';
+  const dateEl=document.getElementById('txtTarotDate');
+  if(el) el.textContent=LANG==='en'?"Today's Tarot":'오늘의 타로';
+  if(dateEl) dateEl.textContent=todayDateLabel();
 }
 
 function updateGwansangTitleDate(){
   const el=document.getElementById('txtGwansangTitle');
-  if(!el) return;
-  el.textContent=(LANG==='en'?"Today's Face Reading":'오늘의 관상')+' ('+todayDateLabel()+')';
+  const dateEl=document.getElementById('txtGwansangDate');
+  if(el) el.textContent=LANG==='en'?"Today's Face Reading":'오늘의 관상';
+  if(dateEl) dateEl.textContent=todayDateLabel();
 }
 
 function renderFortune(profile){
