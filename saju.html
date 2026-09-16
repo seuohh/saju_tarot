@@ -527,6 +527,59 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 .celeb-bio{margin:6px 0 0;font-size:var(--fs-body);color:var(--ink);}
 .celeb-note{margin:6px 0 0;font-size:var(--fs-body);color:var(--ink-soft);}
 
+/* ---- 오늘 생일 유명인 스포트라이트 ---- */
+.bday-spotlight{
+  position:relative;margin-top:8px;margin-bottom:0;
+  border-radius:20px;padding:2px;
+  background:linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 25%, transparent) 60%, var(--accent));
+  box-shadow:var(--shadow);
+}
+.bday-spotlight:has(.bday-spotlight-inner:empty){display:none;}
+.bday-spotlight-inner{
+  background:var(--paper-raised);border-radius:18px;padding:22px 22px 24px;
+}
+.bday-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:var(--fs-tiny);font-weight:800;letter-spacing:0.03em;
+  color:var(--accent-ink);background:var(--accent);
+  border-radius:999px;padding:5px 12px;margin-bottom:14px;
+  animation:bdayPulse 2.4s ease-in-out infinite;
+}
+@keyframes bdayPulse{
+  0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);}
+  50%{box-shadow:0 0 0 7px color-mix(in srgb, var(--accent) 0%, transparent);}
+}
+.bday-hook{font-size:var(--fs-h4);font-weight:700;margin-bottom:14px;color:var(--ink);}
+.bday-body{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;}
+.bday-avatar{
+  flex:none;width:84px;height:84px;border-radius:50%;
+  background:var(--accent);color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:28px;overflow:hidden;
+  box-shadow:0 0 0 3px var(--paper-raised),0 0 0 5px var(--accent);
+}
+.bday-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.bday-info{flex:1;min-width:180px;}
+.bday-name{font-size:var(--fs-h3);font-weight:800;}
+.bday-field{font-size:var(--fs-caption);color:var(--accent);font-weight:600;margin-top:1px;}
+.bday-bio{margin:6px 0 0;font-size:var(--fs-body);color:var(--ink-soft);}
+.bday-fortune{
+  margin-top:16px;background:var(--paper-sunken);border-radius:12px;
+  padding:14px 16px;border-left:3px solid var(--accent);
+}
+.bday-fortune-label{font-size:var(--fs-tiny);font-weight:700;color:var(--accent);letter-spacing:0.03em;margin-bottom:4px;}
+.bday-fortune p{font-size:var(--fs-body);color:var(--ink);margin:0;}
+.bday-cta{
+  display:flex;align-items:center;gap:6px;margin-top:18px;width:100%;justify-content:center;
+  font:inherit;font-weight:700;font-size:14.5px;color:var(--accent-ink);
+  background:var(--accent);border:none;border-radius:11px;
+  padding:13px 20px;cursor:pointer;letter-spacing:0.01em;
+  box-shadow:0 6px 16px -6px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.bday-cta:hover{filter:brightness(1.06);}
+.bday-cta .arrow{display:inline-block;animation:bdayBounce 1.4s ease-in-out infinite;}
+@keyframes bdayBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(3px);}}
+
 /* ---- 궁합편(宮合) ---- */
 .compat-duo{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin:8px 0 20px;}
 .compat-person{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
@@ -656,6 +709,10 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 
   <div class="ad-slot" role="complementary" aria-label="광고 영역" id="txtAdSlot1">광고 영역 (Advertisement)</div>
   <p class="ad-slot-cta" id="adCta1"></p>
+
+  <section class="bday-spotlight">
+    <div class="bday-spotlight-inner" id="bdaySpotlightInner"></div>
+  </section>
 
   <form class="ledger" id="sajuForm">
     <div class="ledger-head">
@@ -1946,6 +2003,12 @@ const STRINGS={
     fortuneGanzhiPrefix:'일간 기준 ',
     celebNoteFn:(dayLabel,others)=>dayLabel+' 일간을 가진 대표적인 인물이에요.'+(others.length?' 이 외에도 '+others.join(', ')+' 님도 같은 일간을 타고났어요.':''),
     celebEmpty:'아직 같은 일간의 유명인 데이터가 없어요.',
+    bdaySpotlightBadgeBirthday:(dateLabel)=>'🎂 '+dateLabel+' 생일인 유명인',
+    bdaySpotlightBadgeGeneric:(dateLabel)=>'✨ '+dateLabel+'의 오늘의 인물',
+    bdaySpotlightHookBirthday:(name)=>'오늘 '+name+'님의 생일이에요! 이 분의 오늘 운세는 어떨까요?',
+    bdaySpotlightHookGeneric:(name)=>name+'님이라면, 오늘은 어떤 하루를 보내고 있을까요?',
+    bdaySpotlightFortuneLabel:'오늘의 운세',
+    bdaySpotlightCta:'내 생년월일 입력하고 나의 진짜 운세 확인하기',
     toastCopied:'결과가 복사되었습니다.',
     toastCopyFail:'복사에 실패했습니다. 직접 선택해 복사해주세요.',
     toastCleared:'저장된 정보를 지웠습니다.',
@@ -2218,6 +2281,12 @@ const STRINGS={
     fortuneGanzhiPrefix:'relative to day master: ',
     celebNoteFn:(dayLabel,others)=>'A well-known figure who shares your '+dayLabel+' day master.'+(others.length?' '+others.join(', ')+' also share this day master.':''),
     celebEmpty:'No matching celebrity data yet for this day master.',
+    bdaySpotlightBadgeBirthday:(dateLabel)=>'🎂 Born on '+dateLabel,
+    bdaySpotlightBadgeGeneric:(dateLabel)=>'✨ Today\'s pick · '+dateLabel,
+    bdaySpotlightHookBirthday:(name)=>'It\'s '+name+'\'s birthday today! What does their fortune look like?',
+    bdaySpotlightHookGeneric:(name)=>'What kind of day is '+name+' having today?',
+    bdaySpotlightFortuneLabel:'Today\'s Fortune',
+    bdaySpotlightCta:'Enter my birthday to see my real fortune',
     toastCopied:'Copied to clipboard.',
     toastCopyFail:'Copy failed. Please select and copy manually.',
     toastCleared:'Saved info cleared.',
@@ -2460,6 +2529,7 @@ function applyStaticI18n(){
   if(currentTarotCard) renderTarotResult(currentTarotCard);
   document.getElementById('txtLede').textContent=s.txtLede;
   document.getElementById('clearSavedLink').textContent=s.txtClearSaved;
+  renderBirthdaySpotlight();
   document.getElementById('txtFooterTerms').textContent=s.txtFooterTerms;
   document.getElementById('txtFooterPrivacy').textContent=s.txtFooterPrivacy;
   document.getElementById('txtFooterContact').textContent=s.txtFooterContact;
@@ -2996,6 +3066,73 @@ function renderCelebrity(profile){
       (bio?'<p class="celeb-bio">'+bio+'</p>':'')+
       '<p class="celeb-note">'+s.celebNoteFn(dayLabel,others)+'</p>'+
     '</div>';
+}
+
+/* ================= 오늘 생일 유명인 스포트라이트 =================
+   생년월일 입력 전, 방문자의 흥미를 끌기 위한 후크 카드. CELEBRITIES 중
+   오늘(월/일)이 생일인 인물이 있으면 그 사람을, 없으면 날짜 기반으로
+   매일 바뀌는 인물을 골라 "오늘의 운세"를 함께 보여준다. */
+function pickBirthdaySpotlight(){
+  const now=new Date();
+  const ty=now.getFullYear(),tm=now.getMonth()+1,td=now.getDate();
+  const exact=CELEBRITIES.filter(c=>c.m===tm&&c.d===td);
+  let pick,isBirthday;
+  if(exact.length){
+    isBirthday=true;
+    pick=exact[(ty*31+tm*7+td)%exact.length];
+  }else{
+    isBirthday=false;
+    const dayOfYear=Math.round((Date.UTC(ty,tm-1,td)-Date.UTC(ty,0,1))/86400000);
+    pick=CELEBRITIES[dayOfYear%CELEBRITIES.length];
+  }
+  const todayProfile=computeFourPillars(ty,tm,td,12,0,true);
+  const pickProfile=computeFourPillars(pick.y,pick.m,pick.d,12,0,true);
+  const dom=tenGod(pickProfile.day.stem,todayProfile.day.stem);
+  return{pick,isBirthday,dom,ty,tm,td};
+}
+
+function renderBirthdaySpotlight(){
+  const container=document.getElementById('bdaySpotlightInner');
+  if(!container) return;
+  const s=STRINGS[LANG];
+  const{pick,isBirthday,dom,ty,tm,td}=pickBirthdaySpotlight();
+  const DT=LANG==='en'?DAY_TENGOD_TEXT_EN:DAY_TENGOD_TEXT;
+  const t=DT[dom];
+  const name=LANG==='en'?pick.nameEn:pick.name;
+  const field=LANG==='en'?pick.fieldEn:pick.field;
+  const bio=LANG==='en'?pick.bioEn:pick.bio;
+  const dateLabel=todayDateLabel(ty,tm,td);
+  const initial=name.charAt(0);
+  const avatarHtml=pick.img
+    ? '<img src="'+pick.img+'" alt="'+name+'" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{textContent:\''+initial+'\'}))">'
+    : initial;
+  const badgeText=isBirthday?s.bdaySpotlightBadgeBirthday(dateLabel):s.bdaySpotlightBadgeGeneric(dateLabel);
+  const hookText=isBirthday?s.bdaySpotlightHookBirthday(name):s.bdaySpotlightHookGeneric(name);
+
+  container.innerHTML=
+    '<div class="bday-badge">'+badgeText+'</div>'+
+    '<div class="bday-hook">'+hookText+'</div>'+
+    '<div class="bday-body">'+
+      '<div class="bday-avatar">'+avatarHtml+'</div>'+
+      '<div class="bday-info">'+
+        '<div class="bday-name">'+name+'</div>'+
+        '<div class="bday-field">'+field+'</div>'+
+        '<p class="bday-bio">'+bio+'</p>'+
+      '</div>'+
+    '</div>'+
+    '<div class="bday-fortune">'+
+      '<div class="bday-fortune-label">'+s.bdaySpotlightFortuneLabel+' · '+tgLabel(dom)+'</div>'+
+      '<p>'+t.flow+'</p>'+
+    '</div>'+
+    '<button type="button" class="bday-cta" id="bdaySpotlightCtaBtn">'+s.bdaySpotlightCta+' <span class="arrow">↓</span></button>';
+
+  const ctaBtn=document.getElementById('bdaySpotlightCtaBtn');
+  if(ctaBtn) ctaBtn.onclick=function(){
+    const formEl=document.getElementById('sajuForm');
+    if(formEl) formEl.scrollIntoView({behavior:'smooth',block:'start'});
+    const dateInput=document.getElementById('fDate');
+    if(dateInput) setTimeout(function(){dateInput.focus();},400);
+  };
 }
 
 // 용신(用神)·희신(喜神) 판정 (억부법의 단순화)
