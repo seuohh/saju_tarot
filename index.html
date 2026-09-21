@@ -404,7 +404,10 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 
 /* ---- saved-info note ---- */
 .saved-note{margin-top:12px;font-size:var(--fs-caption);color:var(--ink-soft);}
-.saved-note a{color:var(--ink-soft);text-decoration:underline;margin-left:4px;}
+.saved-note a{display:inline-flex;align-items:center;gap:4px;margin:6px 0 0 4px;padding:4px 12px;border:1px solid var(--accent);border-radius:999px;background:transparent;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap;transition:background .15s,color .15s;}
+.saved-note a::before{content:"🗑";font-size:.95em;}
+.saved-note a:hover{background:var(--accent);color:var(--accent-ink);}
+.saved-note a:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
 
 /* ---- shared lede paragraph + element balls (used by fortune/compat sections) ---- */
 .lede-note{max-width:640px;font-size:var(--fs-body);color:var(--ink-soft);margin:8px 0 0;}
