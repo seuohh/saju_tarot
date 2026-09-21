@@ -514,22 +514,64 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
 /* ---- celebrity match ---- */
 .celeb-head{font-size:var(--fs-h3);font-weight:700;margin-top:22px;margin-bottom:10px;}
 .celeb-card{
-  display:flex;gap:16px;align-items:flex-start;
-  background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;
-  padding:18px 20px;box-shadow:var(--shadow);min-height:24px;
+  display:flex;gap:22px;align-items:flex-start;
+  background:var(--paper-raised);border:1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+  border-radius:20px;padding:22px;box-shadow:var(--shadow);min-height:24px;
 }
 .celeb-card:empty{display:none;}
 .celeb-avatar{
-  flex:none;width:64px;height:64px;border-radius:50%;
+  flex:none;width:168px;height:210px;border-radius:16px;
   background:var(--accent);color:var(--accent-ink);
   display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:22px;overflow:hidden;
+  font-weight:900;font-size:56px;overflow:hidden;
+  box-shadow:0 0 0 3px var(--paper-raised),0 0 0 5px var(--accent),0 14px 30px -12px rgba(0,0,0,0.55);
 }
-.celeb-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
-.celeb-name{font-size:var(--fs-h4);font-weight:700;}
-.celeb-field{font-size:var(--fs-caption);color:var(--accent);font-weight:600;margin-top:1px;}
-.celeb-bio{margin:6px 0 0;font-size:var(--fs-body);color:var(--ink);}
+.celeb-avatar img{width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;}
+.celeb-info{flex:1;min-width:0;}
+.celeb-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:var(--fs-tiny);font-weight:800;letter-spacing:0.03em;
+  color:var(--accent-ink);background:var(--accent);
+  border-radius:999px;padding:5px 12px;margin-bottom:10px;
+}
+.celeb-name{font-size:clamp(22px,4vw,28px);font-weight:800;line-height:1.25;color:var(--ink);}
+.celeb-field{font-size:var(--fs-h4);color:var(--accent);font-weight:700;margin-top:3px;}
+.celeb-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.celeb-chip{
+  font-size:var(--fs-caption);color:var(--ink);background:var(--paper-sunken);
+  border:1px solid var(--line);border-radius:999px;padding:3px 10px;
+}
+.celeb-chip b{color:var(--ink-soft);font-weight:600;margin-right:4px;}
+.celeb-bio{margin:12px 0 0;font-size:15px;line-height:1.65;color:var(--ink);}
+.celeb-sub{font-size:var(--fs-tiny);font-weight:800;letter-spacing:0.04em;color:var(--accent);margin:16px 0 6px;}
+.celeb-hl{list-style:none;margin:0;padding:0;display:grid;gap:6px;}
+.celeb-hl li{position:relative;padding-left:18px;font-size:var(--fs-body);line-height:1.6;color:var(--ink);}
+.celeb-hl li::before{content:"";position:absolute;left:3px;top:0.6em;width:7px;height:7px;border-radius:50%;background:var(--accent);}
+.celeb-common{
+  margin-top:16px;background:var(--paper-sunken);border-radius:12px;
+  padding:14px 16px;border-left:3px solid var(--accent);
+}
+.celeb-common .celeb-sub{margin-top:0;}
+.celeb-common p{margin:0;font-size:var(--fs-body);line-height:1.65;color:var(--ink);}
+.celeb-common p+p{margin-top:6px;color:var(--ink-soft);}
+.celeb-others{display:flex;flex-wrap:wrap;gap:8px;}
+.celeb-other{
+  display:inline-flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;
+  background:var(--paper-sunken);border:1px solid var(--line);border-radius:999px;
+  font-size:var(--fs-caption);font-weight:600;color:var(--ink);
+}
+.celeb-other .mini{
+  width:30px;height:30px;border-radius:50%;overflow:hidden;flex:none;
+  background:var(--accent);color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;
+}
+.celeb-other .mini img{width:100%;height:100%;object-fit:cover;display:block;}
 .celeb-note{margin:6px 0 0;font-size:var(--fs-body);color:var(--ink-soft);}
+@media (max-width:560px){
+  .celeb-card{flex-direction:column;align-items:stretch;padding:18px;}
+  .celeb-avatar{align-self:center;width:180px;height:225px;}
+  .celeb-info{text-align:left;}
+}
 
 /* ---- 오늘 생일 유명인 스포트라이트 ---- */
 .bday-spotlight{
@@ -2005,7 +2047,17 @@ const STRINGS={
     fortuneToday:(dateLabel)=>dateLabel+' 오늘의 운세(日運)',
     fortuneYear:(y)=>y+'년 세운(歲運)',
     fortuneGanzhiPrefix:'일간 기준 ',
-    celebNoteFn:(dayLabel,others)=>dayLabel+' 일간을 가진 대표적인 인물이에요.'+(others.length?' 이 외에도 '+others.join(', ')+' 님도 같은 일간을 타고났어요.':''),
+    celebBadgeFn:(label,exact)=>exact?'🌟 나와 같은 '+label+' 일간':'🌟 나와 같은 '+label+' 오행',
+    celebBornLabel:'출생',
+    celebPillarLabel:'일주',
+    celebPillarFn:(stem,branch)=>stem.h+branch.h+'('+stem.hj+branch.hj+')',
+    celebHlHead:'대표 이력',
+    celebCommonHead:'나와의 공통점',
+    celebCommonFn:(name,label,elLabel,exact)=>exact
+      ?name+' 님과 당신은 모두 '+label+' 일간으로, '+elLabel+' 기운을 삶의 중심에 두고 태어났어요.'
+      :'나와 똑같은 일간의 인물은 아직 없지만, '+name+' 님은 당신과 같은 '+elLabel+' 오행의 일간을 타고났어요.',
+    celebOthersHead:'같은 일간을 타고난 다른 유명인',
+    celebOthersElHead:'같은 오행을 타고난 다른 유명인',
     celebEmpty:'아직 같은 일간의 유명인 데이터가 없어요.',
     bdaySpotlightBadgeBirthday:(dateLabel)=>'🎂 '+dateLabel+' 생일인 유명인',
     bdaySpotlightBadgeGeneric:(dateLabel)=>'✨ '+dateLabel+'의 오늘의 인물',
@@ -2062,6 +2114,16 @@ const STRINGS={
     txtGwansangRetakeCameraBtn:'재촬영하기',
     txtGwansangRetakeUploadBtn:'사진 재업로드',
     txtGwansangCelebHead:'이 관상과 닮은 글로벌 유명인',
+    gwansangCelebBadgeFn:(shape)=>'🪞 '+shape+' 얼굴 닮은꼴',
+    gwansangCelebWhyHead:'닮은 포인트',
+    gwansangCelebWhyFn:(name,shape)=>'오늘 분석된 당신의 얼굴형은 '+shape+'이에요. '+name+' 님도 '+shape+' 얼굴의 인상으로 잘 알려져 있어요.',
+    gwansangCelebShapeNote:{
+      round:'둥근 얼굴형은 관상에서 온화함과 친화력의 상징으로, 사람을 편안하게 모으고 오래 신뢰를 쌓는 인상으로 봅니다.',
+      oval:'계란형 얼굴은 이마·광대·턱의 균형이 고른 상으로, 여러 재능이 조화롭게 드러나고 대중의 호감을 얻기 쉬운 인상으로 봅니다.',
+      angular:'각진 얼굴형은 의지와 추진력, 승부욕이 강한 상으로, 목표를 끝까지 밀어붙여 성과를 내는 인상으로 봅니다.',
+      long:'긴 얼굴형은 사려 깊고 기획력이 돋보이는 상으로, 멀리 내다보고 새로운 것을 만들어내는 창의적인 인상으로 봅니다.'
+    },
+    gwansangCelebOthersHead:'같은 얼굴형의 다른 유명인',
     txtGwansangPrivacyNote:'사진과 분석 결과는 서버로 전송되지 않고 이 브라우저에만 저장되며, 다음 방문 때 자동으로 불러와요.',
     txtGwansangAnalyzing:'AI가 이목구비를 살펴보고 있어요...',
     txtGwansangCameraError:'카메라를 사용할 수 없어요. 대신 사진을 업로드해주세요.',
@@ -2283,7 +2345,17 @@ const STRINGS={
     fortuneToday:(dateLabel)=>dateLabel+" Fortune (日運)",
     fortuneYear:(y)=>y+' Yearly Fortune (歲運)',
     fortuneGanzhiPrefix:'relative to day master: ',
-    celebNoteFn:(dayLabel,others)=>'A well-known figure who shares your '+dayLabel+' day master.'+(others.length?' '+others.join(', ')+' also share this day master.':''),
+    celebBadgeFn:(label,exact)=>exact?'🌟 Shares your '+label+' day master':'🌟 Shares your '+label+' element',
+    celebBornLabel:'Born',
+    celebPillarLabel:'Day pillar',
+    celebPillarFn:(stem,branch)=>stem.en+'-'+branch.en+' ('+stem.hj+branch.hj+')',
+    celebHlHead:'CAREER HIGHLIGHTS',
+    celebCommonHead:'WHAT YOU SHARE',
+    celebCommonFn:(name,label,elLabel,exact)=>exact
+      ?'You and '+name+' were both born with the '+label+' day master, with '+elLabel+' energy at the core of who you are.'
+      :'No one in our list shares your exact day master yet, but '+name+' was born with a day master of the same '+elLabel+' element.',
+    celebOthersHead:'Other famous people with this day master',
+    celebOthersElHead:'Other famous people with this element',
     celebEmpty:'No matching celebrity data yet for this day master.',
     bdaySpotlightBadgeBirthday:(dateLabel)=>'🎂 Born on '+dateLabel,
     bdaySpotlightBadgeGeneric:(dateLabel)=>'✨ Today\'s pick · '+dateLabel,
@@ -2340,6 +2412,16 @@ const STRINGS={
     txtGwansangRetakeCameraBtn:'Retake Photo',
     txtGwansangRetakeUploadBtn:'Upload New Photo',
     txtGwansangCelebHead:'Global Celebrities Who Share This Look',
+    gwansangCelebBadgeFn:(shape)=>'🪞 '+shape+' face look-alike',
+    gwansangCelebWhyHead:'WHY THIS MATCH',
+    gwansangCelebWhyFn:(name,shape)=>'Your face shape today reads as '+shape.toLowerCase()+'. '+name+' is also known for a '+shape.toLowerCase()+' face shape.',
+    gwansangCelebShapeNote:{
+      round:'In face reading, a round face signals warmth and approachability: someone who draws people in and builds trust over time.',
+      oval:'An oval face shows balance between forehead, cheekbones, and jaw, reading as well-rounded talent and broad public appeal.',
+      angular:'An angular face signals willpower, drive, and a competitive streak: someone who pushes goals through to real results.',
+      long:'A long face reads as thoughtful and strategic: someone who plans far ahead and creates new things.'
+    },
+    gwansangCelebOthersHead:'Other celebrities with this face shape',
     txtGwansangPrivacyNote:'Your photo and result are never sent to a server. They are stored only in this browser and loaded automatically on your next visit.',
     txtGwansangAnalyzing:'AI is reading your features...',
     txtGwansangCameraError:'Camera unavailable. Please upload a photo instead.',
@@ -2899,119 +2981,177 @@ const CELEBRITIES=[
   {name:'알베르트 아인슈타인',nameEn:'Albert Einstein',field:'물리학자',fieldEn:'Physicist',y:1879,m:3,d:14,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Albert_Einstein_Head_cleaned.jpg/330px-Albert_Einstein_Head_cleaned.jpg',
     bio:'상대성이론을 정립해 현대 물리학의 토대를 놓았고, 1921년 노벨 물리학상을 받았습니다.',
-    bioEn:'Developed the theory of relativity and won the 1921 Nobel Prize in Physics.'},
+    bioEn:'Developed the theory of relativity and won the 1921 Nobel Prize in Physics.',
+    hl:['1905년 \'기적의 해\'에 특수상대성이론·광전효과·E=mc² 논문을 잇달아 발표','1915년 일반상대성이론을 완성해 중력을 시공간의 휘어짐으로 설명','1921년 광전효과 연구로 노벨 물리학상 수상'],
+    hlEn:['Published papers on special relativity, the photoelectric effect, and E=mc² in his 1905 "miracle year"','Completed general relativity in 1915, describing gravity as the curvature of spacetime','Won the 1921 Nobel Prize in Physics for explaining the photoelectric effect']},
   {name:'스티브 잡스',nameEn:'Steve Jobs',field:'기업가',fieldEn:'Entrepreneur',y:1955,m:2,d:24,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Steve_Jobs_Headshot_2010_%28cropped_4%29.jpg/330px-Steve_Jobs_Headshot_2010_%28cropped_4%29.jpg',
     bio:'애플을 공동 창업해 개인용 컴퓨터와 스마트폰 시대를 이끈 혁신가입니다.',
-    bioEn:'Co-founder of Apple who helped drive the personal computer and smartphone revolution.'},
+    bioEn:'Co-founder of Apple who helped drive the personal computer and smartphone revolution.',
+    hl:['1976년 스티브 워즈니악과 애플 공동 창업','1984년 매킨토시, 2007년 아이폰을 선보이며 업계 판도를 바꿈','픽사를 키워 세계 최초 장편 3D 애니메이션 《토이 스토리》 제작을 이끎'],
+    hlEn:['Co-founded Apple with Steve Wozniak in 1976','Reshaped the industry with the Macintosh (1984) and the iPhone (2007)','Built Pixar, which made Toy Story, the first fully computer-animated feature film']},
   {name:'빌 게이츠',nameEn:'Bill Gates',field:'기업가',fieldEn:'Entrepreneur',y:1955,m:10,d:28,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Bill_Gates_at_the_European_Commission_-_P067383-987995_%28cropped%29_5.jpg/330px-Bill_Gates_at_the_European_Commission_-_P067383-987995_%28cropped%29_5.jpg',
     bio:'마이크로소프트를 공동 창업해 소프트웨어 산업을 개척했고, 현재는 대규모 자선사업을 이끌고 있습니다.',
-    bioEn:'Co-founder of Microsoft who pioneered the software industry and now leads major philanthropic work.'},
+    bioEn:'Co-founder of Microsoft who pioneered the software industry and now leads major philanthropic work.',
+    hl:['1975년 폴 앨런과 마이크로소프트 공동 창업','윈도우·오피스로 \'모든 책상 위에 PC를\'이라는 비전을 현실화','2000년 게이츠 재단을 세워 세계 보건·빈곤 문제 해결에 힘씀'],
+    hlEn:['Co-founded Microsoft with Paul Allen in 1975','Made "a computer on every desk" real through Windows and Office','Started the Gates Foundation in 2000 to tackle global health and poverty']},
   {name:'일론 머스크',nameEn:'Elon Musk',field:'기업가',fieldEn:'Entrepreneur',y:1971,m:6,d:28,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Elon_Musk_-_54820081119_%28cropped%29.jpg/330px-Elon_Musk_-_54820081119_%28cropped%29.jpg',
     bio:'테슬라와 스페이스X를 이끌며 전기차·우주산업 혁신을 주도하는 기업가입니다.',
-    bioEn:'Entrepreneur leading Tesla and SpaceX, driving innovation in electric vehicles and spaceflight.'},
+    bioEn:'Entrepreneur leading Tesla and SpaceX, driving innovation in electric vehicles and spaceflight.',
+    hl:['1999년 온라인 결제 기업 X.com(훗날 페이팔) 공동 창업','2002년 스페이스X 설립, 재사용 로켓 시대를 엶','테슬라를 이끌며 전기차 대중화를 주도'],
+    hlEn:['Co-founded X.com (later PayPal) in 1999','Founded SpaceX in 2002 and ushered in the era of reusable rockets','Led Tesla in bringing electric cars to the mainstream']},
   {name:'마크 저커버그',nameEn:'Mark Zuckerberg',field:'기업가',fieldEn:'Entrepreneur',y:1984,m:5,d:14,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/F20250904AH-2824_%2854778373111%29_%283x4_cropped_on_Zuckerberg_following_the_rule_of_thirds%29.jpg/330px-F20250904AH-2824_%2854778373111%29_%283x4_cropped_on_Zuckerberg_following_the_rule_of_thirds%29.jpg',
     bio:'페이스북(메타)을 창업해 소셜 미디어 시대를 연 기업가입니다.',
-    bioEn:'Founder of Facebook (Meta) who helped launch the social media era.'},
+    bioEn:'Founder of Facebook (Meta) who helped launch the social media era.',
+    hl:['2004년 하버드 기숙사에서 페이스북 창업','인스타그램(2012)·왓츠앱(2014)을 인수해 글로벌 소셜 플랫폼 구축','2021년 회사명을 메타로 바꾸고 가상현실·AI에 집중 투자'],
+    hlEn:['Launched Facebook from his Harvard dorm room in 2004','Acquired Instagram (2012) and WhatsApp (2014) to build a global social platform','Renamed the company Meta in 2021 and invested heavily in VR and AI']},
   {name:'제프 베이조스',nameEn:'Jeff Bezos',field:'기업가',fieldEn:'Entrepreneur',y:1964,m:1,d:12,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/260202-D-PM193-2205_SECWAR_Arsenal_of_Freedom_Tour_-_Florida_%283x4_cropped_on_Bezos_and_rotated%29.jpg/330px-260202-D-PM193-2205_SECWAR_Arsenal_of_Freedom_Tour_-_Florida_%283x4_cropped_on_Bezos_and_rotated%29.jpg',
     bio:'아마존을 창업해 세계 최대 규모의 전자상거래·클라우드 기업으로 키운 기업가입니다.',
-    bioEn:'Founder of Amazon, which he built into the world’s largest e-commerce and cloud computing company.'},
+    bioEn:'Founder of Amazon, which he built into the world’s largest e-commerce and cloud computing company.',
+    hl:['1994년 온라인 서점으로 아마존 창업','클라우드 서비스 AWS로 인터넷 인프라의 표준을 만듦','2000년 우주기업 블루 오리진 설립, 2013년 워싱턴 포스트 인수'],
+    hlEn:['Founded Amazon as an online bookstore in 1994','Turned AWS into the backbone of cloud computing','Founded Blue Origin in 2000 and bought The Washington Post in 2013']},
   {name:'워런 버핏',nameEn:'Warren Buffett',field:'투자자',fieldEn:'Investor',y:1930,m:8,d:30,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Warren_Buffett_at_the_2015_SelectUSA_Investment_Summit_%28cropped%29.jpg/330px-Warren_Buffett_at_the_2015_SelectUSA_Investment_Summit_%28cropped%29.jpg',
     bio:'버크셔 해서웨이를 이끄는 세계적인 투자자로, \'오마하의 현인\'이라 불립니다.',
-    bioEn:'Legendary investor and chairman of Berkshire Hathaway, known as the "Oracle of Omaha."'},
+    bioEn:'Legendary investor and chairman of Berkshire Hathaway, known as the "Oracle of Omaha."',
+    hl:['11살에 첫 주식을 산 \'가치투자\'의 대명사','1965년부터 버크셔 해서웨이를 세계적 투자 지주회사로 키움','재산 대부분을 기부하겠다고 약속하고 \'기빙 플레지\'를 공동 발족'],
+    hlEn:['Bought his first stock at 11 and became the face of value investing','Grew Berkshire Hathaway into a global holding company from 1965','Pledged most of his fortune to charity and co-founded the Giving Pledge']},
   {name:'오프라 윈프리',nameEn:'Oprah Winfrey',field:'방송인',fieldEn:'Media Executive',y:1954,m:1,d:29,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Oprah_Winfrey_2016.jpg/330px-Oprah_Winfrey_2016.jpg',
     bio:'자신의 이름을 건 토크쇼로 미디어 제국을 일군 방송인이자 기업가입니다.',
-    bioEn:'Media mogul and talk show host who built a media empire under her own name.'},
+    bioEn:'Media mogul and talk show host who built a media empire under her own name.',
+    hl:['1986~2011년 《오프라 윈프리 쇼》로 미국 최고 시청률 토크쇼를 진행','제작사 하포를 세우고 방송·출판·케이블 채널로 사업 확장','북클럽·교육 기부로 사회적 영향력을 넓혀 2013년 대통령 자유 훈장 수상'],
+    hlEn:['Hosted The Oprah Winfrey Show (1986–2011), the top-rated talk show in America','Founded Harpo and expanded into TV, publishing, and her own cable network','Received the Presidential Medal of Freedom in 2013 for her influence and philanthropy']},
   {name:'버락 오바마',nameEn:'Barack Obama',field:'전 미국 대통령',fieldEn:'Former U.S. President',y:1961,m:8,d:4,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/330px-President_Barack_Obama.jpg',
     bio:'미국 최초의 흑인 대통령으로, 2009년부터 2017년까지 재임했습니다.',
-    bioEn:'The first Black president of the United States, serving from 2009 to 2017.'},
+    bioEn:'The first Black president of the United States, serving from 2009 to 2017.',
+    hl:['2009~2017년 제44대 미국 대통령으로 재임','2009년 노벨 평화상 수상','건강보험개혁법(오바마케어) 제정 등 굵직한 개혁을 추진'],
+    hlEn:['Served as the 44th President of the United States (2009–2017)','Awarded the 2009 Nobel Peace Prize','Pushed major reforms including the Affordable Care Act']},
   {name:'마틴 루터 킹',nameEn:'Martin Luther King Jr.',field:'인권운동가',fieldEn:'Civil Rights Leader',y:1929,m:1,d:15,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Martin_Luther_King%2C_Jr._and_Lyndon_Johnson_%28cropped%29.jpg/330px-Martin_Luther_King%2C_Jr._and_Lyndon_Johnson_%28cropped%29.jpg',
     bio:'비폭력 저항으로 미국 흑인 민권 운동을 이끈 목사이자 인권운동가입니다.',
-    bioEn:'Baptist minister and civil rights leader who led the U.S. civil rights movement through nonviolent resistance.'},
+    bioEn:'Baptist minister and civil rights leader who led the U.S. civil rights movement through nonviolent resistance.',
+    hl:['1955년 몽고메리 버스 보이콧을 이끌며 민권운동의 얼굴로 떠오름','1963년 워싱턴 행진에서 "I Have a Dream" 연설','1964년 최연소 노벨 평화상 수상자(당시 기준)'],
+    hlEn:['Rose to prominence leading the 1955 Montgomery bus boycott','Delivered the "I Have a Dream" speech at the 1963 March on Washington','Became the youngest Nobel Peace Prize laureate at the time in 1964']},
   {name:'마리 퀴리',nameEn:'Marie Curie',field:'과학자',fieldEn:'Scientist',y:1867,m:11,d:7,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Marie_Curie_c._1920s.jpg/330px-Marie_Curie_c._1920s.jpg',
     bio:'방사능 연구로 서로 다른 두 과학 분야에서 노벨상을 받은 최초의 인물입니다.',
-    bioEn:'Pioneering scientist and the first person to win Nobel Prizes in two different sciences for her work on radioactivity.'},
+    bioEn:'Pioneering scientist and the first person to win Nobel Prizes in two different sciences for her work on radioactivity.',
+    hl:['남편 피에르 퀴리와 함께 폴로늄·라듐 발견','1903년 노벨 물리학상 수상, 여성 최초의 노벨상','1911년 노벨 화학상까지 받아 두 분야 수상이라는 전무후무한 기록'],
+    hlEn:['Discovered polonium and radium with her husband Pierre Curie','Won the 1903 Nobel Prize in Physics, the first woman to win a Nobel','Won the 1911 Nobel Prize in Chemistry, becoming the first to win in two sciences']},
   {name:'스티븐 호킹',nameEn:'Stephen Hawking',field:'물리학자',fieldEn:'Physicist',y:1942,m:1,d:8,
     img:'https://upload.wikimedia.org/wikipedia/commons/e/eb/Stephen_Hawking.StarChild.jpg',
     bio:'블랙홀과 우주론 연구로 유명한 이론물리학자이자 베스트셀러 작가입니다.',
-    bioEn:'Theoretical physicist renowned for his work on black holes and cosmology, and author of best-selling books.'},
+    bioEn:'Theoretical physicist renowned for his work on black holes and cosmology, and author of best-selling books.',
+    hl:['블랙홀도 복사를 방출한다는 \'호킹 복사\' 이론을 제시','대중과학서 《시간의 역사》로 전 세계 베스트셀러 기록','루게릭병(ALS)과 싸우며 케임브리지대 루카스 석좌교수로 연구를 이어감'],
+    hlEn:['Proposed that black holes emit radiation, now known as Hawking radiation','Wrote A Brief History of Time, a worldwide bestseller','Kept working as Cambridge\'s Lucasian Professor while living with ALS']},
   {name:'레오나르도 디카프리오',nameEn:'Leonardo DiCaprio',field:'배우',fieldEn:'Actor',y:1974,m:11,d:11,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/LeoPTABFI191125-28_%28cropped%29.jpg/330px-LeoPTABFI191125-28_%28cropped%29.jpg',
     bio:'《타이타닉》,《레버넌트》 등에 출연했고 아카데미 남우주연상을 받은 배우입니다.',
-    bioEn:'Academy Award-winning actor known for films like Titanic and The Revenant.'},
+    bioEn:'Academy Award-winning actor known for films like Titanic and The Revenant.',
+    hl:['1997년 《타이타닉》으로 세계적 스타 반열에 오름','마틴 스코세이지 감독과 《디파티드》, 《울프 오브 월스트리트》 등 협업','2016년 《레버넌트》로 아카데미 남우주연상 수상, 환경운동가로도 활동'],
+    hlEn:['Became a global star with Titanic (1997)','Frequent collaborator with Martin Scorsese on films like The Departed and The Wolf of Wall Street','Won the Best Actor Oscar for The Revenant (2016) and is an active environmentalist']},
   {name:'메릴 스트립',nameEn:'Meryl Streep',field:'배우',fieldEn:'Actor',y:1949,m:6,d:22,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Meryl_Streep-_Press_conference_for_the_film_%22The_Devil_Wears_Prada_2%22_-_55194765350_%28cropped1%29.jpg/330px-Meryl_Streep-_Press_conference_for_the_film_%22The_Devil_Wears_Prada_2%22_-_55194765350_%28cropped1%29.jpg',
     bio:'다수의 아카데미상을 수상하며 한 세대를 대표하는 배우로 꼽힙니다.',
-    bioEn:'Multiple Academy Award-winning actress widely regarded as one of the greatest of her generation.'},
+    bioEn:'Multiple Academy Award-winning actress widely regarded as one of the greatest of her generation.',
+    hl:['아카데미상 3회 수상(《크레이머 대 크레이머》, 《소피의 선택》, 《철의 여인》)','아카데미 연기상 역대 최다 후보 지명 기록 보유','《악마는 프라다를 입는다》, 《맘마 미아!》 등 장르를 넘나드는 연기'],
+    hlEn:['Three-time Oscar winner (Kramer vs. Kramer, Sophie\'s Choice, The Iron Lady)','Holds the record for the most acting Oscar nominations','Spans genres, from The Devil Wears Prada to Mamma Mia!']},
   {name:'톰 크루즈',nameEn:'Tom Cruise',field:'배우',fieldEn:'Actor',y:1962,m:7,d:3,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Tom_Cruise_at_53rd_Saturn_Awards_2026-01.jpg/330px-Tom_Cruise_at_53rd_Saturn_Awards_2026-01.jpg',
     bio:'《미션 임파서블》시리즈 등으로 활약해온 할리우드 대표 배우입니다.',
-    bioEn:'Hollywood leading man known for the Mission: Impossible franchise and decades of blockbuster films.'},
+    bioEn:'Hollywood leading man known for the Mission: Impossible franchise and decades of blockbuster films.',
+    hl:['1986년 《탑건》으로 할리우드 톱스타에 등극','1996년부터 《미션 임파서블》 시리즈 주연·제작','고난도 액션을 대역 없이 소화하는 배우로 유명, 《탑건: 매버릭》(2022) 흥행'],
+    hlEn:['Became a Hollywood superstar with Top Gun (1986)','Has starred in and produced the Mission: Impossible series since 1996','Famous for doing his own stunts; Top Gun: Maverick (2022) was a massive hit']},
   {name:'비욘세',nameEn:'Beyoncé',field:'가수',fieldEn:'Singer',y:1981,m:9,d:4,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Beyonc%C3%A9_-_Tottenham_Hotspur_Stadium_-_1st_June_2023_%2810_of_118%29_%2852946364598%29_%28best_crop%29.jpg/330px-Beyonc%C3%A9_-_Tottenham_Hotspur_Stadium_-_1st_June_2023_%2810_of_118%29_%2852946364598%29_%28best_crop%29.jpg',
     bio:'그래미상을 최다 수상한 싱어송라이터이자 세계적인 퍼포머입니다.',
-    bioEn:'Singer-songwriter and performer who holds the record for the most Grammy wins.'},
+    bioEn:'Singer-songwriter and performer who holds the record for the most Grammy wins.',
+    hl:['데스티니스 차일드 멤버로 데뷔해 솔로로 세계적 성공','그래미 역대 최다 수상 기록 보유','《Lemonade》, 《Renaissance》, 《Cowboy Carter》 등 장르를 넓힌 앨범 발표'],
+    hlEn:['Rose to fame with Destiny\'s Child before a global solo career','Holds the record for the most Grammy wins of all time','Released genre-expanding albums like Lemonade, Renaissance, and Cowboy Carter']},
   {name:'테일러 스위프트',nameEn:'Taylor Swift',field:'가수',fieldEn:'Singer',y:1989,m:12,d:13,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Taylor_Swift_at_the_2023_MTV_Video_Music_Awards_%283%29.png/330px-Taylor_Swift_at_the_2023_MTV_Video_Music_Awards_%283%29.png',
     bio:'자전적인 songwriting으로 세계적 인기를 얻은 싱어송라이터입니다.',
-    bioEn:'Singer-songwriter celebrated worldwide for her autobiographical songwriting.'},
+    bioEn:'Singer-songwriter celebrated worldwide for her autobiographical songwriting.',
+    hl:['10대에 컨트리 가수로 데뷔한 뒤 팝으로 영역을 넓힘','그래미 올해의 앨범 역대 최다(4회) 수상','\'디 에라스 투어\'로 역대 최고 흥행 투어 기록'],
+    hlEn:['Debuted as a teenage country singer before expanding into pop','Record four-time winner of the Grammy for Album of the Year','The Eras Tour became the highest-grossing concert tour ever']},
   {name:'마이클 잭슨',nameEn:'Michael Jackson',field:'가수',fieldEn:'Singer',y:1958,m:8,d:29,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Michael_Jackson_1983_%283x4_cropped%29_%28contrast%29.jpg/330px-Michael_Jackson_1983_%283x4_cropped%29_%28contrast%29.jpg',
     bio:'\'팝의 황제\'로 불리며 대중음악과 퍼포먼스에 큰 영향을 남긴 가수입니다.',
-    bioEn:'Known as the "King of Pop," he left a lasting influence on popular music and performance.'},
+    bioEn:'Known as the "King of Pop," he left a lasting influence on popular music and performance.',
+    hl:['어린 시절 잭슨 파이브로 데뷔','1982년 《스릴러》는 역대 가장 많이 팔린 앨범으로 꼽힘','문워크와 뮤직비디오 혁신으로 팝 퍼포먼스의 기준을 세움'],
+    hlEn:['Started out as a child star in the Jackson 5','Thriller (1982) is widely cited as the best-selling album of all time','Set the standard for pop performance with the moonwalk and landmark music videos']},
   {name:'마이클 조던',nameEn:'Michael Jordan',field:'농구선수',fieldEn:'Basketball Player',y:1963,m:2,d:17,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Michael_Jordan_in_2014.jpg/330px-Michael_Jordan_in_2014.jpg',
     bio:'시카고 불스에서 6번의 NBA 우승을 이끈, 역사상 최고의 농구선수로 꼽힙니다.',
-    bioEn:'Widely regarded as the greatest basketball player ever, he led the Chicago Bulls to six NBA titles.'},
+    bioEn:'Widely regarded as the greatest basketball player ever, he led the Chicago Bulls to six NBA titles.',
+    hl:['시카고 불스에서 NBA 우승 6회, 파이널 MVP 6회','정규시즌 MVP 5회, 득점왕 10회','1984·1992 올림픽 금메달, 1992년 \'드림팀\' 멤버'],
+    hlEn:['Six NBA titles and six Finals MVPs with the Chicago Bulls','Five regular-season MVPs and ten scoring titles','Olympic gold in 1984 and 1992 as part of the "Dream Team"']},
   {name:'크리스티아누 호날두',nameEn:'Cristiano Ronaldo',field:'축구선수',fieldEn:'Footballer',y:1985,m:2,d:5,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Cristiano_Ronaldo_Croatia_v_Portugal_2_July_2026-075_%28cropped%29.jpg/330px-Cristiano_Ronaldo_Croatia_v_Portugal_2_July_2026-075_%28cropped%29.jpg',
     bio:'발롱도르를 5차례 수상한, 축구 역사상 최고의 선수 중 한 명입니다.',
-    bioEn:'Five-time Ballon d’Or winner and one of the greatest footballers in history.'},
+    bioEn:'Five-time Ballon d’Or winner and one of the greatest footballers in history.',
+    hl:['발롱도르 5회 수상','UEFA 챔피언스리그 우승 5회, 대회 역대 최다 득점','포르투갈 대표팀 주장으로 유로 2016 우승, A매치 최다 득점 기록'],
+    hlEn:['Five-time Ballon d\'Or winner','Five Champions League titles and the competition\'s all-time top scorer','Captained Portugal to Euro 2016 and holds the men\'s international scoring record']},
   {name:'리오넬 메시',nameEn:'Lionel Messi',field:'축구선수',fieldEn:'Footballer',y:1987,m:6,d:24,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Leo_Messi_Argentina_v_Egypt_7_July_2026-1.jpg/330px-Leo_Messi_Argentina_v_Egypt_7_July_2026-1.jpg',
     bio:'발롱도르를 8차례 수상하며 축구 역사상 최고의 선수로 평가받습니다.',
-    bioEn:'Eight-time Ballon d’Or winner, widely considered the greatest footballer of all time.'},
+    bioEn:'Eight-time Ballon d’Or winner, widely considered the greatest footballer of all time.',
+    hl:['발롱도르 역대 최다 8회 수상','FC 바르셀로나 구단 역대 최다 득점자','아르헨티나 주장으로 2022 카타르 월드컵 우승'],
+    hlEn:['Record eight-time Ballon d\'Or winner','FC Barcelona\'s all-time leading goalscorer','Captained Argentina to the 2022 World Cup title in Qatar']},
   {name:'세레나 윌리엄스',nameEn:'Serena Williams',field:'테니스선수',fieldEn:'Tennis Player',y:1981,m:9,d:26,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Guests_at_the_2026_Met_Gala_209_%28cropped%29.jpg/330px-Guests_at_the_2026_Met_Gala_209_%28cropped%29.jpg',
     bio:'메이저 대회 23회 우승 기록을 가진 여자 테니스의 전설입니다.',
-    bioEn:'Tennis legend with a record 23 major singles titles in the Open Era.'},
+    bioEn:'Tennis legend with a record 23 major singles titles in the Open Era.',
+    hl:['그랜드슬램 단식 23회 우승(오픈 시대 최다)','올림픽 금메달 4개(단식 1, 복식 3)','2022년 은퇴 후 벤처투자 등 사업가로 활동'],
+    hlEn:['23 Grand Slam singles titles, the most in the Open Era','Four Olympic gold medals (one singles, three doubles)','Retired in 2022 and turned to venture investing and business']},
   {name:'손흥민',nameEn:'Son Heung-min',field:'축구선수',fieldEn:'Footballer',y:1992,m:7,d:8,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/BFA_2023_-2_Heung-Min_Son_%28cropped%29.jpg/330px-BFA_2023_-2_Heung-Min_Son_%28cropped%29.jpg',
     bio:'프리미어리그·챔피언스리그에서 아시아 선수 최다골을 기록한 축구선수입니다.',
-    bioEn:'Footballer who holds the record for most goals by an Asian player in the Premier League and Champions League.'},
+    bioEn:'Footballer who holds the record for most goals by an Asian player in the Premier League and Champions League.',
+    hl:['2021-22시즌 아시아 선수 최초 프리미어리그 득점왕','2020년 FIFA 푸스카스상 수상','토트넘 주장으로 2024-25 UEFA 유로파리그 우승'],
+    hlEn:['First Asian player to win the Premier League Golden Boot (2021–22)','Won the 2020 FIFA Puskás Award','Captained Tottenham to the 2024–25 UEFA Europa League title']},
   {name:'박지성',nameEn:'Park Ji-sung',field:'축구선수',fieldEn:'Footballer',y:1981,m:2,d:25,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Park_Ji-sung_G20_Seoul_Summit_Ambassador_%28cropped%29.jpg/330px-Park_Ji-sung_G20_Seoul_Summit_Ambassador_%28cropped%29.jpg',
     bio:'맨체스터 유나이티드에서 활약하며 아시아 최초로 챔피언스리그 결승에 오른 축구선수입니다.',
-    bioEn:'Footballer who starred for Manchester United and became the first Asian player to reach a Champions League final.'},
+    bioEn:'Footballer who starred for Manchester United and became the first Asian player to reach a Champions League final.',
+    hl:['2002 한일 월드컵 포르투갈전 결승골로 4강 신화에 기여','맨체스터 유나이티드에서 프리미어리그 4회 우승','2011년 아시아 선수 최초로 UEFA 챔피언스리그 결승 출전'],
+    hlEn:['Scored the winner against Portugal on Korea\'s run to the 2002 World Cup semifinals','Won four Premier League titles with Manchester United','First Asian player to play in a Champions League final (2011)']},
   {name:'김연아',nameEn:'Kim Yuna',field:'피겨스케이팅 선수',fieldEn:'Figure Skater',y:1990,m:9,d:5,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/YuNaKimInVancouver.jpg/330px-YuNaKimInVancouver.jpg',
     bio:'2010 밴쿠버 올림픽 금메달리스트로, \'피겨여왕\'이라 불리는 피겨스케이팅 선수입니다.',
-    bioEn:'Figure skater and 2010 Vancouver Olympic champion known as the "Queen of Figure Skating."'},
+    bioEn:'Figure skater and 2010 Vancouver Olympic champion known as the "Queen of Figure Skating."',
+    hl:['2009년 세계선수권 우승','2010 밴쿠버 올림픽 금메달(당시 세계 최고점)','2014 소치 올림픽 은메달, 2018 평창 올림픽 성화 최종 점화'],
+    hlEn:['2009 World Champion','2010 Vancouver Olympic gold with a then world-record score','2014 Sochi Olympic silver; lit the cauldron at the 2018 PyeongChang Olympics']},
   {name:'봉준호',nameEn:'Bong Joon-ho',field:'영화감독',fieldEn:'Film Director',y:1969,m:9,d:14,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Bong_Joon_Ho_at_Busan_Film_Festival%2C_smaller.jpg/330px-Bong_Joon_Ho_at_Busan_Film_Festival%2C_smaller.jpg',
     bio:'영화 《기생충》으로 아카데미 작품상을 수상한 영화감독입니다.',
-    bioEn:'Film director who won the Academy Award for Best Picture for Parasite.'},
+    bioEn:'Film director who won the Academy Award for Best Picture for Parasite.',
+    hl:['《살인의 추억》, 《괴물》, 《설국열차》로 장르 영화의 거장이 됨','2019년 《기생충》으로 한국 영화 최초 칸 황금종려상','2020년 아카데미 작품·감독·각본·국제장편영화상 4관왕'],
+    hlEn:['Became a master of genre film with Memories of Murder, The Host, and Snowpiercer','Parasite won the 2019 Palme d\'Or, a first for Korean cinema','Won four Oscars in 2020: Picture, Director, Original Screenplay, and International Feature']},
   {name:'BTS 알엠',nameEn:'RM (BTS)',field:'가수',fieldEn:'Singer',y:1994,m:9,d:12,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/RM_at_W_Korea_Love_Your_W%2C_November_2023.jpg/330px-RM_at_W_Korea_Love_Your_W%2C_November_2023.jpg',
     bio:'방탄소년단(BTS)의 리더이자 래퍼·프로듀서로 활동하는 가수입니다.',
-    bioEn:'Leader, rapper, and producer of the K-pop group BTS.'},
+    bioEn:'Leader, rapper, and producer of the K-pop group BTS.',
+    hl:['2013년 방탄소년단 리더로 데뷔, 다수 곡 작사·작곡 참여','2018년 유엔 총회에서 \'Love Yourself\' 연설','2022년 첫 정규 솔로 앨범 《Indigo》 발표'],
+    hlEn:['Debuted in 2013 as BTS\'s leader and co-writes much of the group\'s music','Delivered the "Love Yourself" speech at the UN General Assembly in 2018','Released his first solo studio album, Indigo, in 2022']},
   {name:'BTS 진',nameEn:'Jin (BTS)',field:'가수',fieldEn:'Singer',y:1992,m:12,d:4,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/BTS_Jin_at_Maison_Fred%2C_13_March_2025_04.png/330px-BTS_Jin_at_Maison_Fred%2C_13_March_2025_04.png',
     bio:'방탄소년단(BTS) 멤버로, 솔로 앨범과 싱글로도 활발히 활동하는 가수입니다.',
-    bioEn:'BTS member who has also released solo singles and albums.'},
+    bioEn:'BTS member who has also released solo singles and albums.',
+    hl:['방탄소년단의 맏형이자 메인 보컬','2022년 솔로 싱글 《The Astronaut》 발표','2024년 파리 올림픽 성화 봉송, 같은 해 솔로 앨범 《Happy》 발표'],
+    hlEn:['The eldest member and a lead vocalist of BTS','Released the solo single The Astronaut in 2022','Carried the torch for the 2024 Paris Olympics and released the solo album Happy the same year']},
   {name:'블랙핑크 지수',nameEn:'Jisoo (BLACKPINK)',field:'가수',fieldEn:'Singer',y:1995,m:1,d:3,
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Jisoo_at_Boyfriend_on_Demand_press_conference_on_26022026_%2812%29.png/330px-Jisoo_at_Boyfriend_on_Demand_press_conference_on_26022026_%2812%29.png',
     bio:'블랙핑크 멤버로 활동하는 가수 겸 배우입니다.',
-    bioEn:'Member of the girl group Blackpink, also active as an actress.'}
+    bioEn:'Member of the girl group Blackpink, also active as an actress.',
+    hl:['2016년 블랙핑크로 데뷔해 K팝 걸그룹의 글로벌 기록을 이끎','2023년 솔로 싱글 《꽃》으로 음원 차트 1위','드라마 《설강화》 주연 등 배우로도 활동'],
+    hlEn:['Debuted with BLACKPINK in 2016, helping set global records for K-pop girl groups','Topped charts with her 2023 solo single "FLOWER"','Also works as an actress, including a lead role in Snowdrop']}
 ];
 
 let CELEB_INDEX_BY_STEM=null;
@@ -3041,6 +3181,47 @@ function findCelebMatches(profile){
   });
 }
 
+function celebAvatarHtml(c,name){
+  const initial=name.charAt(0);
+  return c.img
+    ? '<img src="'+c.img+'" alt="'+name+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{textContent:\''+initial+'\'}))">'
+    : initial;
+}
+
+/* 오늘의 운세·오늘의 관상 유명인 카드 공용 마크업.
+   opt: {pick, badge, commonHead, commonHtml, othersHead, others} */
+function celebCardHtml(opt){
+  const s=STRINGS[LANG];
+  const c=opt.pick;
+  const name=LANG==='en'?c.nameEn:c.name;
+  const field=LANG==='en'?c.fieldEn:c.field;
+  const bio=LANG==='en'?c.bioEn:c.bio;
+  const hl=(LANG==='en'?c.hlEn:c.hl)||[];
+  const dp=computeFourPillars(c.y,c.m,c.d,12,0,true).day;
+  let othersHtml='';
+  if(opt.others&&opt.others.length){
+    othersHtml='<div class="celeb-sub">'+opt.othersHead+'</div><div class="celeb-others">'+
+      opt.others.map(function(o){
+        const on=LANG==='en'?o.nameEn:o.name;
+        return '<span class="celeb-other"><span class="mini">'+celebAvatarHtml(o,on)+'</span>'+on+'</span>';
+      }).join('')+'</div>';
+  }
+  return '<div class="celeb-avatar">'+celebAvatarHtml(c,name)+'</div>'+
+    '<div class="celeb-info">'+
+      '<div class="celeb-badge">'+opt.badge+'</div>'+
+      '<div class="celeb-name">'+name+'</div>'+
+      '<div class="celeb-field">'+field+'</div>'+
+      '<div class="celeb-meta">'+
+        '<span class="celeb-chip"><b>'+s.celebBornLabel+'</b>'+todayDateLabel(c.y,c.m,c.d)+'</span>'+
+        '<span class="celeb-chip"><b>'+s.celebPillarLabel+'</b>'+s.celebPillarFn(dp.stem,dp.branch)+'</span>'+
+      '</div>'+
+      (bio?'<p class="celeb-bio">'+bio+'</p>':'')+
+      (hl.length?'<div class="celeb-sub">'+s.celebHlHead+'</div><ul class="celeb-hl">'+hl.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>':'')+
+      '<div class="celeb-common"><div class="celeb-sub">'+opt.commonHead+'</div>'+opt.commonHtml+'</div>'+
+      othersHtml+
+    '</div>';
+}
+
 function renderCelebrity(profile){
   const s=STRINGS[LANG];
   const container=document.getElementById('celebCard');
@@ -3051,25 +3232,23 @@ function renderCelebrity(profile){
     return;
   }
 
+  const stem=profile.day.stem;
+  const exact=matches.some(function(c){ return computeFourPillars(c.y,c.m,c.d,12,0,true).day.stem.h===stem.h; });
   const pick=matches[0];
-  const others=matches.slice(1,4).map(c=>LANG==='en'?c.nameEn:c.name);
   const name=LANG==='en'?pick.nameEn:pick.name;
-  const field=LANG==='en'?pick.fieldEn:pick.field;
-  const bio=LANG==='en'?pick.bioEn:pick.bio;
-  const dayLabel=LANG==='en'?profile.day.stem.en:profile.day.stem.h;
-  const initial=name.charAt(0);
-  const avatarHtml=pick.img
-    ? '<img src="'+pick.img+'" alt="'+name+'" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{textContent:\''+initial+'\'}))">'
-    : initial;
+  const stemLabel=LANG==='en'?stem.en+' ('+stem.hj+')':stem.h+'('+stem.hj+')';
+  const elLabel=elName(stem.el);
+  const dmText=(LANG==='en'?DAYMASTER_TEXT_EN:DAYMASTER_TEXT)[stem.h]||'';
+  const dmFirst=dmText.split(/(?<=[.。])\s+/).slice(0,2).join(' ');
 
-  container.innerHTML=
-    '<div class="celeb-avatar">'+avatarHtml+'</div>'+
-    '<div class="celeb-info">'+
-      '<div class="celeb-name">'+name+'</div>'+
-      '<div class="celeb-field">'+field+'</div>'+
-      (bio?'<p class="celeb-bio">'+bio+'</p>':'')+
-      '<p class="celeb-note">'+s.celebNoteFn(dayLabel,others)+'</p>'+
-    '</div>';
+  container.innerHTML=celebCardHtml({
+    pick:pick,
+    badge:s.celebBadgeFn(exact?stemLabel:elLabel,exact),
+    commonHead:s.celebCommonHead,
+    commonHtml:'<p>'+s.celebCommonFn(name,stemLabel,elLabel,exact)+'</p>'+(dmFirst?'<p>'+dmFirst+'</p>':''),
+    othersHead:exact?s.celebOthersHead:s.celebOthersElHead,
+    others:matches.slice(1,5)
+  });
 }
 
 /* ================= 오늘 생일 유명인 스포트라이트 =================
@@ -4821,21 +5000,22 @@ function findGwansangCelebMatch(faceShape){
 function renderGwansangCelebMatch(faceShape){
   const container=document.getElementById('gwansangCelebCard');
   if(!container) return;
+  const s=STRINGS[LANG];
   const pick=findGwansangCelebMatch(faceShape);
+  const shapeKey=GWANSANG_FACE_CELEBS[faceShape]?faceShape:'oval';
+  const shape=s.gwansangFeatureLabel.faceShape[shapeKey];
   const name=LANG==='en'?pick.nameEn:pick.name;
-  const field=LANG==='en'?pick.fieldEn:pick.field;
-  const bio=LANG==='en'?pick.bioEn:pick.bio;
-  const initial=name.charAt(0);
-  const avatarHtml=pick.img
-    ? '<img src="'+pick.img+'" alt="'+name+'" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{textContent:\''+initial+'\'}))">'
-    : initial;
-  container.innerHTML=
-    '<div class="celeb-avatar">'+avatarHtml+'</div>'+
-    '<div class="celeb-info">'+
-      '<div class="celeb-name">'+name+'</div>'+
-      '<div class="celeb-field">'+field+'</div>'+
-      (bio?'<p class="celeb-bio">'+bio+'</p>':'')+
-    '</div>';
+  const others=GWANSANG_FACE_CELEBS[shapeKey]
+    .map(function(n){ return CELEBRITIES.find(function(c){ return c.name===n; }); })
+    .filter(function(c){ return c&&c!==pick; });
+  container.innerHTML=celebCardHtml({
+    pick:pick,
+    badge:s.gwansangCelebBadgeFn(shape),
+    commonHead:s.gwansangCelebWhyHead,
+    commonHtml:'<p>'+s.gwansangCelebWhyFn(name,shape)+'</p><p>'+s.gwansangCelebShapeNote[shapeKey]+'</p>',
+    othersHead:s.gwansangCelebOthersHead,
+    others:others
+  });
 }
 
 function gwansangResultText(){
