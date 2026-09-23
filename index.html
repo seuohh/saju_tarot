@@ -1296,7 +1296,10 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
       <button type="button" class="secondary" id="namingCopyBtn">📋 <span id="txtNamingCopyBtn">결과 복사</span></button>
       <button type="button" class="secondary" id="namingShareBtn">🔗 <span id="txtNamingShareBtn">공유하기</span></button>
     </div>
-    <p class="tarot-reshuffle-note" id="txtNamingReshuffleNote" style="text-align:center;">이름 후보는 점수 순으로 정렬되며, 같은 순위 안에서는 날짜에 따라 매일 조금씩 달라집니다.</p>
+    <p class="tarot-reshuffle-note" id="txtNamingReshuffleNote" style="text-align:center;">이름 후보는 점수 순으로 정렬되며, 같은 점수 안에서는 날짜에 따라 매일 조금씩 달라집니다.</p>
+
+    <h3 id="txtNamingCelebHead" class="celeb-head" style="margin-top:44px;">이 이름과 기운이 닮은 유명인</h3>
+    <div class="celeb-card" id="namingCelebCard"></div>
   </section>
 
   <div class="ad-slot wide" role="complementary" aria-label="광고 영역" id="txtAdSlot9">광고 영역 (Advertisement)</div>
@@ -2243,6 +2246,18 @@ const STRINGS={
     namingLuckLabel:{'1':'길','0':'반길','-1':'흉'},
     namingFlowLabel:{gen:'상생',same:'비화',rev:'상생(역생)',clash:'상극'},
     namingOneLineLabel:'오늘의 한 줄',
+    txtNamingCelebHead:'이 이름과 기운이 닮은 유명인',
+    namingCelebWhyHead:'닮은 포인트',
+    namingCelebOthersHead:'같은 기운을 타고난 다른 유명인',
+    namingCelebBadgeFn:(el)=>'\u270d\ufe0f '+el+' 기운을 타고난 인물',
+    namingCelebWhyFn:(fullName,celeb,el)=>'추천 이름 '+fullName+namingJosa(fullName,'이','가')+' 채워주는 기운은 '+el+'입니다. '+celeb+' 님은 태어난 날의 일간이 바로 '+el+namingJosa(el,'이라','라')+', 이 이름이 불러오는 기운을 이미 타고난 셈이에요.',
+    namingCelebElNote:{
+      wood:'목(木) 기운은 뻗어 나가는 성장과 시작의 힘으로, 새로운 일을 벌이고 사람을 키우는 자리에서 빛납니다.',
+      fire:'화(火) 기운은 드러내고 밝히는 힘으로, 무대와 표현, 사람들 앞에 서는 자리에서 강점이 됩니다.',
+      earth:'토(土) 기운은 품고 버티는 힘으로, 신뢰를 쌓고 판을 지켜내는 자리에서 진가가 드러납니다.',
+      metal:'금(金) 기운은 다듬고 끊어내는 힘으로, 기준을 세우고 완성도를 끌어올리는 일에서 돋보입니다.',
+      water:'수(水) 기운은 흐르고 스며드는 힘으로, 지혜와 유연함이 필요한 자리에서 특히 강합니다.'
+    },
     namingRankFn:(rank)=>rank+'순위',
     namingScoreFn:(score)=>score+'점',
     namingShareHeaderFn:(sur)=>'오늘의 작명 · '+sur+'씨 추천 이름',
@@ -2616,6 +2631,18 @@ const STRINGS={
     namingLuckLabel:{'1':'auspicious','0':'mixed','-1':'challenging'},
     namingFlowLabel:{gen:'generating',same:'same element',rev:'generating (reverse)',clash:'clashing'},
     namingOneLineLabel:'One line for today',
+    txtNamingCelebHead:'A famous name that carries the same energy',
+    namingCelebWhyHead:'What you share',
+    namingCelebOthersHead:'Others born with the same element',
+    namingCelebBadgeFn:(el)=>'\u270d\ufe0f Born with '+el+' energy',
+    namingCelebWhyFn:(fullName,celeb,el)=>'The energy the name '+fullName+' fills in is '+el+'. '+celeb+" was born with exactly that element as the Day Master, so this name calls on energy they already carry.",
+    namingCelebElNote:{
+      wood:'Wood is the energy of growth and beginnings — it shows in starting things and in bringing other people along.',
+      fire:'Fire is the energy of light and display — it shows on stage, in expression, and anywhere you stand in front of people.',
+      earth:'Earth is the energy of holding and enduring — it shows in building trust and keeping things steady over years.',
+      metal:'Metal is the energy of refining and cutting away — it shows in setting standards and finishing work properly.',
+      water:'Water is the energy of flowing and seeping in — it shows wherever wisdom and flexibility matter most.'
+    },
     namingRankFn:(rank)=>'#'+rank,
     namingScoreFn:(score)=>score+' pts',
     namingShareHeaderFn:(sur)=>"Today's Naming · names for the "+sur+' family',
@@ -2974,7 +3001,7 @@ function applyStaticI18n(){
    'txtNamingHourUnknown','txtNamingLabelGender','txtNamingGenderMale','txtNamingGenderFemale',
    'txtNamingLabelWish','txtNamingSubmitBtn','txtNamingSavedNote','txtNamingDiagnosisHead',
    'txtNamingListHead','txtNamingListNote','txtNamingMoreBtn','txtNamingCopyBtn','txtNamingShareBtn',
-   'txtNamingReshuffleNote','txtNamingFooterNote','txtNamingGlossaryHead',
+   'txtNamingReshuffleNote','txtNamingCelebHead','txtNamingFooterNote','txtNamingGlossaryHead',
    'txtNamingGlossaryTerm1Head','txtNamingGlossaryTerm1Body','txtNamingGlossaryTerm2Head','txtNamingGlossaryTerm2Body',
    'txtNamingGlossaryTerm3Head','txtNamingGlossaryTerm3Body','txtNamingGlossaryTerm4Head','txtNamingGlossaryTerm4Body',
    'txtFaqHead','txtFaqQ1','txtFaqA1','txtFaqQ2','txtFaqA2','txtFaqQ3','txtFaqA3','txtFaqQ4','txtFaqA4',
@@ -6007,6 +6034,59 @@ function namingCardHtml(item,rank){
     +'</div>';
 }
 
+/* 한글 받침 여부에 따라 조사를 골라준다 (예: 수해가 / 수회이) */
+function namingJosa(word,withBatchim,withoutBatchim){
+  const ch=(word||'').charAt((word||'').length-1);
+  const code=ch.charCodeAt(0)-0xAC00;
+  if(code<0||code>11171) return withoutBatchim;
+  return (code%28)!==0?withBatchim:withoutBatchim;
+}
+
+/* 유명인을 일간의 오행별로 묶어둔다. 추천 이름이 채워주는 기운과
+   같은 오행을 타고난 인물을 마지막에 보여주기 위한 색인이다. */
+let NAMING_CELEB_BY_EL=null;
+function namingCelebIndex(){
+  if(NAMING_CELEB_BY_EL) return NAMING_CELEB_BY_EL;
+  NAMING_CELEB_BY_EL={wood:[],fire:[],earth:[],metal:[],water:[]};
+  const idx=buildCelebIndex();
+  Object.keys(idx).forEach(function(stemKo){
+    const stem=STEMS.find(function(st){ return st.h===stemKo; });
+    if(!stem) return;
+    idx[stemKo].forEach(function(c){ NAMING_CELEB_BY_EL[stem.el].push(c); });
+  });
+  return NAMING_CELEB_BY_EL;
+}
+
+/* 두 글자 중 사주가 더 바라는 쪽의 자원오행을 이 이름의 대표 기운으로 본다. */
+function namingCelebElement(item){
+  const w=currentNaming.ctx.wanted.w;
+  return w[item.b.el]>w[item.a.el]?item.b.el:item.a.el;
+}
+
+function renderNamingCelebMatch(item){
+  const container=document.getElementById('namingCelebCard');
+  if(!container) return;
+  if(!item){ container.innerHTML=''; return; }
+  const s=STRINGS[LANG];
+  const el=namingCelebElement(item);
+  const pool=namingCelebIndex()[el];
+  const list=(pool&&pool.length)?pool:CELEBRITIES;
+  const sur=currentNaming.ctx.surname;
+  const full=sur.k+item.a.k+item.b.k;
+  const pick=list[Math.abs(hashSeed(todayKey()+'|naming-celeb|'+full))%list.length];
+  const name=LANG==='en'?pick.nameEn:pick.name;
+  const others=list.filter(function(c){ return c!==pick; }).slice(0,4);
+  container.innerHTML=celebCardHtml({
+    pick:pick,
+    badge:s.namingCelebBadgeFn(elName(el)),
+    commonHead:s.namingCelebWhyHead,
+    commonHtml:'<p>'+s.namingCelebWhyFn(full,name,elName(el))+'</p><p>'+s.namingCelebElNote[el]+'</p>',
+    othersHead:s.namingCelebOthersHead,
+    others:others,
+    fortuneHtml:celebTodayFortuneHtml(pick,name)
+  });
+}
+
 function renderNamingResult(){
   if(!currentNaming) return;
   const s=STRINGS[LANG];
@@ -6039,6 +6119,7 @@ function renderNamingResult(){
     return namingCardHtml(item,start+idx+1);
   }).join('');
   currentNaming.page=page;
+  renderNamingCelebMatch(page[0]);
   document.getElementById('namingResult').hidden=false;
 }
 
