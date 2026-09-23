@@ -751,6 +751,16 @@ footer .visitor-counter b{font-weight:700;color:var(--accent);}
   padding:8px 14px;font-size:13.5px;cursor:pointer;background:var(--paper);
 }
 .naming-wish-chip input{accent-color:var(--accent);}
+.naming-code{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:30px;padding:2px 7px;border-radius:7px;
+  background:var(--paper-sunken);border:1px solid var(--line-strong);
+  color:var(--ink-soft);font-size:var(--fs-tiny);font-weight:800;
+  letter-spacing:0.07em;line-height:1.5;
+}
+.naming-wish-chip:has(input:checked) .naming-code{
+  background:var(--accent);color:var(--accent-ink);border-color:transparent;
+}
 .naming-diagnosis{
   background:var(--paper-raised);border:1px solid var(--line);border-radius:18px;
   padding:24px;box-shadow:var(--shadow);
@@ -2227,7 +2237,8 @@ const STRINGS={
     txtNamingLabelSurnameText:'성(姓, 선택 입력)',
     txtNamingGlossaryTerm5Head:'나라마다 작명법이 어떻게 다른가요?',
     txtNamingGlossaryTerm5Body:'한국은 발음오행과 자원오행에 수리 사격(원격·형격·이격·정격)을 더해 봅니다. 중국은 같은 한자 문화권이지만 삼재오격(천격·인격·지격·외격·총격)을 쓰고, 일본의 성명판단도 같은 오격 체계를 따릅니다. 알파벳을 쓰는 서양권에는 획수가 없어, 첫소리의 오행과 이름 전체 글자에 담긴 오행 분포에 수비학의 운명수(1~9)를 더해 풀이합니다. 어느 방식이든 사주에서 비어 있는 기운을 이름으로 채운다는 원리는 같습니다.',
-    namingCultureLabel:{ko:'🇰🇷 한국식',zh:'🇨🇳 중국식',ja:'🇯🇵 일본식',en:'🌍 영어·서양식'},
+    namingCultureLabel:{ko:'한국식',zh:'중국식',ja:'일본식',en:'영어·서양식'},
+    namingCultureCode:{ko:'KR',zh:'CN',ja:'JP',en:'INT'},
     namingCultureLabelPlain:{ko:'한국식',zh:'중국식',ja:'일본식',en:'영어·서양식'},
     namingNoSurname:'성 없이',
     namingGogyeokLabel:{cheon:'천격 天格',in:'인격 人格',ji:'지격 地格',oe:'외격 外格',chong:'총격 總格'},
@@ -2647,7 +2658,8 @@ const STRINGS={
     txtNamingLabelSurnameText:'Family name (optional)',
     txtNamingGlossaryTerm5Head:'How does naming differ from country to country?',
     txtNamingGlossaryTerm5Body:'Korean naming combines sound elements and character elements with a four-number stroke chart. Chinese naming uses the same Chinese characters but reads them through the five-grid chart (heaven, personality, earth, outer, total), and Japanese seimei-handan follows that same five-grid system. Alphabet names have no stroke counts, so for Western names we read the element of the first sound, the spread of elements across every letter, and the Pythagorean destiny number from 1 to 9. In every tradition the principle is the same: the name fills in whatever your Saju is missing.',
-    namingCultureLabel:{ko:'🇰🇷 Korean',zh:'🇨🇳 Chinese',ja:'🇯🇵 Japanese',en:'🌍 Western'},
+    namingCultureLabel:{ko:'Korean',zh:'Chinese',ja:'Japanese',en:'Western'},
+    namingCultureCode:{ko:'KR',zh:'CN',ja:'JP',en:'INT'},
     namingCultureLabelPlain:{ko:'Korean',zh:'Chinese',ja:'Japanese',en:'Western'},
     namingNoSurname:'no family name',
     namingGogyeokLabel:{cheon:'Heaven 天',in:'Personality 人',ji:'Earth 地',oe:'Outer 外',chong:'Total 總'},
@@ -6703,7 +6715,8 @@ function renderNamingCultureRow(){
   if(!row) return;
   row.innerHTML=NAMING_CULTURES.map(function(key){
     return '<label class="naming-wish-chip"><input type="radio" name="fNamingCulture" value="'+key+'"'
-      +(key===namingCulture?' checked':'')+'> <span>'+s.namingCultureLabel[key]+'</span></label>';
+      +(key===namingCulture?' checked':'')+'> <span class="naming-code">'+s.namingCultureCode[key]+'</span>'
+      +'<span>'+s.namingCultureLabel[key]+'</span></label>';
   }).join('');
   row.querySelectorAll('input[name="fNamingCulture"]').forEach(function(input){
     input.addEventListener('change',function(){ namingSetCulture(input.value,true); });
